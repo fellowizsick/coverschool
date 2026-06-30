@@ -29,7 +29,7 @@ npx next start -p 3000  # Start server
 ## Fee Structure
 
 - **One-Time Registration Fee:** $75
-- **Monthly Tuition:** $25/month
+- **Monthly Tuition:** $45/month
 - Config in `src/lib/constants.ts`
 
 ## Key Files
@@ -50,7 +50,8 @@ npx next start -p 3000  # Start server
 - ✅ Supabase — 7 tables created (enrollments, students, profiles, newsletter_subscribers, donations, contact_messages, parents)
 - ✅ Stripe webhook configured (checkout.session.completed)
 - ✅ Deployed to Vercel at https://coverschool.vercel.app
-- 🔴 SMTP not configured (env vars empty)
+- ✅ SMTP configured (Gmail — enrollment confirmation emails sending)
+- ✅ Live Stripe keys active — $45/mo tuition
 
 ## 💌 Contact Form — ANNE'S ONLY
 
