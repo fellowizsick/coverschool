@@ -193,7 +193,7 @@ export default function HomePage() {
 
                     <div className="flex items-center gap-2 text-sm text-emerald-200/50">
                       <div className="h-px flex-1 bg-emerald-500/20" />
-                      <span>$25/month Tuition</span>
+                      <span>$45/month Tuition</span>
                       <div className="h-px flex-1 bg-emerald-500/20" />
                     </div>
 
@@ -205,7 +205,7 @@ export default function HomePage() {
 
                 {/* Floating decorative element */}
                 <div className="absolute -top-6 -right-6 h-24 w-24 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl shadow-amber-500/20 flex items-center justify-center animate-float">
-                  <span className="text-2xl font-bold text-amber-950">$25</span>
+                  <span className="text-2xl font-bold text-amber-950">$45</span>
                 </div>
 
                 {/* Fun floating emoji decorations */}
@@ -508,14 +508,14 @@ export default function HomePage() {
 
             <p className="text-lg leading-relaxed text-emerald-100/70 max-w-xl mx-auto">
               Join hundreds of families who have found peace of mind through
-              Larose Christian Academy. Tuition is just $25/month — curriculum
+              Larose Christian Academy. Tuition is just $45/month — curriculum
               books are purchased separately. 🙌
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/enroll">
                 <Button size="lg" variant="fun" className="shadow-xl shadow-purple-500/20 text-base animate-bounce-soft">
-                  ✨ Enroll Now — $25/mo
+                  ✨ Enroll Now — $45/mo
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>

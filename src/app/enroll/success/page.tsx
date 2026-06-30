@@ -95,7 +95,7 @@ export default function EnrollSuccessPage() {
             Welcome to Larose Christian Academy! 🎉
           </h1>
           <p className="mt-4 text-lg text-gray-600 max-w-md mx-auto">
-            Your enrollment is confirmed and your $25/month tuition has been processed.
+            Your enrollment is confirmed and your $45/month tuition has been processed.
             You&apos;ll receive a confirmation email shortly. 📧
           </p>
           <div className="flex justify-center gap-1 mt-2">
@@ -208,7 +208,7 @@ export default function EnrollSuccessPage() {
                   📚 Purchase Your Curriculum Books
                 </h2>
                 <p className="mt-2 text-sm text-amber-800 leading-relaxed">
-                  Your $25/month tuition covers administrative services, record-keeping, and
+                  Your $45/month tuition covers administrative services, record-keeping, and
                   legal oversight. <strong>Curriculum books are not included</strong> and need
                   to be purchased separately.
                 </p>

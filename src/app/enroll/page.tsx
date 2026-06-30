@@ -129,7 +129,7 @@ export default function EnrollPage() {
 
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
         <p className="mt-4 text-lg text-gray-600">
-          Complete the form below to enroll. Your $25/month tuition covers administrative
+          Complete the form below to enroll. Your $45/month tuition covers administrative
           services, record-keeping, and legal oversight. Curriculum books are purchased
           separately.
         </p>
@@ -142,7 +142,7 @@ export default function EnrollPage() {
             </div>
             <div>
               <p className="font-semibold text-gray-900 flex items-center gap-1">
-                $25/month per student — Tuition Only 💰
+                $45/month per student — Tuition Only 💰
               </p>
               <p className="text-sm text-gray-600">
                 Recurring monthly subscription. Cancel anytime. First payment due at
@@ -172,7 +172,7 @@ export default function EnrollPage() {
                 A one-time <strong>$75 registration fee</strong> covers the setup
                 of your student&apos;s permanent file, official transcript initiation,
                 record-keeping system configuration, and initial administrative processing.
-                This is a <strong>separate one-time payment</strong> from the $25/month tuition.
+                This is a <strong>separate one-time payment</strong> from the $45/month tuition.
                 You&apos;ll be able to pay it after your tuition is processed. 💜
               </p>
             </div>
@@ -369,7 +369,7 @@ export default function EnrollPage() {
                   ✅ I confirm that the information provided is accurate. I understand
                   that this enrollment is subject to review and approval by Larose
                   Christian Academy after payment is processed. By enrolling, I agree
-                  to the $25/month tuition fee. I understand that curriculum books are not
+                  to the $45/month tuition fee. I understand that curriculum books are not
                   included and must be purchased separately.
                 </span>
               </label>
@@ -388,7 +388,7 @@ export default function EnrollPage() {
             ) : (
               <span className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                Enroll & Pay Tuition — $25/month
+                Enroll & Pay Tuition — $45/month
               </span>
             )}
           </Button>

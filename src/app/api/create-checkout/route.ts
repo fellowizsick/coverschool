@@ -33,10 +33,10 @@ export async function POST(request: Request) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Larose Christian Academy — Monthly Tuition ($25/mo — books not included)',
+              name: 'Larose Christian Academy — Monthly Tuition ($45/mo — books not included)',
               description: `Student: ${studentName} | Parent: ${parentName}`,
             },
-            unit_amount: 2500,
+            unit_amount: 4500,
             recurring: {
               interval: 'month',
             },

@@ -57,7 +57,7 @@ export default function TermsPage() {
           </ul>
 
           <h2>Tuition and Payment</h2>
-          <p>Enrollment is $25/month per student, billed monthly via subscription. This covers administrative services, record-keeping, and legal oversight. Curriculum books are not included and are purchased separately.</p>
+          <p>Enrollment is $45/month per student, billed monthly via subscription. This covers administrative services, record-keeping, and legal oversight. Curriculum books are not included and are purchased separately.</p>
           <ul>
             <li>Payments are processed securely through Stripe</li>
             <li>You may cancel your subscription at any time</li>

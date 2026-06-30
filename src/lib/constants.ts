@@ -93,7 +93,7 @@ export const GRADE_OPTIONS = [
 ]
 
 export const ENROLLMENT_FEE = 0 // Free for initial launch — set later
-export const ANNUAL_TUITION = 300 // $25/month
+export const ANNUAL_TUITION = 540 // $45/month
 
 export const CURRICULUM_BOOKS_URL =
   'https://www.christianbook.com/page/homeschool/homeschool-curriculum/ace-paces'
@@ -103,7 +103,7 @@ export const PAPERWORK_FEE_NOTE =
   'A one-time $75 registration fee covers the setup of your student file, transcript initiation, record-keeping system configuration, and initial administrative processing.'
 
 export const CURRICULUM_NOTE =
-  '$25/month tuition covers administrative services, record-keeping, and legal oversight. Curriculum books are purchased separately.'
+  '$45/month tuition covers administrative services, record-keeping, and legal oversight. Curriculum books are purchased separately.'
 
 export const NAV_LINKS = [
   { label: 'Home', href: '/' },

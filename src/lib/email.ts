@@ -33,7 +33,7 @@ export async function sendEnrollmentEmail({
         <p style="color: #374151; font-size: 16px;">Dear ${parentName},</p>
         <p style="color: #374151; font-size: 16px;">
           Thank you for enrolling <strong>${studentName}</strong> (Grade: ${grade}) at
-          ${SCHOOL_CONFIG.name}. Your enrollment is confirmed and your $25/month tuition
+          ${SCHOOL_CONFIG.name}. Your enrollment is confirmed and your $45/month tuition
           has been processed successfully.
         </p>
 
