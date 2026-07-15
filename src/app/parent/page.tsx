@@ -28,7 +28,7 @@ export default async function ParentPortalPage() {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
-          My Students
+          My Child&apos;s Dashboard
         </h2>
         <Link href="/enroll">
           <Button size="sm">Enroll New Student</Button>

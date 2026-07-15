@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { redirect } from 'next/navigation'
@@ -9,6 +10,10 @@ export default async function EnrollmentsPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  if (!user || !isAuthorizedAdmin(user.email)) {
+    redirect('/')
+  }
 
   const { data: profile } = await supabase
     .from('profiles')

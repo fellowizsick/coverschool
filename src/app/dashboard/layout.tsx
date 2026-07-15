@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 
@@ -17,6 +18,11 @@ export default async function DashboardLayout({
     redirect('/login?redirect=/dashboard')
   }
 
+  // ⛔ HARD LOCK: only Batman (Jonathan) and Mom (Anne) reach the dashboard.
+  if (!isAuthorizedAdmin(user.email)) {
+    redirect('/')
+  }
+
   // Check if user is admin
   const { data: profile } = await supabase
     .from('profiles')
@@ -30,7 +36,7 @@ export default async function DashboardLayout({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">
-          {isAdmin ? 'Admin Dashboard' : 'Parent Portal'}
+          {isAdmin ? 'Admin Portal' : 'Parent Portal'}
         </h1>
         <form
           action={async () => {
@@ -74,7 +80,7 @@ export default async function DashboardLayout({
               href="/parent"
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
-              My Students
+              My Child&apos;s Dashboard
             </Link>
           </>
         )}
