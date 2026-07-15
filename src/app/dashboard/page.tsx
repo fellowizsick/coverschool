@@ -79,7 +79,7 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profErr } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user!.id)
