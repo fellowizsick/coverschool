@@ -112,6 +112,7 @@ export const NAV_LINKS = [
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Assessment', href: '/assessment' },
+  { label: 'Diploma Exam', href: '/exam' },
   { label: 'Contact', href: '/contact' },
   { label: 'Enroll', href: '/enroll', highlight: true },
 ]

@@ -32,6 +32,31 @@ export async function POST(request: Request) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
     const enrollmentId = session.metadata?.enrollment_id
+    const diplomaType = session.metadata?.type
+    const examId = session.metadata?.exam_id
+
+    // === DIPLOMA EXAM FLOW ===
+    if (diplomaType && examId) {
+      const { createAdminClient } = await import('@/lib/supabase/server')
+      const supabase = createAdminClient()
+      if (diplomaType === 'test_fee') {
+        await supabase.from('diploma_exams').update({
+          test_paid: true,
+          status: 'test_paid',
+          updated_at: new Date().toISOString(),
+        }).eq('id', examId)
+        console.log(`✅ Diploma exam ${examId} test fee paid`)
+      } else if (diplomaType === 'paper_fee') {
+        await supabase.from('diploma_exams').update({
+          paper_fee_paid: true,
+          paper_ordered: true,
+          status: 'paper_ordered',
+          updated_at: new Date().toISOString(),
+        }).eq('id', examId)
+        console.log(`✅ Diploma exam ${examId} paper fee paid — ready to mail`)
+      }
+      return NextResponse.json({ received: true })
+    }
 
     if (!enrollmentId) {
       console.error('No enrollment_id in session metadata')
