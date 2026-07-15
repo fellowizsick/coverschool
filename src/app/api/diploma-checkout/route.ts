@@ -22,9 +22,11 @@ export async function POST(request: Request) {
     let description = ''
 
     if (type === 'test_fee') {
-      amount = isEnrolled ? 5000 : 20000 // $50 enrolled / $200 not-enrolled
-      productName = `Larose Christian Academy — Diploma Exam Fee (${isEnrolled ? 'Enrolled Student' : 'Non-Enrolled'})`
-      description = `Diploma assessment test fee for ${studentName}. ${isEnrolled ? '$50 enrolled rate' : '$200 standard rate'}.`
+      // $175 member rate (paid membership >=1yr OR completed full 12th grade year)
+      // $450 standard non-member rate
+      amount = isEnrolled ? 17500 : 45000
+      productName = `Larose Christian Academy — Adult Diploma Program Fee (${isEnrolled ? 'Member Rate' : 'Non-Member'})`
+      description = `Adult diploma program fee for ${studentName}. ${isEnrolled ? '$175 member rate (1yr+ membership or completed 12th grade year)' : '$450 standard non-member rate'}.`
     } else if (type === 'paper_fee') {
       amount = 7500 // $75 paper diploma + mailing
       productName = 'Larose Christian Academy — Paper Diploma & Mailing'

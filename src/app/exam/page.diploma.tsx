@@ -34,7 +34,7 @@ export default function ExamPage() {
   const [address, setAddress] = useState({ line1: '', city: '', state: '', zip: '' })
   const [busy, setBusy] = useState(false)
 
-  const testFee = isEnrolled ? 50 : 200
+  const testFee = isEnrolled ? 175 : 450
   const currentQ = questions[currentIndex]
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function ExamPage() {
     setQuestions(qs); setCurrentIndex(0); setAnswers({})
     const res = await fetch('/api/diploma-create', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentName, email, isEnrolled, testFee: isEnrolled ? 5000 : 20000 }),
+      body: JSON.stringify({ studentName, email, isEnrolled, testFee: isEnrolled ? 17500 : 45000 }),
     })
     const data = await res.json()
     if (data.examId) {
@@ -131,12 +131,12 @@ export default function ExamPage() {
             <div>
               <p className="mb-2 text-sm font-medium text-gray-700">🎓 Are you currently enrolled at Larose Christian Academy?</p>
               <div className="flex gap-3">
-                <button onClick={() => setIsEnrolled(true)} className={`flex-1 rounded-xl border-2 p-4 text-sm font-medium ${isEnrolled === true ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-gray-200 text-gray-600'}`}>Yes — Enrolled ($50)</button>
-                <button onClick={() => setIsEnrolled(false)} className={`flex-1 rounded-xl border-2 p-4 text-sm font-medium ${isEnrolled === false ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-gray-200 text-gray-600'}`}>No — Not Enrolled ($200)</button>
+                <button onClick={() => setIsEnrolled(true)} className={`flex-1 rounded-xl border-2 p-4 text-sm font-medium ${isEnrolled === true ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-gray-200 text-gray-600'}`}>Yes — Member ($175)</button>
+                <button onClick={() => setIsEnrolled(false)} className={`flex-1 rounded-xl border-2 p-4 text-sm font-medium ${isEnrolled === false ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-gray-200 text-gray-600'}`}>No — Not Enrolled ($450)</button>
               </div>
             </div>
             <Button onClick={handleBegin} disabled={busy || !studentName.trim() || !email.trim() || isEnrolled === null} className="w-full">Continue to Payment →</Button>
-            <p className="text-center text-xs text-gray-400">Test fee: {isEnrolled ? '$50 (enrolled)' : '$200 (not enrolled)'} · 40 questions · 70% to pass</p>
+            <p className="text-center text-xs text-gray-400">Program fee: {isEnrolled ? '$175 (member — 1yr+ membership or completed 12th grade year)' : '$450 (non-member)'} · 40 questions · 70% to pass</p>
           </CardContent></Card>
         )}
 
