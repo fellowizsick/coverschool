@@ -469,6 +469,39 @@ export function getAssessmentQuestions(): Question[] {
 }
 
 /**
+ * Age-appropriate question picker.
+ * Returns questions centered on the student's selected grade:
+ *   - primary band = selected grade AND the year below (confirms prerequisite skills)
+ *   - if that band is too small (<6), widen to include the year above as well
+ * This keeps the test matched to the child's age/skill level instead of mixing
+ * grades 1–9 together.
+ */
+export function getQuestionsByGrade(grade: number): Question[] {
+  let pool = [...mathQuestions, ...readingQuestions].filter(
+    (q) => q.gradeLevel >= grade - 1 && q.gradeLevel <= grade
+  )
+  if (pool.length < 6) {
+    pool = [...mathQuestions, ...readingQuestions].filter(
+      (q) => q.gradeLevel <= grade + 1
+    )
+  }
+  // Shuffle using Fisher-Yates
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[pool[i], pool[j]] = [pool[j], pool[i]]
+  }
+  return pool
+}
+
+/** Convert a grade label (e.g. "Kindergarten", "3rd Grade") to a number (0–9) */
+export function gradeLabelToNumber(label: string): number {
+  if (!label) return 1
+  if (label.toLowerCase().startsWith('k')) return 0
+  const m = label.match(/\d+/)
+  return m ? parseInt(m[0], 10) : 1
+}
+
+/**
  * Score the assessment and determine the recommended grade level.
  * Uses weighted scoring based on difficulty of questions answered correctly.
  */

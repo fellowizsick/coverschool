@@ -4,12 +4,14 @@ import { useState, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   getAssessmentQuestions,
+  getQuestionsByGrade,
+  gradeLabelToNumber,
   scoreAssessment,
   isStateCovered,
   type Question,
   type AssessmentResult,
 } from '@/lib/assessment'
-import { COVERED_STATES, ALL_STATES } from '@/lib/constants'
+import { COVERED_STATES, ALL_STATES, GRADE_OPTIONS } from '@/lib/constants'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -30,6 +32,11 @@ const stateOptions = ALL_STATES.map((s) => ({
   value: s.code,
   label: `${s.name} (${s.code})`,
 }))
+
+const gradeOptions = [
+  { value: 'Kindergarten', label: 'Kindergarten' },
+  ...GRADE_OPTIONS.map((g) => ({ value: g, label: g })),
+]
 
 // Fun color cycle for answer buttons
 const ANSWER_COLORS = [
@@ -52,6 +59,7 @@ export default function AssessmentPage() {
   const [studentName, setStudentName] = useState('')
   const [studentAge, setStudentAge] = useState('')
   const [selectedState, setSelectedState] = useState('')
+  const [selectedGrade, setSelectedGrade] = useState('')
   const [questions, setQuestions] = useState<Question[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<{ questionId: string; selectedIndex: number }[]>([])
@@ -64,6 +72,10 @@ export default function AssessmentPage() {
       setError('Please enter the student name and select a state.')
       return
     }
+    if (!selectedGrade) {
+      setError('Please select the student\'s current grade so we can match the test to their age.')
+      return
+    }
     setError('')
 
     if (!isStateCovered(selectedState)) {
@@ -71,10 +83,9 @@ export default function AssessmentPage() {
       return
     }
 
-    // Generate random test questions
-    const allQuestions = getAssessmentQuestions()
-    // Take 15 questions to keep it reasonable
-    const testQuestions = allQuestions.slice(0, 15)
+    // Generate age-appropriate test questions for the selected grade
+    const gradeNum = gradeLabelToNumber(selectedGrade)
+    const testQuestions = getQuestionsByGrade(gradeNum)
     setQuestions(testQuestions)
     setCurrentIndex(0)
     setAnswers([])
@@ -121,6 +132,7 @@ export default function AssessmentPage() {
     setStudentName('')
     setStudentAge('')
     setSelectedState('')
+    setSelectedGrade('')
     setQuestions([])
     setCurrentIndex(0)
     setAnswers([])
@@ -212,13 +224,26 @@ export default function AssessmentPage() {
                   value={selectedState}
                   onChange={(e) => setSelectedState(e.target.value)}
                 />
+                <Select
+                  id="grade"
+                  name="grade"
+                  label="🎓 What grade is the student in?"
+                  required
+                  options={gradeOptions}
+                  placeholder="Select their grade"
+                  value={selectedGrade}
+                  onChange={(e) => setSelectedGrade(e.target.value)}
+                />
               </div>
 
               <div className="mt-6 rounded-xl bg-gradient-to-br from-emerald-50 to-sky-50 p-4 text-sm text-emerald-800 ring-1 ring-emerald-100">
                 <p className="font-semibold">📝 What to expect:</p>
                 <ul className="mt-2 space-y-1.5 text-emerald-700">
                   <li className="flex items-center gap-2">
-                    <span className="emoji-badge">❓</span> 15 multiple-choice questions (Math &amp; Reading)
+                    <span className="emoji-badge">❓</span> Questions matched to {selectedGrade || 'the selected grade'} level
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="emoji-badge">🧮</span> Covers Math and Reading at their age
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="emoji-badge">⏱️</span> Takes about 10&ndash;15 minutes
