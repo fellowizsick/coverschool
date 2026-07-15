@@ -89,7 +89,7 @@ export const GRADE_OPTIONS = [
   '9th Grade',
   '10th Grade',
   '11th Grade',
-  '12th Grade',
+  // NOTE: 12th Grade is intentionally excluded — 12th grade = diploma exam (/exam), not placement.
 ]
 
 export const ENROLLMENT_FEE = 0 // Free for initial launch — set later

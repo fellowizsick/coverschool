@@ -59,7 +59,8 @@ git push origin main      # auto-deploys to https://coverschool.vercel.app
 | Path | What it is |
 |------|-----------|
 | `/` | Home — school intro, location, CTA to enroll |
-| `/enroll` | Enrollment form → collects student/parent info → writes to Supabase → Stripe checkout for $75 reg fee |
+| `/assessment` | **Placement test** — parent/child picks grade, age-appropriate Math+Reading questions, recommends grade level. NOT a diploma. |
+| `/exam` (PLANNED) | **Diploma exam** — SEPARATE test (content from Anne). On pass, site issues the student's actual diploma. Distinct from /assessment. |
 | `/faq` | FAQ page |
 | `/contact` (or footer) | Contact form → **Formspree** (`mykqplgw`) → emails Anne |
 | API `/api/pay-paperwork` | Stripe checkout session for registration fee |

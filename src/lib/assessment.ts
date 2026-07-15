@@ -239,6 +239,88 @@ const mathQuestions: Question[] = [
     correctIndex: 2,
     gradeLevel: 9,
   },
+  // Grade 10 level
+  {
+    id: 'm27',
+    subject: 'math',
+    question: 'What is the area of a circle with radius 5?',
+    options: ['10π', '25π', '50π', '100π'],
+    correctIndex: 1,
+    gradeLevel: 10,
+  },
+  {
+    id: 'm28',
+    subject: 'math',
+    question: 'Solve: x² - 5x + 6 = 0',
+    options: ['x = 2, 3', 'x = -2, -3', 'x = 1, 6', 'x = -1, -6'],
+    correctIndex: 0,
+    gradeLevel: 10,
+  },
+  {
+    id: 'm29',
+    subject: 'math',
+    question: 'What is the volume of a cylinder with radius 3 and height 4? (V = πr²h)',
+    options: ['12π', '24π', '36π', '48π'],
+    correctIndex: 2,
+    gradeLevel: 10,
+  },
+  {
+    id: 'm30',
+    subject: 'math',
+    question: 'What is the midpoint of (2, 4) and (8, 10)?',
+    options: ['(5, 7)', '(4, 6)', '(6, 8)', '(3, 5)'],
+    correctIndex: 0,
+    gradeLevel: 10,
+  },
+  {
+    id: 'm31',
+    subject: 'math',
+    question: 'If f(x) = 2x + 3, what is f(4)?',
+    options: ['8', '11', '9', '14'],
+    correctIndex: 1,
+    gradeLevel: 10,
+  },
+  // Grade 11 level
+  {
+    id: 'm32',
+    subject: 'math',
+    question: 'What is sin(30°)?',
+    options: ['0.5', '0.707', '1', '0'],
+    correctIndex: 0,
+    gradeLevel: 11,
+  },
+  {
+    id: 'm33',
+    subject: 'math',
+    question: 'Solve: 2x² - 8 = 0',
+    options: ['x = ±2', 'x = 2', 'x = -2', 'x = ±4'],
+    correctIndex: 0,
+    gradeLevel: 11,
+  },
+  {
+    id: 'm34',
+    subject: 'math',
+    question: 'What is the value of log₂(8)?',
+    options: ['2', '3', '4', '8'],
+    correctIndex: 1,
+    gradeLevel: 11,
+  },
+  {
+    id: 'm35',
+    subject: 'math',
+    question: 'What is the period of y = sin(2x)?',
+    options: ['π', '2π', 'π/2', '4π'],
+    correctIndex: 0,
+    gradeLevel: 11,
+  },
+  {
+    id: 'm36',
+    subject: 'math',
+    question: 'A bag has 3 red and 2 blue marbles. What is the probability of drawing a red one?',
+    options: ['2/5', '3/5', '1/2', '3/4'],
+    correctIndex: 1,
+    gradeLevel: 11,
+  },
 ]
 
 const readingQuestions: Question[] = [
@@ -455,6 +537,72 @@ const readingQuestions: Question[] = [
     correctIndex: 2,
     gradeLevel: 9,
   },
+  // Grade 10 level
+  {
+    id: 'r27',
+    subject: 'reading',
+    question: 'What is the denotation of the word "home"?',
+    options: ['A feeling of warmth', 'The place where one lives', 'A family gathering', 'A childhood memory'],
+    correctIndex: 1,
+    gradeLevel: 10,
+  },
+  {
+    id: 'r28',
+    subject: 'reading',
+    question: 'Which sentence uses a semicolon correctly?',
+    options: ['I went home; and ate dinner.', 'I went home; I ate dinner.', 'I went home, I ate; dinner.', 'I went; home and ate dinner.'],
+    correctIndex: 1,
+    gradeLevel: 10,
+  },
+  {
+    id: 'r29',
+    subject: 'reading',
+    question: 'What does "meticulous" mean?',
+    options: ['Careless', 'Very careful and precise', 'Quick', 'Angry'],
+    correctIndex: 1,
+    gradeLevel: 10,
+  },
+  {
+    id: 'r30',
+    subject: 'reading',
+    question: 'What is the effect of dramatic irony?',
+    options: ['The reader knows something the character does not', 'A surprise at the end', 'A happy ending', 'Confusing the reader'],
+    correctIndex: 0,
+    gradeLevel: 10,
+  },
+  // Grade 11 level
+  {
+    id: 'r31',
+    subject: 'reading',
+    question: 'What is a thesis statement?',
+    options: ['The last sentence of an essay', 'The main argument or claim of a paper', 'A quote from a book', 'A type of conclusion'],
+    correctIndex: 1,
+    gradeLevel: 11,
+  },
+  {
+    id: 'r32',
+    subject: 'reading',
+    question: 'Which is an example of an oxymoron?',
+    options: ['Deafening silence', 'Happy child', 'Running water', 'Old book'],
+    correctIndex: 0,
+    gradeLevel: 11,
+  },
+  {
+    id: 'r33',
+    subject: 'reading',
+    question: 'What does "ubiquitous" mean?',
+    options: ['Rare', 'Present everywhere', 'Dangerous', 'Ancient'],
+    correctIndex: 1,
+    gradeLevel: 11,
+  },
+  {
+    id: 'r34',
+    subject: 'reading',
+    question: 'What is the purpose of a counterargument?',
+    options: ['To confuse the reader', 'To address and refute an opposing view', 'To repeat the thesis', 'To end the essay'],
+    correctIndex: 1,
+    gradeLevel: 11,
+  },
 ]
 
 /** Combine all questions and shuffle to randomize subjects */
@@ -567,14 +715,16 @@ function determineGradeFromScore(
   // Weighted score: combine overall, math, and reading
   const weightedScore = overall * 0.5 + mathScore * 0.25 + readingScore * 0.25
 
-  if (weightedScore >= 92) return 9
-  if (weightedScore >= 85) return 8
-  if (weightedScore >= 78) return 7
-  if (weightedScore >= 70) return 6
-  if (weightedScore >= 62) return 5
-  if (weightedScore >= 54) return 4
-  if (weightedScore >= 45) return 3
-  if (weightedScore >= 35) return 2
+  if (weightedScore >= 92) return 11
+  if (weightedScore >= 85) return 10
+  if (weightedScore >= 78) return 9
+  if (weightedScore >= 70) return 8
+  if (weightedScore >= 62) return 7
+  if (weightedScore >= 54) return 6
+  if (weightedScore >= 45) return 5
+  if (weightedScore >= 35) return 4
+  if (weightedScore >= 25) return 3
+  if (weightedScore >= 15) return 2
   return 1
 }
 
