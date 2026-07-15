@@ -71,11 +71,22 @@ git push origin main      # auto-deploys to https://coverschool.vercel.app
 - One-Time Registration Fee: **$75**
 - Monthly Tuition: **$45/month**
 
+**PAYMENTS — HARD RULE (user-confirmed 2026-07-15):** EVERY payment-accepting route
+(enrollment fee, tuition/create-checkout, diploma test fee, diploma paper-mailing, webhook)
+reads `process.env.STRIPE_SECRET_KEY` — the SAME single key. That key is **Anne's Stripe
+account**. DO NOT split, swap, or hardcode a different key for any route. All money flows to Anne.
+Verified: grep shows all 5 Stripe routes use `process.env.STRIPE_SECRET_KEY` only (no dual keys).
+The diploma exam (page.diploma.tsx) is DEFERRED pending Anne's accreditation — re-enable later
+by renaming page.diploma.tsx -> page.tsx + re-adding the 'Diploma Exam' nav link.
+
 **Key files:**
 - `src/lib/constants.ts` — fees, Stripe price IDs
 - `src/data/siteData.ts` — contact info, address, school name
 - `src/app/enroll/page.tsx` — enrollment form
-- `src/app/api/pay-paperwork/route.ts` — Stripe checkout
+- `src/app/api/pay-paperwork/route.ts` — Stripe checkout (enrollment fee)
+- `src/app/api/create-checkout/route.ts` — tuition/general Stripe checkout
+- `src/app/api/diploma-checkout/route.ts` — diploma test fee (DEFERRED, pending accreditation)
+- `src/app/api/webhook/route.ts` — Stripe webhook confirming all payments
 
 ## 4. DOMAIN SETUP (REFERENCE — read this before touching DNS)
 
