@@ -108,7 +108,7 @@ export default function AssessmentPage() {
         setCurrentIndex(currentIndex + 1)
       } else {
         // Test done — score it
-        const scored = scoreAssessment(newAnswers)
+        const scored = scoreAssessment(questions, newAnswers)
         setResult(scored)
         setStep('results')
       }

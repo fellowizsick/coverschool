@@ -1,5 +1,7 @@
 export type Subject = 'math' | 'reading'
 
+import { COVERED_STATES } from './constants'
+
 export interface Question {
   id: string
   subject: Subject
@@ -244,6 +246,11 @@ export function gradeNumberToLabel(num: number): string {
   const special: Record<number, string> = { 1: '1st', 2: '2nd', 3: '3rd' }
   const label = special[num] || `${num}${suffix}`
   return `${label} Grade`
+}
+
+/** Whether Larose Christian Academy currently enrolls students in the given state */
+export function isStateCovered(stateCode: string): boolean {
+  return COVERED_STATES.some((s) => s.code === stateCode)
 }
 
 /**
