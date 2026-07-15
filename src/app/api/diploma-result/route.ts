@@ -10,13 +10,15 @@ const s = createClient(
 
 export async function POST(request: Request) {
   try {
-    const { examId, score, passed } = await request.json()
+    const { examId, score, passed, subResults, essayScore } = await request.json()
     if (!examId) return NextResponse.json({ error: 'Missing examId' }, { status: 400 })
     const { error } = await s
       .from('diploma_exams')
       .update({
         score,
         passed,
+        essay_score: essayScore ?? null,
+        subtest_results: subResults ?? null,
         test_paid: true,
         status: passed ? 'passed' : 'taken',
         updated_at: new Date().toISOString(),
