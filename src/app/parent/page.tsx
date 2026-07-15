@@ -5,6 +5,7 @@ import { GraduationCap, Mail, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { createServerClient } from '@supabase/ssr'
 import { redirect } from 'next/navigation'
+import StopMembershipButton from '@/components/StopMembershipButton'
 
 export default async function ParentPortalPage() {
   const supabase = await createClient()
@@ -88,6 +89,9 @@ export default async function ParentPortalPage() {
                 <div className="pt-2 text-xs text-gray-400">
                   Enrolled: {new Date(e.created_at).toLocaleDateString()}
                 </div>
+                {(e.status === 'approved' || e.status === 'pending') && (
+                  <StopMembershipButton enrollmentId={e.id} cancelled={e.status === 'cancelled'} />
+                )}
               </CardContent>
             </Card>
           ))}

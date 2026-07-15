@@ -121,6 +121,13 @@ export async function POST(request: Request) {
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object
     console.log(`❌ Subscription ${subscription.id} cancelled`)
+    // Mark the matching enrollment cancelled in DB
+    const { createAdminClient } = await import('@/lib/supabase/server')
+    const admin = createAdminClient()
+    await admin
+      .from('enrollments')
+      .update({ status: 'cancelled', stripe_subscription_id: null, payment_status: 'cancelled' })
+      .eq('stripe_subscription_id', subscription.id)
   }
 
   return NextResponse.json({ received: true })

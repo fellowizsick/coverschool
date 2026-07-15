@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -116,6 +117,7 @@ export default async function EnrollmentsPage() {
                         <div className="flex gap-2">
                           <ApproveButton id={e.id} disabled={e.status !== 'pending'} />
                           <RejectButton id={e.id} disabled={e.status !== 'pending'} />
+                          <StopMembershipButton id={e.id} hasSubscription={!!e.stripe_subscription_id} />
                         </div>
                       </td>
                     </tr>
@@ -177,6 +179,47 @@ function RejectButton({ id, disabled }: { id: string; disabled: boolean }) {
         className="h-7 px-2 text-xs text-red-600 border-red-300 hover:bg-red-50"
       >
         Reject
+      </Button>
+    </form>
+  )
+}
+
+function StopMembershipButton({ id, hasSubscription }: { id: string; hasSubscription: boolean }) {
+  return (
+    <form
+      action={async () => {
+        'use server'
+        const admin = createAdminClient()
+        const { data: e } = await admin
+          .from('enrollments')
+          .select('stripe_subscription_id')
+          .eq('id', id)
+          .single()
+        const subId = e?.stripe_subscription_id
+        if (subId) {
+          try {
+            const Stripe = require('stripe')
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+            await stripe.subscriptions.del(subId, { prorate: false })
+          } catch (err) {
+            console.error('Admin cancel subscription error:', err)
+          }
+        }
+        await admin
+          .from('enrollments')
+          .update({ status: 'cancelled', stripe_subscription_id: null, payment_status: 'cancelled' })
+          .eq('id', id)
+        redirect('/dashboard/enrollments')
+      }}
+    >
+      <Button
+        type="submit"
+        size="sm"
+        variant="outline"
+        disabled={!hasSubscription}
+        className="h-7 px-2 text-xs text-red-600 border-red-300 hover:bg-red-50"
+      >
+        Stop Billing
       </Button>
     </form>
   )
