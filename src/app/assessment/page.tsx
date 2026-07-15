@@ -34,7 +34,6 @@ const stateOptions = ALL_STATES.map((s) => ({
 }))
 
 const gradeOptions = [
-  { value: 'Kindergarten', label: 'Kindergarten' },
   ...GRADE_OPTIONS.map((g) => ({ value: g, label: g })),
 ]
 
@@ -167,7 +166,7 @@ export default function AssessmentPage() {
           </h1>
           <p className="mt-4 text-lg text-emerald-100/80">
             Take our fun, free assessment to discover the right grade placement for your student.
-            Covers Math and Reading for grades 1&ndash;9. Let&apos;s get started! 🚀
+            Covers Math and Reading for grades K&amp;ndash;11. Let&apos;s get started! 🚀
           </p>
         </div>
         {/* Bottom rainbow divider */}
