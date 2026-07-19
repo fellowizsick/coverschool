@@ -66,30 +66,65 @@ export default function CurriculumPlayer({
   const [answer, setAnswer] = useState<string | number | null>(null)
   const [answeredCorrect, setAnsweredCorrect] = useState<boolean | null>(null)
 
-  // Load progress from localStorage
+  // Load progress: prefer Supabase (cross-device), fall back to localStorage
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(progressKey(enrollmentId))
-      if (raw) {
-        const arr = JSON.parse(raw) as boolean[]
-        setDone(arr)
-        // resume at first not-done
-        const firstUndone = arr.findIndex((d) => !d)
-        setCurrent(firstUndone === -1 ? arr.length - 1 : firstUndone)
-      } else {
-        setDone(new Array(sequence.length).fill(false))
+    let cancelled = false
+    async function load() {
+      // try Supabase first
+      try {
+        const res = await fetch(`/api/curriculum-progress?enrollmentId=${enrollmentId}`)
+        const j = await res.json()
+        if (Array.isArray(j.completed_steps) && j.completed_steps.length === sequence.length) {
+          if (!cancelled) {
+            setDone(j.completed_steps)
+            const firstUndone = j.completed_steps.findIndex((d: boolean) => !d)
+            setCurrent(firstUndone === -1 ? j.completed_steps.length - 1 : firstUndone)
+          }
+          return
+        }
+      } catch {
+        /* offline — fall through to localStorage */
       }
-    } catch {
-      setDone(new Array(sequence.length).fill(false))
+      // fallback localStorage
+      try {
+        const raw = localStorage.getItem(progressKey(enrollmentId))
+        if (raw) {
+          const arr = JSON.parse(raw) as boolean[]
+          if (!cancelled) {
+            setDone(arr)
+            const firstUndone = arr.findIndex((d) => !d)
+            setCurrent(firstUndone === -1 ? arr.length - 1 : firstUndone)
+          }
+          return
+        }
+      } catch {
+        /* ignore */
+      }
+      if (!cancelled) setDone(new Array(sequence.length).fill(false))
+    }
+    load()
+    return () => {
+      cancelled = true
     }
   }, [enrollmentId, sequence.length])
 
-  function save(next: boolean[]) {
+  async function persist(next: boolean[]) {
     setDone(next)
+    // localStorage cache (instant + offline)
     try {
       localStorage.setItem(progressKey(enrollmentId), JSON.stringify(next))
     } catch {
       /* ignore */
+    }
+    // Supabase sync (cross-device) — fire and forget
+    try {
+      await fetch('/api/curriculum-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enrollmentId, completed_steps: next }),
+      })
+    } catch {
+      /* offline — localStorage already saved */
     }
   }
 
@@ -111,7 +146,7 @@ export default function CurriculumPlayer({
   function markComplete() {
     const next = [...done]
     next[current] = true
-    save(next)
+    persist(next)
     setCelebrate(true)
     setTimeout(() => {
       setCelebrate(false)
