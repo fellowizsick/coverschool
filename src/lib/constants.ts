@@ -113,7 +113,6 @@ export const NAV_LINKS = [
   { label: 'FAQ', href: '/faq' },
   { label: 'Curriculum', href: '/curriculum' },
   { label: 'Assessment', href: '/assessment' },
-  { label: 'Adult Diploma', href: '/exam' },
   { label: 'Contact', href: '/contact' },
   { label: 'Enroll', href: '/enroll', highlight: true },
 ]
