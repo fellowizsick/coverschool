@@ -102,6 +102,24 @@ export default function HomePage() {
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-20 sm:px-6 lg:px-8">
+          {/* Floating fun particles layer */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {['📚','⭐','✏️','🌟','🎓','💡','🍎','☀️','💚','🙌'].map((e, i) => (
+              <span
+                key={i}
+                className="absolute text-2xl opacity-70 animate-float"
+                style={{
+                  left: `${(i * 37 + 12) % 100}%`,
+                  top: `${(i * 53 + 8) % 90}%`,
+                  animationDuration: `${5 + (i % 5)}s`,
+                  animationDelay: `${i * 0.4}s`,
+                }}
+              >
+                {e}
+              </span>
+            ))}
+          </div>
+
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
             {/* Left Column */}
             <div className="space-y-8">
