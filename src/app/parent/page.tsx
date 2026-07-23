@@ -92,6 +92,14 @@ export default async function ParentPortalPage() {
                 {(e.status === 'approved' || e.status === 'pending') && (
                   <StopMembershipButton enrollmentId={e.id} cancelled={e.status === 'cancelled'} />
                 )}
+                <div className="pt-2">
+                  <Link
+                    href={`/parent/transfer-records/${e.id}`}
+                    className="text-sm text-emerald-600 hover:text-emerald-700"
+                  >
+                    → Add previous school records
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           ))}
