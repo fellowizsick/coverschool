@@ -73,12 +73,6 @@ export default async function DashboardLayout({
             >
               Students
             </Link>
-            <Link
-              href="/dashboard/diplomas"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
-              Diploma Exams
-            </Link>
           </>
         ) : (
           <>
