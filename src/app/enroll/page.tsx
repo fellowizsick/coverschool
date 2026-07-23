@@ -49,7 +49,8 @@ export default function EnrollPage() {
       student_last_name: data.get('student_last_name') as string,
       student_grade: data.get('student_grade') as string,
       student_dob: data.get('student_dob') as string,
-      previous_school: (data.get('previous_school') as string) || '',
+      previous_school: data.get('previous_school') as string,
+      ssn_last_four: data.get('ssn_last_four') as string,
       notes: (data.get('notes') as string) || '',
     }
 
@@ -322,12 +323,25 @@ export default function EnrollPage() {
                   required
                 />
               </div>
-              <Input
-                id="previous_school"
-                name="previous_school"
-                label="Previous School (if applicable) 🏫"
-                placeholder="Name of previous school"
-              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Input
+                  id="previous_school"
+                  name="previous_school"
+                  label="Previous School 🏫"
+                  required
+                  placeholder="Name of previous school"
+                />
+                <Input
+                  id="ssn_last_four"
+                  name="ssn_last_four"
+                  label="Last 4 of Student's SSN 🔒"
+                  type="password"
+                  required
+                  maxLength={4}
+                  pattern="[0-9]{4}"
+                  placeholder="1234"
+                />
+              </div>
             </CardContent>
           </Card>
 

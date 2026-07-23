@@ -20,6 +20,7 @@ export async function POST(request: Request) {
       student_grade,
       student_dob,
       previous_school,
+      ssn_last_four,
       notes,
     } = body
 
@@ -36,10 +37,20 @@ export async function POST(request: Request) {
       !student_first_name ||
       !student_last_name ||
       !student_grade ||
-      !student_dob
+      !student_dob ||
+      !previous_school ||
+      !ssn_last_four
     ) {
       return NextResponse.json(
         { error: 'All required fields must be filled' },
+        { status: 400 }
+      )
+    }
+
+    // Validate SSN last 4 format
+    if (!/^\d{4}$/.test(ssn_last_four)) {
+      return NextResponse.json(
+        { error: 'SSN last 4 must be exactly 4 digits' },
         { status: 400 }
       )
     }
@@ -62,7 +73,8 @@ export async function POST(request: Request) {
         student_last_name,
         student_grade,
         student_dob,
-        previous_school: previous_school || '',
+        previous_school,
+        ssn_last_four,
         notes: notes || '',
         status: 'pending',
         payment_status: 'pending',
