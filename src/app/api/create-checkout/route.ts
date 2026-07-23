@@ -28,12 +28,20 @@ export async function POST(request: Request) {
       mode: 'subscription',
       payment_method_types: ['card'],
       customer_email: email,
+      subscription_data: {
+        // Auto-cancel after 10 months (end of school year)
+        cancel_at: Math.floor(new Date('2027-06-01T00:00:00Z').getTime() / 1000),
+        metadata: {
+          enrollment_id: enrollmentId,
+          type: 'school_year_tuition',
+        },
+      },
       line_items: [
         {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Larose Christian Academy — Monthly Tuition ($45/mo — books not included)',
+              name: 'Larose Christian Academy — Monthly Tuition (10-month school year)',
               description: `Student: ${studentName} | Parent: ${parentName}`,
             },
             unit_amount: 4500,

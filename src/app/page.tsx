@@ -193,19 +193,32 @@ export default function HomePage() {
 
                     <div className="flex items-center gap-2 text-sm text-emerald-200/50">
                       <div className="h-px flex-1 bg-emerald-500/20" />
-                      <span>$45/month Tuition</span>
+                      <span>$45/mo Tuition (10 months)</span>
                       <div className="h-px flex-1 bg-emerald-500/20" />
                     </div>
 
-                    <p className="mt-2 text-xs text-emerald-300/50 text-center">
-                      Tuition only — curriculum books purchased separately
+                    <div className="flex items-center gap-2 text-xs text-emerald-300/40">
+                      <div className="h-px flex-1 bg-emerald-500/10" />
+                      <span>+ $75 Annual Registration Fee</span>
+                      <div className="h-px flex-1 bg-emerald-500/10" />
+                    </div>
+
+                    <p className="mt-2 text-xs text-emerald-300/60 text-center font-semibold">
+                      = $525/year per student
+                    </p>
+
+                    <p className="mt-1 text-[10px] text-emerald-300/30 text-center">
+                      Curriculum books purchased separately
                     </p>
                   </div>
                 </div>
 
                 {/* Floating decorative element */}
                 <div className="absolute -top-6 -right-6 h-24 w-24 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl shadow-amber-500/20 flex items-center justify-center animate-float">
-                  <span className="text-2xl font-bold text-amber-950">$45</span>
+                  <div className="text-center">
+                    <span className="text-lg font-bold text-amber-950 block">$45</span>
+                    <span className="text-[9px] font-medium text-amber-800 block -mt-1">/mo</span>
+                  </div>
                 </div>
 
                 {/* Fun floating emoji decorations */}
@@ -508,14 +521,14 @@ export default function HomePage() {
 
             <p className="text-lg leading-relaxed text-emerald-100/70 max-w-xl mx-auto">
               Join hundreds of families who have found peace of mind through
-              Larose Christian Academy. Tuition is just $45/month — curriculum
-              books are purchased separately. 🙌
+              Larose Christian Academy. <strong>$45/mo tuition (10 school months)</strong> + 
+              $75 annual reg fee = <strong>$525/year per student</strong>. 🙌
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/enroll">
                 <Button size="lg" variant="fun" className="shadow-xl shadow-purple-500/20 text-base animate-bounce-soft">
-                  ✨ Enroll Now — $45/mo
+                  ✨ Enroll Now — $45/mo Tuition
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>

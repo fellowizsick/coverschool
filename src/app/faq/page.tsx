@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: 'How much does it cost?',
-    a: 'Enrollment is $45/month per student for tuition. This covers all administrative services including record-keeping, report cards, and transcripts. Additionally, there is a one-time $75 registration fee to set up your student\'s permanent file and records. Curriculum books are purchased separately. Cancel tuition anytime.',
+    a: 'Our school year runs August through May (10 months). Tuition is $45/month per student during the school year — no charges in June or July. There is also a $75 annual registration fee per student (charged each school year at enrollment or re-enrollment). Total is $525/year per student. Curriculum books are purchased separately. Cancel anytime.',
   },
   {
     q: 'Can I enroll multiple students from the same family?',

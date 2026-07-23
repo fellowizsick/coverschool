@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Registration fee: $75 one-time
+    // Annual registration fee: $75 per school year
     const PAPERWORK_FEE_AMOUNT = 7500 // $75 in cents
 
     const secretKey = process.env.STRIPE_SECRET_KEY
@@ -40,8 +40,8 @@ export async function POST(request: Request) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Larose Christian Academy — One-Time Registration Fee',
-              description: `One-time paperwork fee for: ${studentName} | Parent: ${parentName}. Covers enrollment file setup, transcript initiation, and record-keeping system configuration.`,
+              name: 'Larose Christian Academy — Annual Registration Fee',
+              description: `Annual registration fee for: ${studentName} | Parent: ${parentName}. Covers enrollment file setup, transcript initiation, and record-keeping system configuration for the school year.`,
             },
             unit_amount: PAPERWORK_FEE_AMOUNT,
           },
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       ],
       metadata: {
         enrollment_id: enrollmentId,
-        type: 'paperwork_fee',
+        type: 'annual_registration',
         student_name: studentName,
       },
       success_url: `${origin}/enroll/success?session_id={CHECKOUT_SESSION_ID}&paperwork=paid`,
