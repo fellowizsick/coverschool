@@ -47,3 +47,6 @@ next-env.d.ts
 # Never sync project notes with personal/school info
 AGENTS.md
 LOROSECA_DOMAIN.md
+
+# Supabase temp files
+supabase/.temp/
