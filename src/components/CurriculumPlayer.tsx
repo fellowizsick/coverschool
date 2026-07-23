@@ -12,10 +12,12 @@ type LessonRef = {
   lessonTitle: string
   summary: string
   qIndex: number // which question (0 or 1) — questions live per unit, show after lesson
+  isUnitTest: boolean // true = this is an end-of-unit test question
 }
 
 // Flatten a grade into an ordered teaching sequence:
-// for each subject -> each quarter -> each lesson (in order), then the unit's 2 check-in questions.
+// for each subject -> each quarter -> each lesson (in order), then the unit's 2 check-in questions,
+// then the end-of-unit test.
 function buildSequence(grade: GradeCurriculum) {
   const seq: LessonRef[] = []
   grade.subjects.forEach((subj) => {
@@ -27,6 +29,7 @@ function buildSequence(grade: GradeCurriculum) {
           lessonTitle: les.title,
           summary: les.summary,
           qIndex: -1,
+          isUnitTest: false,
         })
       })
       // check-in questions follow the unit's lessons
@@ -37,8 +40,22 @@ function buildSequence(grade: GradeCurriculum) {
           lessonTitle: `Check-in: ${unit.name}`,
           summary: '',
           qIndex: i,
+          isUnitTest: false,
         })
       })
+      // end-of-unit test follows check-ins
+      if (unit.unitTest && unit.unitTest.length > 0) {
+        unit.unitTest.forEach((_q, i) => {
+          seq.push({
+            subject: subj.name,
+            unit: unit.name,
+            lessonTitle: `Unit Test: ${unit.name}`,
+            summary: '',
+            qIndex: i,
+            isUnitTest: true,
+          })
+        })
+      }
     })
   })
   return seq
@@ -143,7 +160,9 @@ export default function CurriculumPlayer({
   if (isQuestion) {
     const subj = grade.subjects.find((s) => s.name === node.subject)!
     const unit = subj.units.find((u) => u.name === node.unit)!
-    question = unit.questions[node.qIndex]
+    question = node.isUnitTest
+      ? unit.unitTest?.[node.qIndex] ?? null
+      : unit.questions[node.qIndex]
   }
 
   function markComplete() {
@@ -323,8 +342,15 @@ export default function CurriculumPlayer({
               <>
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl animate-bob">{pt.mascot}</span>
-                  <h2 className="text-2xl font-bold text-slate-900">📝 Check-in</h2>
+                  <h2 className="text-2xl font-bold text-slate-900">
+                    {node.isUnitTest ? '📋 End of Unit Test' : '📝 Check-in'}
+                  </h2>
                 </div>
+                {node.isUnitTest && (
+                  <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-700">
+                    This test covers everything you learned in this section. Take your time!
+                  </div>
+                )}
                 <p className="text-lg text-slate-700 mb-6">{question.q}</p>
                 {question.type === 'mc' ? (
                   <div className="grid gap-3">

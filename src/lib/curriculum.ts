@@ -19,6 +19,8 @@ export interface CUnit {
   name: string
   lessons: CLesson[]
   questions: CQuestion[]
+  /** End-of-unit test covering all lessons in this unit (3-5 questions) */
+  unitTest?: CQuestion[]
 }
 export interface CSubject {
   name: string
@@ -51,6 +53,12 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       ], questions: [
         { id: 'K-M-Q1-1', q: 'How many sides does a triangle have?', type: 'mc', options: ['2', '3', '4', '5'], answer: 1 },
         { id: 'K-M-Q1-2', q: 'Which group has more: 3 apples or 5 apples?', type: 'mc', options: ['3 apples', '5 apples', 'they are equal'], answer: 1 },
+      ], unitTest: [
+        { id: 'K-M-Q1-U1', q: 'Count the sides: a square has ___ sides.', type: 'mc', options: ['2', '3', '4', '5'], answer: 2 },
+        { id: 'K-M-Q1-U2', q: 'Which number comes right after 7?', type: 'mc', options: ['6', '7', '8', '9'], answer: 2 },
+        { id: 'K-M-Q1-U3', q: 'A circle has how many sides?', type: 'mc', options: ['0', '1', '2', '3'], answer: 0 },
+        { id: 'K-M-Q1-U4', q: 'Draw a square and a triangle. Color the shape with 3 sides.', type: 'activity' },
+        { id: 'K-M-Q1-U5', q: 'Count from 1 to 10 out loud. Write the number 6.', type: 'short', answer: '6' },
       ]},
       { name: 'Q2 — Numbers to 20', lessons: [
         { title: 'Counting 11-20', summary: 'Extend counting and recognize teen numbers.' },
