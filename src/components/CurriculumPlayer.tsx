@@ -65,6 +65,9 @@ export default function CurriculumPlayer({
   const [celebrate, setCelebrate] = useState(false)
   const [answer, setAnswer] = useState<string | number | null>(null)
   const [answeredCorrect, setAnsweredCorrect] = useState<boolean | null>(null)
+  const [streak, setStreak] = useState(0)
+  const [stars, setStars] = useState(0)
+  const [showStarsAnimation, setShowStarsAnimation] = useState(false)
 
   // Load progress: prefer Supabase (cross-device), fall back to localStorage
   useEffect(() => {
@@ -153,7 +156,7 @@ export default function CurriculumPlayer({
       if (current < total - 1) setCurrent(current + 1)
       setAnswer(null)
       setAnsweredCorrect(null)
-    }, 1800)
+    }, 2200)
   }
 
   function onAnswer(val: string | number) {
@@ -164,9 +167,23 @@ export default function CurriculumPlayer({
         : String(val).trim().toLowerCase() === String(question.answer).trim().toLowerCase()
     setAnsweredCorrect(correct)
     if (correct) {
+      const newStreak = streak + 1
+      setStreak(newStreak)
+      setStars(stars + 1)
+      setShowStarsAnimation(true)
+      setTimeout(() => setShowStarsAnimation(false), 1500)
       // correct -> celebrate + unlock
-      setTimeout(() => markComplete(), 700)
-      setCelebrate(true)
+      setTimeout(() => {
+        setCelebrate(true)
+        setTimeout(() => {
+          setCelebrate(false)
+          if (current < total - 1) setCurrent(current + 1)
+          setAnswer(null)
+          setAnsweredCorrect(null)
+        }, 2200)
+      }, 500)
+    } else {
+      setStreak(0)
     }
   }
 
@@ -175,12 +192,21 @@ export default function CurriculumPlayer({
     '🎉 Amazing job!',
     '🔥 You are on fire!',
     '⭐ Brilliant!',
-    '💡 That’s right!',
+    '💡 That\u2019s right!',
     '🏆 Way to go!',
     '🌈 Super smart!',
-    '💪 You’re learning!',
+    '💪 You\u2019re learning!',
+  ]
+  const STREAK_PRAISE = [
+    '🔥🔥🔥 ON FIRE!',
+    '⭐⭐⭐ STAR POWER!',
+    '💪 UNSTOPPABLE!',
+    '🏆 CRUSHING IT!',
+    '🚀 ROCKET MODE!',
+    '👑 ABSOLUTE LEGEND!',
   ]
   const praise = PRAISE[current % PRAISE.length]
+  const streakPraise = STREAK_PRAISE[Math.min(streak - 1, STREAK_PRAISE.length - 1)]
 
   // Age-appropriate, fun visual theme for the STUDY screen.
   function playerTheme(num: number) {
