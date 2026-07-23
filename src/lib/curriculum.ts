@@ -49,7 +49,15 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
   [
     { name: 'Mathematics', units: [
       { name: 'Q1 — Counting & Shapes', lessons: [
-        { title: 'Counting 1 to 10', summary: 'Recognize, say, and write numbers 1-10 using objects.', weekTest: [
+        { title: 'Counting 1 to 10', summary: `Numbers help us know how many of something we have. Today we will learn to count from 1 to 10!
+
+Let's start with our fingers. Hold up one finger. That is the number 1. Now hold up two fingers. That is 2. Keep going: 3, 4, 5, 6, 7, 8, 9, 10!
+
+Practice by counting things around you. Count your toys. Count the stairs. Count the apples in the kitchen. The more you count, the better you will get.
+
+Try this: point to each object as you say its number. This helps you keep track so you don't count the same thing twice. That is called "one-to-one correspondence," and it is a very important math skill!
+
+When you get to 10, you have counted a whole group. Great job! Tomorrow we will learn to write these numbers too.`, weekTest: [
           { id: 'K-M-W1-1', q: 'What number comes after 3?', type: 'mc', options: ['2', '4', '5'], answer: 1 },
           { id: 'K-M-W1-2', q: 'Count to 5. What number comes right before 5?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
           { id: 'K-M-W1-3', q: 'How many toes are on one foot?', type: 'mc', options: ['4', '5', '10'], answer: 1 },
@@ -61,7 +69,17 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
           { id: 'K-M-W1-9', q: 'Draw 3 stars. Now draw 2 more. How many stars total?', type: 'activity' },
           { id: 'K-M-W1-10', q: 'What is the first number we say when we count?', type: 'mc', options: ['0', '1', '2'], answer: 1 },
         ] },
-        { title: 'Basic Shapes', summary: 'Identify circle, square, triangle, rectangle in the world.', weekTest: [
+        { title: 'Basic Shapes', summary: `Shapes are everywhere! Let's learn to see them.
+
+A circle is round like a ball or the sun. It has no straight lines and no corners. Can you find something round in your room?
+
+A square has 4 sides that are all the same length. A window or a checkerboard square is a good example. Count the sides: 1, 2, 3, 4!
+
+A triangle has 3 sides and 3 corners. A piece of pizza or a yield sign is a triangle. Triangles are strong shapes that builders use.
+
+A rectangle has 4 sides too, but two sides are longer than the other two. A door or a book is a rectangle. Look around — how many rectangles can you spot?
+
+Activity: find one circle, one square, one triangle, and one rectangle in your house. Point to each one and say its name out loud!`, weekTest: [
           { id: 'K-M-W2-1', q: 'Which shape has 4 equal sides?', type: 'mc', options: ['circle', 'square', 'triangle'], answer: 1 },
           { id: 'K-M-W2-2', q: 'A pizza slice looks most like which shape?', type: 'mc', options: ['square', 'triangle', 'circle'], answer: 1 },
           { id: 'K-M-W2-3', q: 'How many sides does a triangle have?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
@@ -73,7 +91,15 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
           { id: 'K-M-W2-9', q: 'Name one thing in your kitchen that is shaped like a rectangle.', type: 'short', answer: 'open' },
           { id: 'K-M-W2-10', q: 'Which shape can roll?', type: 'mc', options: ['square', 'circle', 'triangle'], answer: 1 },
         ] },
-        { title: 'More or Less', summary: 'Compare small groups and decide which has more.', weekTest: [
+        { title: 'More or Less', summary: `Being able to tell which group has more and which has less is a very useful skill!
+
+Imagine you have 4 cookies and your friend has 7 cookies. Who has more? Your friend does! Who has less? You do!
+
+Here is how to compare: line up the items in two rows. Match one item from each group together. The group that has items left over has more. The group that runs out first has less.
+
+Try this at snack time. Put some crackers on one plate and some on another. Count each plate. Which plate has more? Which has less? You can do this with toys, books, or anything!
+
+Bigger numbers mean more. Smaller numbers mean less. Remember: 10 is more than 3. 2 is less than 8. Practice comparing numbers every day and you will become a math superstar!`, weekTest: [
           { id: 'K-M-W3-1', q: 'Which is more: 2 cookies or 6 cookies?', type: 'mc', options: ['2', '6', 'they are the same'], answer: 1 },
           { id: 'K-M-W3-2', q: 'You have 4 toys. Your friend has 7 toys. Who has less?', type: 'mc', options: ['you', 'your friend', 'same'], answer: 0 },
           { id: 'K-M-W3-3', q: 'Which is less: 8 or 3?', type: 'mc', options: ['8', '3', 'they are the same'], answer: 1 },
