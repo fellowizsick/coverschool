@@ -14,6 +14,8 @@ export interface CQuestion {
 export interface CLesson {
   title: string
   summary: string
+  /** End-of-week test covering this lesson's content (3-5 questions) */
+  weekTest?: CQuestion[]
 }
 export interface CUnit {
   name: string
@@ -47,9 +49,18 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
   [
     { name: 'Mathematics', units: [
       { name: 'Q1 — Counting & Shapes', lessons: [
-        { title: 'Counting 1 to 10', summary: 'Recognize, say, and write numbers 1-10 using objects.' },
-        { title: 'Basic Shapes', summary: 'Identify circle, square, triangle, rectangle in the world.' },
-        { title: 'More or Less', summary: 'Compare small groups and decide which has more.' },
+        { title: 'Counting 1 to 10', summary: 'Recognize, say, and write numbers 1-10 using objects.', weekTest: [
+          { id: 'K-M-W1-1', q: 'What number comes after 3?', type: 'mc', options: ['2', '4', '5'], answer: 1 },
+          { id: 'K-M-W1-2', q: 'Count the number of fingers on one hand. Write the number.', type: 'short', answer: '5' },
+        ] },
+        { title: 'Basic Shapes', summary: 'Identify circle, square, triangle, rectangle in the world.', weekTest: [
+          { id: 'K-M-W2-1', q: 'Which shape has 4 equal sides?', type: 'mc', options: ['circle', 'square', 'triangle'], answer: 1 },
+          { id: 'K-M-W2-2', q: 'A pizza slice looks most like which shape?', type: 'mc', options: ['square', 'triangle', 'circle'], answer: 1 },
+        ] },
+        { title: 'More or Less', summary: 'Compare small groups and decide which has more.', weekTest: [
+          { id: 'K-M-W3-1', q: 'Which is more: 2 cookies or 6 cookies?', type: 'mc', options: ['2', '6', 'they are the same'], answer: 1 },
+          { id: 'K-M-W3-2', q: 'Draw 4 stars. Draw 2 circles. Which group has less?', type: 'activity' },
+        ] },
       ], questions: [
         { id: 'K-M-Q1-1', q: 'How many sides does a triangle have?', type: 'mc', options: ['2', '3', '4', '5'], answer: 1 },
         { id: 'K-M-Q1-2', q: 'Which group has more: 3 apples or 5 apples?', type: 'mc', options: ['3 apples', '5 apples', 'they are equal'], answer: 1 },

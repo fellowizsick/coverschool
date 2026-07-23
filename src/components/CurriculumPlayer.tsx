@@ -11,18 +11,21 @@ type LessonRef = {
   unit: string
   lessonTitle: string
   summary: string
-  qIndex: number // which question (0 or 1) — questions live per unit, show after lesson
-  isUnitTest: boolean // true = this is an end-of-unit test question
+  qIndex: number
+  isUnitTest: boolean
+  isWeekTest: boolean
+  /** Index of the lesson this question belongs to (for week tests) */
+  lessonIndex?: number
 }
 
 // Flatten a grade into an ordered teaching sequence:
-// for each subject -> each quarter -> each lesson (in order), then the unit's 2 check-in questions,
-// then the end-of-unit test.
+// for each subject -> each quarter -> for each lesson: lesson content, then week test,
+// then the unit's check-in questions, then the end-of-unit test.
 function buildSequence(grade: GradeCurriculum) {
   const seq: LessonRef[] = []
   grade.subjects.forEach((subj) => {
     subj.units.forEach((unit) => {
-      unit.lessons.forEach((les) => {
+      unit.lessons.forEach((les, li) => {
         seq.push({
           subject: subj.name,
           unit: unit.name,
@@ -30,7 +33,23 @@ function buildSequence(grade: GradeCurriculum) {
           summary: les.summary,
           qIndex: -1,
           isUnitTest: false,
+          isWeekTest: false,
         })
+        // End-of-week test after each lesson
+        if (les.weekTest && les.weekTest.length > 0) {
+        les.weekTest.forEach((_q, wi) => {
+          seq.push({
+            subject: subj.name,
+            unit: unit.name,
+            lessonTitle: `Week ${li + 1} Test: ${les.title}`,
+            summary: '',
+            qIndex: wi,
+            isUnitTest: false,
+            isWeekTest: true,
+            lessonIndex: li,
+          })
+          })
+        }
       })
       // check-in questions follow the unit's lessons
       unit.questions.forEach((_q, i) => {
@@ -41,6 +60,7 @@ function buildSequence(grade: GradeCurriculum) {
           summary: '',
           qIndex: i,
           isUnitTest: false,
+          isWeekTest: false,
         })
       })
       // end-of-unit test follows check-ins
@@ -53,6 +73,7 @@ function buildSequence(grade: GradeCurriculum) {
             summary: '',
             qIndex: i,
             isUnitTest: true,
+            isWeekTest: false,
           })
         })
       }
@@ -160,9 +181,14 @@ export default function CurriculumPlayer({
   if (isQuestion) {
     const subj = grade.subjects.find((s) => s.name === node.subject)!
     const unit = subj.units.find((u) => u.name === node.unit)!
-    question = node.isUnitTest
-      ? unit.unitTest?.[node.qIndex] ?? null
-      : unit.questions[node.qIndex]
+    if (node.isWeekTest) {
+      const les = unit.lessons[node.lessonIndex ?? 0]
+      question = les.weekTest?.[node.qIndex] ?? null
+    } else if (node.isUnitTest) {
+      question = unit.unitTest?.[node.qIndex] ?? null
+    } else {
+      question = unit.questions[node.qIndex]
+    }
   }
 
   function markComplete() {
@@ -343,12 +369,17 @@ export default function CurriculumPlayer({
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl animate-bob">{pt.mascot}</span>
                   <h2 className="text-2xl font-bold text-slate-900">
-                    {node.isUnitTest ? '📋 End of Unit Test' : '📝 Check-in'}
+                    {node.isUnitTest ? '📋 End of Unit Test' : node.isWeekTest ? '📋 End of Week Test' : '📝 Check-in'}
                   </h2>
                 </div>
                 {node.isUnitTest && (
                   <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-700">
                     This test covers everything you learned in this section. Take your time!
+                  </div>
+                )}
+                {node.isWeekTest && (
+                  <div className="mb-4 rounded-lg bg-blue-50 border border-blue-200 p-3 text-sm text-blue-700">
+                    End of week test — how well do you remember what you learned?
                   </div>
                 )}
                 <p className="text-lg text-slate-700 mb-6">{question.q}</p>
