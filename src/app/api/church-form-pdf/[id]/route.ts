@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
-const { PDFDocument, StandardFonts, rgb } = require('pdf-lib')
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
