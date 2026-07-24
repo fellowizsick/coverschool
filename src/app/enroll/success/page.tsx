@@ -196,6 +196,43 @@ export default function EnrollSuccessPage() {
           </CardContent>
         </Card>
 
+        {/* ===== CHURCH ENROLLMENT FORM ===== */}
+        <Card fun="amber" className="mt-6 animate-on-scroll border-2 border-amber-300">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-200 to-amber-100 shadow-sm animate-wiggle">
+                <FileText className="h-7 w-7 text-amber-700" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-lg font-semibold text-amber-900 flex items-center gap-2">
+                    📋 Church / Home School Enrollment Form
+                  </h2>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-0.5 text-xs font-semibold text-red-700 animate-pulse">
+                    ⏰ Required
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-amber-800 leading-relaxed">
+                  <strong>This is a state-required form</strong> that must be completed before
+                  your student can begin. It gives us permission to oversee your homeschool
+                  records and notify the public school district if needed.
+                </p>
+                <div className="mt-3 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
+                  <p>⏱️ <strong>Due within 10 days</strong> of enrollment. Your student cannot
+                  start until this form is submitted.</p>
+                </div>
+                <a
+                  href="/enroll/church-form"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/30 transition-all hover:shadow-xl hover:shadow-amber-500/40 hover:-translate-y-0.5"
+                >
+                  📝 Fill Out Church Enrollment Form
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Curriculum Card */}
         <Card fun="amber" className="mt-6 animate-on-scroll">
           <CardContent className="p-6">
@@ -232,11 +269,12 @@ export default function EnrollSuccessPage() {
         </Card>
 
         {/* Next Steps */}
-        <div className="mt-10 grid gap-4 sm:grid-cols-3 animate-on-scroll">
+        <div className="mt-10 grid gap-4 sm:grid-cols-4 animate-on-scroll">
           {[
             { num: '📧', title: 'Check Email', desc: 'Look for your enrollment confirmation in your inbox' },
-            { num: '📋', title: 'Registration Fee', desc: 'Complete the $75 registration fee to activate your student file', highlight: registrationStatus !== 'paid' },
-            { num: '📚', title: 'Buy Books', desc: 'Purchase ACE PACE curriculum from Christianbook.com' },
+            { num: '📋', title: 'Reg Fee', desc: 'Complete the $75 registration fee', highlight: registrationStatus !== 'paid' },
+            { num: '📝', title: 'Church Form', desc: 'Submit church enrollment form (required)', highlight: true },
+            { num: '📚', title: 'Buy Books', desc: 'Purchase ACE PACE curriculum' },
           ].map((step, i) => (
             <div
               key={i}

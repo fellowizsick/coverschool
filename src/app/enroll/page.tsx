@@ -98,11 +98,38 @@ export default function EnrollPage() {
           <CheckCircle className="h-8 w-8 text-emerald-600" />
         </div>
         <h1 className="mt-6 text-3xl font-bold text-gray-900">
-          Enrollment Submitted!
+          Enrollment Submitted! ✅
         </h1>
         <p className="mt-4 text-lg text-gray-600">
-          Thank you for enrolling with Larose Christian Academy. We will review your
-          application and send a confirmation email within 1-2 business days.
+          Thank you for enrolling with Larose Christian Academy. Your application
+          is being reviewed.
+        </p>
+
+        <div className="mt-8 rounded-xl border-2 border-amber-300 bg-amber-50 p-6 text-left">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">📋</span>
+            <div>
+              <h3 className="font-bold text-amber-900">One More Step Required!</h3>
+              <p className="mt-2 text-sm text-amber-800">
+                You must also complete the <strong>Church / Home School Enrollment Form</strong>
+                before your student can begin. This is a state-required form that gives us
+                permission to oversee your homeschool records.
+              </p>
+              <p className="mt-1 text-sm text-amber-700">
+                ⏰ Please fill it out within <strong>10 days</strong>.
+              </p>
+              <a
+                href={`/enroll/church-form?enrollment_id=${submitted}&student=${encodeURIComponent(submitted)}`}
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all"
+              >
+                📝 Fill Out Church Enrollment Form
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-6 text-sm text-gray-400">
+          A confirmation email will be sent within 1-2 business days.
         </p>
       </div>
     )
