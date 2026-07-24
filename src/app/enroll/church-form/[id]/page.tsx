@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useParams } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Printer, Download, ArrowLeft, FileText } from 'lucide-react'
 import Link from 'next/link'
 
-export default function ChurchFormViewPage() {
+function ChurchFormViewContent() {
   const params = useParams()
   const [form, setForm] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -248,5 +248,13 @@ export default function ChurchFormViewPage() {
         }
       `}</style>
     </div>
+  )
+}
+
+export default function ChurchFormViewPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-gray-500">Loading...</p></div>}>
+      <ChurchFormViewContent />
+    </Suspense>
   )
 }
