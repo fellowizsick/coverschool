@@ -122,8 +122,12 @@ Bigger numbers mean more. Smaller numbers mean less. Remember: 10 is more than 3
         { id: 'K-M-Q1-U5', q: 'Count from 1 to 10 out loud. Write the number 6.', type: 'short', answer: '6' },
       ]},
       { name: 'Q2 — Numbers to 20', lessons: [
-        { title: 'Counting 11-20', summary: 'Extend counting and recognize teen numbers.' },
-        { title: 'Writing Numerals', summary: 'Practice forming each numeral correctly.' },
+        { title: 'Counting 11-20', summary: `` },
+        { title: 'Writing Numerals', summary: `Let's explore the world of numbers! You see them every day, like on your clock or when you count your toys. Today, we will learn to write numbers from one to ten. Start with number one. It is like a tall tree. Draw a line from top to bottom. Now, number two is like a swan. Curve around at the top and slide to the right.
+
+Next, we have numbers three, four, and five. Number three is like a pair of lips. Make two curves on top of each other. Number four is like a little house. Draw a line down, across, and down. Number five is like a belly with a hat. Draw a line across, curve down, and a line on top. You have five fingers on each hand!
+
+Now for numbers six, seven, eight, nine` },
         { title: 'One More, One Less', summary: 'Find the number just before and after.' },
       ], questions: [
         { id: 'K-M-Q2-1', q: 'What comes after 14?', type: 'mc', options: ['13', '15', '16', '4'], answer: 1 },

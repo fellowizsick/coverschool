@@ -111,7 +111,7 @@ export const NAV_LINKS = [
   { label: 'States', href: '/states' },
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'FAQ', href: '/faq' },
-  { label: 'Curriculum', href: '/curriculum' },
+  { label: 'Curriculum', href: '/curriculum-preview' },
   { label: 'Assessment', href: '/assessment' },
   { label: 'Contact', href: '/contact' },
   { label: 'Enroll', href: '/enroll', highlight: true },
