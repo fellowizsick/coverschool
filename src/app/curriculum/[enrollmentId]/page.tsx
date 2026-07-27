@@ -96,6 +96,7 @@ export default async function ChildCurriculumPage({
           studentName={`${enrollment.student_first_name} ${enrollment.student_last_name}`}
           gradeNum={gradeNum}
           backUrl={`/curriculum/${enrollmentId}`}
+          subjectName={decodedSubject}
         />
       )
     }

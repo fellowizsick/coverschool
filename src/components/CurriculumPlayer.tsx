@@ -85,8 +85,10 @@ function buildSequence(grade: GradeCurriculum) {
   return seq
 }
 
-function progressKey(enrollmentId: string) {
-  return `lca_curriculum_${enrollmentId}`
+function progressKey(enrollmentId: string, subjectName?: string) {
+  return subjectName
+    ? `lca_curriculum_${enrollmentId}_${subjectName.replace(/\s+/g, '_')}`
+    : `lca_curriculum_${enrollmentId}`
 }
 
 export default function CurriculumPlayer({
@@ -95,12 +97,14 @@ export default function CurriculumPlayer({
   studentName,
   gradeNum,
   backUrl,
+  subjectName,
 }: {
   grade: GradeCurriculum
   enrollmentId: string
   studentName: string
   gradeNum: number
   backUrl?: string
+  subjectName?: string
 }) {
   const sequence = useMemo(() => buildSequence(grade), [grade])
   const [done, setDone] = useState<boolean[]>([])
@@ -127,7 +131,7 @@ export default function CurriculumPlayer({
     async function load() {
       // try Supabase first
       try {
-        const res = await fetch(`/api/curriculum-progress?enrollmentId=${enrollmentId}`)
+        const res = await fetch(`/api/curriculum-progress?enrollmentId=${enrollmentId}&subject=${subjectName || ''}`)
         const j = await res.json()
         if (Array.isArray(j.completed_steps) && j.completed_steps.length === sequence.length) {
           if (!cancelled) {
@@ -142,7 +146,7 @@ export default function CurriculumPlayer({
       }
       // fallback localStorage
       try {
-        const raw = localStorage.getItem(progressKey(enrollmentId))
+        const raw = localStorage.getItem(progressKey(enrollmentId, subjectName))
         if (raw) {
           const arr = JSON.parse(raw) as boolean[]
           if (!cancelled) {
@@ -167,7 +171,7 @@ export default function CurriculumPlayer({
     setDone(next)
     // localStorage cache (instant + offline)
     try {
-      localStorage.setItem(progressKey(enrollmentId), JSON.stringify(next))
+      localStorage.setItem(progressKey(enrollmentId, subjectName), JSON.stringify(next))
     } catch {
       /* ignore */
     }
@@ -176,7 +180,7 @@ export default function CurriculumPlayer({
       await fetch('/api/curriculum-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enrollmentId, completed_steps: next }),
+        body: JSON.stringify({ enrollmentId, subject: subjectName, completed_steps: next }),
       })
     } catch {
       /* offline — localStorage already saved */
