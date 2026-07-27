@@ -44,250 +44,428 @@ const g = (
   subjects: CSubject[]
 ): GradeCurriculum => ({ grade, gradeNum, age, tagline, subjects })
 
+
 // ====================== KINDERGARTEN ======================
 export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in faith, number, and wonder.',
   [
+    // MATHEMATICS – 4 units (Q1 Counting&Shapes, Q2 Numbers to 20, Q3 Sorting&Patterns, Q4 Easy Addition)
     { name: 'Mathematics', units: [
-      { name: 'Q1 — Counting & Shapes', lessons: [
-        { title: 'Counting 1 to 10', summary: 'Lets count together! One, two, three, four, five, six, seven, eight, nine, ten! Point to each number as you say it.', weekTest: [
-          { id: 'K-M-W1-1', q: 'What number comes after 3?', type: 'mc', options: ['2', '4', '5'], answer: 1 },
-          { id: 'K-M-W1-2', q: 'Count to 5. What number comes right before 5?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
-          { id: 'K-M-W1-3', q: 'How many toes are on one foot?', type: 'mc', options: ['4', '5', '10'], answer: 1 },
-          { id: 'K-M-W1-4', q: 'What number is between 2 and 4?', type: 'mc', options: ['1', '3', '5'], answer: 1 },
-          { id: 'K-M-W1-5', q: 'Which of these is shaped like a circle?', type: 'mc', options: ['A book', 'A coin', 'A window'], answer: 1 },
-          { id: 'K-M-W1-6', q: 'Count backward from 5: 5, 4, ___, 2, 1. What is missing?', type: 'mc', options: ['6', '3', '0'], answer: 1 },
-          { id: 'K-M-W1-7', q: 'Which is bigger: 2 or 7?', type: 'mc', options: ['2', '7', 'they are the same'], answer: 1 },
-          { id: 'K-M-W1-8', q: 'Write the number that comes after 9.', type: 'short', answer: '10' },
-          { id: 'K-M-W1-9', q: 'If you have 3 stars and draw 2 more, how many stars total?', type: 'mc', options: ['4', '5', '6'], answer: 1 },
-          { id: 'K-M-W1-10', q: 'What is the first number we say when we count?', type: 'mc', options: ['0', '1', '2'], answer: 1 },
+      { name: 'Q1 – Counting & Shapes', lessons: [
+        // WEEK 1: Counting 1-10
+        { title: 'Counting 1 to 10', summary: 'Lets count together! One, two, three, four, five! Can you count with me?', weekTest: [
+          { id: 'K-M-W1-1', q: 'Count with me: 1, 2, 3... What comes next?', type: 'mc', options: ['4', '5', '6'], answer: 0 },
+          { id: 'K-M-W1-2', q: 'Show me 3 fingers. How many fingers is that?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
+          { id: 'K-M-W1-3', q: 'Point to the number 5. Which one is 5?', type: 'mc', options: ['3', '5', '8'], answer: 1 },
+          { id: 'K-M-W1-4', q: 'Count these dots: • • • How many dots?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
         ] },
-        { title: 'Basic Shapes', summary: 'Can you find a circle? It is round like a ball. A square has four sides. A triangle has three sides. Point to shapes around you!', weekTest: [
-          { id: 'K-M-W2-1', q: 'Which shape has 4 equal sides?', type: 'mc', options: ['circle', 'square', 'triangle'], answer: 1 },
-          { id: 'K-M-W2-2', q: 'A pizza slice looks most like which shape?', type: 'mc', options: ['square', 'triangle', 'circle'], answer: 1 },
-          { id: 'K-M-W2-3', q: 'How many sides does a triangle have?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
-          { id: 'K-M-W2-4', q: 'A dollar bill is shaped like a ___.', type: 'mc', options: ['circle', 'rectangle', 'triangle'], answer: 1 },
-          { id: 'K-M-W2-5', q: 'Which shape has no sides at all?', type: 'mc', options: ['square', 'circle', 'triangle'], answer: 1 },
-          { id: 'K-M-W2-6', q: 'A stop sign is shaped like an ___.', type: 'mc', options: ['octagon', 'circle', 'square'], answer: 0 },
-          { id: 'K-M-W2-7', q: 'Which shape has 4 equal sides?', type: 'mc', options: ['Circle', 'Triangle', 'Square'], answer: 2 },
-          { id: 'K-M-W2-8', q: 'A rectangle has how many corners?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
-          { id: 'K-M-W2-9', q: 'What in your kitchen is shaped like a rectangle?', type: 'mc', options: ['A plate', 'A refrigerator door', 'A ball'], answer: 1 },
-          { id: 'K-M-W2-10', q: 'Which shape can roll?', type: 'mc', options: ['square', 'circle', 'triangle'], answer: 1 },
+        // WEEK 2: Basic Shapes
+        { title: 'Basic Shapes', summary: 'A circle is round like a ball. A square has four sides. A triangle has three sides.', weekTest: [
+          { id: 'K-M-W2-1', q: 'Which shape is round like a ball?', type: 'mc', options: ['Circle', 'Square', 'Triangle'], answer: 0 },
+          { id: 'K-M-W2-2', q: 'Which shape has three corners?', type: 'mc', options: ['Circle', 'Square', 'Triangle'], answer: 2 },
+          { id: 'K-M-W2-3', q: 'Which shape has four sides that are all the same?', type: 'mc', options: ['Circle', 'Square', 'Triangle'], answer: 1 },
+          { id: 'K-M-W2-4', q: 'What shape is a wheel?', type: 'mc', options: ['Circle', 'Square', 'Triangle'], answer: 0 },
         ] },
-        { title: 'More or Less', summary: 'Which pile has more? Which has less? Count the toys and compare. The group with more things has a bigger number.', weekTest: [
-          { id: 'K-M-W3-1', q: 'Which is more: 2 cookies or 6 cookies?', type: 'mc', options: ['2', '6', 'they are the same'], answer: 1 },
-          { id: 'K-M-W3-2', q: 'You have 4 toys. Your friend has 7 toys. Who has less?', type: 'mc', options: ['you', 'your friend', 'same'], answer: 0 },
-          { id: 'K-M-W3-3', q: 'Which is less: 8 or 3?', type: 'mc', options: ['8', '3', 'they are the same'], answer: 1 },
-          { id: 'K-M-W3-4', q: 'You have 4 stars and 2 circles. Which group has less?', type: 'mc', options: ['Stars', 'Circles', 'They are equal'], answer: 1 },
-          { id: 'K-M-W3-5', q: 'A tall glass has more water than a short glass. True or false?', type: 'mc', options: ['true', 'false'], answer: 0 },
-          { id: 'K-M-W3-6', q: 'Which group has more: 1 bird or 10 birds?', type: 'mc', options: ['1 bird', '10 birds', 'same'], answer: 1 },
-          { id: 'K-M-W3-7', q: 'There are 5 red blocks and 3 blue blocks. Which color has less?', type: 'mc', options: ['red', 'blue', 'same'], answer: 1 },
-          { id: 'K-M-W3-8', q: 'What can you have "more" of?', type: 'mc', options: ['Toys', 'Your age', 'Your name'], answer: 0 },
-          { id: 'K-M-W3-9', q: 'Which plate has less food: one with 2 crackers or one with 9 crackers?', type: 'mc', options: ['2 crackers', '9 crackers', 'same'], answer: 0 },
-          { id: 'K-M-W3-10', q: 'A group of 3 is less than a group of ___.', type: 'mc', options: ['2', '3', '5'], answer: 2 },
+        // WEEK 3: More or Less
+        { title: 'More or Less', summary: 'Which pile has more toys? Which has less? Lets count and see!', weekTest: [
+          { id: 'K-M-W3-1', q: 'Here are 2 apples and 4 apples. Which group has more?', type: 'mc', options: ['2 apples', '4 apples', 'Same'], answer: 1 },
+          { id: 'K-M-W3-2', q: 'Look at 5 toys and 3 toys. Which group has less?', type: 'mc', options: ['5 toys', '3 toys', 'Same'], answer: 1 },
+          { id: 'K-M-W3-3', q: 'Point to the bigger group: 1 cookie or 3 cookies?', type: 'mc', options: ['1 cookie', '3 cookies', 'Same'], answer: 1 },
+          { id: 'K-M-W3-4', q: 'Which has more: 2 birds or 2 cats?', type: 'mc', options: ['2 birds', '2 cats', 'Same'], answer: 2 },
         ] },
       ], questions: [
-        { id: 'K-M-Q1-1', q: 'How many sides does a triangle have?', type: 'mc', options: ['2', '3', '4', '5'], answer: 1 },
-        { id: 'K-M-Q1-2', q: 'Which group has more: 3 apples or 5 apples?', type: 'mc', options: ['3 apples', '5 apples', 'they are equal'], answer: 1 },
+        { id: 'K-M-Q1-1', q: 'Count to 5 with me: 1, 2, 3, 4, __', type: 'mc', options: ['3', '5', '6'], answer: 1 },
+        { id: 'K-M-Q1-2', q: 'Which shape is round?', type: 'mc', options: ['Square', 'Circle', 'Triangle'], answer: 1 },
       ], unitTest: [
-        { id: 'K-M-Q1-U1', q: 'Count the sides: a square has ___ sides.', type: 'mc', options: ['2', '3', '4', '5'], answer: 2 },
-        { id: 'K-M-Q1-U2', q: 'Which number comes right after 7?', type: 'mc', options: ['6', '7', '8', '9'], answer: 2 },
-        { id: 'K-M-Q1-U3', q: 'A circle has how many sides?', type: 'mc', options: ['0', '1', '2', '3'], answer: 0 },
-        { id: 'K-M-Q1-U4', q: 'Which shape has 3 sides?', type: 'mc', options: ['Square', 'Triangle', 'Circle'], answer: 1 },
-        { id: 'K-M-Q1-U5', q: 'Count from 1 to 10 out loud. Write the number 6.', type: 'short', answer: '6' },
+        { id: 'K-M-U1-1', q: 'What comes after 4 when counting?', type: 'mc', options: ['3', '5', '6'], answer: 1 },
+        { id: 'K-M-U1-2', q: 'Which shape has three sides?', type: 'mc', options: ['Circle', 'Square', 'Triangle'], answer: 2 },
+        { id: 'K-M-U1-3', q: 'Which group has more: 1 toy or 3 toys?', type: 'mc', options: ['1 toy', '3 toys', 'Same'], answer: 1 },
       ]},
-      { name: 'Q2 — Numbers to 20', lessons: [
-        { title: 'Counting 11-20', summary: 'Lets count higher! After 10 comes 11, 12, 13, all the way to 20. Practice counting with your fingers and toes!' },
-        { title: 'Writing Numerals', summary: 'Lets practice writing numbers! Trace a 1, then a 2, then a 3. Keep going until you can write all your numbers.' },
-        { title: 'One More, One Less', summary: 'Lets play a number game! Pick any number and add one more. Now take one away! Try this with your toys or snacks.' },
+      // Q2: Numbers 11-20
+      { name: 'Q2 – Numbers to 20', lessons: [
+        { title: 'Counting 11-20', summary: 'Count with me! After 10 comes 11, 12, 13... all the way to 20!', weekTest: [
+          { id: 'K-M-W4-1', q: 'What comes after 10?', type: 'mc', options: ['9', '11', '20'], answer: 1 },
+          { id: 'K-M-W4-2', q: 'Count with me: 15, 16, 17, __', type: 'mc', options: ['16', '18', '19'], answer: 1 },
+          { id: 'K-M-W4-3', q: 'Which number comes before 20?', type: 'mc', options: ['18', '19', '21'], answer: 1 },
+          { id: 'K-M-W4-4', q: 'Show me the number 15', type: 'mc', options: ['12', '15', '18'], answer: 1 },
+        ] },
+        { title: 'Number Recognition', summary: 'Can you find the number 15? Point to 12! Lets find numbers together.', weekTest: [
+          { id: 'K-M-W5-1', q: 'Point to the number 12', type: 'mc', options: ['10', '12', '20'], answer: 1 },
+          { id: 'K-M-W5-2', q: 'Which number is this: 16?', type: 'mc', options: ['14', '16', '18'], answer: 1 },
+          { id: 'K-M-W5-3', q: 'Find the number 13', type: 'mc', options: ['11', '13', '15'], answer: 1 },
+          { id: 'K-M-W5-4', q: 'What number is this: 19?', type: 'mc', options: ['17', '19', '20'], answer: 1 },
+        ] },
+        { title: 'Counting Everyday Things', summary: 'Count your toys! Count your fingers! How many things can you count?', weekTest: [
+          { id: 'K-M-W6-1', q: 'Count your fingers on both hands. How many?', type: 'mc', options: ['5', '10', '15'], answer: 1 },
+          { id: 'K-M-W6-2', q: 'If you have 12 blocks, is that more than 10?', type: 'mc', options: ['Yes', 'No', 'Same'], answer: 0 },
+          { id: 'K-M-W6-3', q: 'Count 14 dots. Is 14 more than 13?', type: 'mc', options: ['Yes', 'No', 'Same'], answer: 0 },
+          { id: 'K-M-W6-4', q: 'Which is bigger: 11 or 9?', type: 'mc', options: ['11', '9', 'Same'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-M-Q2-1', q: 'What comes after 14?', type: 'mc', options: ['13', '15', '16', '4'], answer: 1 },
-        { id: 'K-M-Q2-2', q: 'Write the number that is one less than 9.', type: 'short', answer: '8' },
+        { id: 'K-M-Q2-1', q: 'What number comes after 15?', type: 'mc', options: ['14', '16', '17'], answer: 1 },
+        { id: 'K-M-Q2-2', q: 'Point to the number 18', type: 'mc', options: ['16', '18', '20'], answer: 1 },
+      ], unitTest: [
+        { id: 'K-M-U2-1', q: 'Count to 20. What comes after 19?', type: 'mc', options: ['18', '20', '21'], answer: 1 },
+        { id: 'K-M-U2-2', q: 'Find the number 14', type: 'mc', options: ['12', '14', '16'], answer: 1 },
+        { id: 'K-M-U2-3', q: 'Which is more: 13 or 17?', type: 'mc', options: ['13', '17', 'Same'], answer: 1 },
       ]},
-      { name: 'Q3 — Sorting & Patterns', lessons: [
-        { title: 'Sort by Color & Size', summary: 'Lets sort your toys! Put all the big red things together, then all the small blue things together. Can you find which group has more toys?' },
-        { title: 'Make a Pattern', summary: 'Lets make a fun pattern together! Find some toys or blocks. Put them in a row like red, blue, red, blue. Can you keep going?' },
-        { title: 'Position Words', summary: 'Lets play with position words! Put your teddy bear on top of your pillow, then under your blanket. Now put it next to you and give it a hug!' },
+      // Q3: Sorting & Patterns
+      { name: 'Q3 – Sorting & Patterns', lessons: [
+        { title: 'Sort by Color', summary: 'Put all the red toys together! Now all the blue toys! Can you sort by color?', weekTest: [
+          { id: 'K-M-W7-1', q: 'Where do red blocks go?', type: 'mc', options: ['With red things', 'With blue things', 'Anywhere'], answer: 0 },
+          { id: 'K-M-W7-2', q: 'Sort these: red ball, blue ball, red car. Which go together?', type: 'mc', options: ['Both red', 'Both blue', 'Both balls'], answer: 0 },
+          { id: 'K-M-W7-3', q: 'What color are these sorted items: all green toys?', type: 'mc', options: ['Red', 'Green', 'Blue'], answer: 1 },
+          { id: 'K-M-W7-4', q: 'Put the yellow toys together. What color group is this?', type: 'mc', options: ['Red', 'Yellow', 'Blue'], answer: 1 },
+        ] },
+        { title: 'Make a Pattern', summary: 'Red, blue, red, blue! Can you make a pattern with your toys?', weekTest: [
+          { id: 'K-M-W8-1', q: 'Red, blue, red, blue, red... What comes next?', type: 'mc', options: ['Red', 'Blue', 'Yellow'], answer: 1 },
+          { id: 'K-M-W8-2', q: 'Circle, square, circle, square... What comes next?', type: 'mc', options: ['Circle', 'Square', 'Triangle'], answer: 0 },
+          { id: 'K-M-W8-3', q: 'Clap, stomp, clap, stomp... What comes next?', type: 'mc', options: ['Clap', 'Stomp', 'Jump'], answer: 0 },
+          { id: 'K-M-W8-4', q: 'Big, small, big, small... What comes next?', type: 'mc', options: ['Big', 'Small', 'Medium'], answer: 0 },
+        ] },
+        { title: 'Same and Different', summary: 'These two blocks are the same color! These two are different. Can you find things that are the same?', weekTest: [
+          { id: 'K-M-W9-1', q: 'Are these the same: two red balls?', type: 'mc', options: ['Same', 'Different', 'Maybe'], answer: 0 },
+          { id: 'K-M-W9-2', q: 'Are these different: red ball and blue ball?', type: 'mc', options: ['Same', 'Different', 'Maybe'], answer: 1 },
+          { id: 'K-M-W9-3', q: 'Find two things that are the same color', type: 'mc', options: ['Two red cars', 'Red car, blue car', 'All cars'], answer: 0 },
+          { id: 'K-M-W9-4', q: 'Which are the same shape: circle and circle?', type: 'mc', options: ['Same', 'Different', 'Maybe'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-M-Q3-1', q: 'Continue the pattern: circle, square, circle, ___', type: 'mc', options: ['circle', 'square', 'triangle'], answer: 1 },
-        { id: 'K-M-Q3-2', q: 'Which word means "on top of"?', type: 'mc', options: ['above', 'below', 'next to'], answer: 0 },
+        { id: 'K-M-Q3-1', q: 'Red, blue, red... What comes next in this pattern?', type: 'mc', options: ['Red', 'Blue', 'Yellow'], answer: 1 },
+        { id: 'K-M-Q3-2', q: 'Sort by color: Where does the green toy go?', type: 'mc', options: ['With red toys', 'With green toys', 'Anywhere'], answer: 1 },
+      ], unitTest: [
+        { id: 'K-M-U3-1', q: 'Make a pattern: Circle, square, circle... What comes next?', type: 'mc', options: ['Circle', 'Square', 'Triangle'], answer: 1 },
+        { id: 'K-M-U3-2', q: 'Are two blue blocks the same color?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
+        { id: 'K-M-U3-3', q: 'Sort these toys by color. Where do yellow toys go?', type: 'mc', options: ['With red', 'With yellow', 'With blue'], answer: 1 },
       ]},
-      { name: 'Q4 — Easy Addition', lessons: [
-        { title: 'Adding With Objects', summary: 'Lets add with toys! Put out 2 blocks, then add 1 more block. Count them all together - how many do you have now?' },
-        { title: 'Plus One', summary: 'Lets play plus one! When you add one more to any number, you get the next number. Hold up three fingers, then add one more - now you have four!' },
-        { title: 'Math All Around Us', summary: 'Lets find numbers everywhere! Can you see 2 shoes plus 1 sock? Count toys in your room and add them together - how many do you have?' },
+      // Q4: More/Less & Colors
+      { name: 'Q4 – More, Less & Colors', lessons: [
+        { title: 'Which Group Has More?', summary: 'Here are 2 cookies and here are 5 cookies. Which group has more? Point to the bigger group!', weekTest: [
+          { id: 'K-M-W10-1', q: 'Which has more: 3 apples or 1 apple?', type: 'mc', options: ['3 apples', '1 apple', 'Same'], answer: 0 },
+          { id: 'K-M-W10-2', q: 'Count and compare: 4 toys or 2 toys?', type: 'mc', options: ['4 toys', '2 toys', 'Same'], answer: 0 },
+          { id: 'K-M-W10-3', q: 'Which group is bigger: 5 balls or 3 balls?', type: 'mc', options: ['5 balls', '3 balls', 'Same'], answer: 0 },
+          { id: 'K-M-W10-4', q: 'More cookies: 6 cookies or 4 cookies?', type: 'mc', options: ['6 cookies', '4 cookies', 'Same'], answer: 0 },
+        ] },
+        { title: 'Find the Colors', summary: 'Point to something red! Now find something blue! Can you name these colors?', weekTest: [
+          { id: 'K-M-W11-1', q: 'What color is the sun?', type: 'mc', options: ['Red', 'Yellow', 'Blue'], answer: 1 },
+          { id: 'K-M-W11-2', q: 'What color is grass?', type: 'mc', options: ['Green', 'Purple', 'Orange'], answer: 0 },
+          { id: 'K-M-W11-3', q: 'Point to the red toy. What color is it?', type: 'mc', options: ['Red', 'Blue', 'Green'], answer: 0 },
+          { id: 'K-M-W11-4', q: 'What color do you see in the sky?', type: 'mc', options: ['Purple', 'Blue', 'Pink'], answer: 1 },
+        ] },
+        { title: 'Big and Small', summary: 'Look at these two toys. One is big and one is small. Can you find something big in your room?', weekTest: [
+          { id: 'K-M-W12-1', q: 'Which is bigger: an elephant or a mouse?', type: 'mc', options: ['Elephant', 'Mouse', 'Same'], answer: 0 },
+          { id: 'K-M-W12-2', q: 'Which is smaller: a car or a house?', type: 'mc', options: ['Car', 'House', 'Same'], answer: 0 },
+          { id: 'K-M-W12-3', q: 'Point to the big ball. Which one is big?', type: 'mc', options: ['The big one', 'The small one', 'Both'], answer: 0 },
+          { id: 'K-M-W12-4', q: 'Which is small: a grape or a watermelon?', type: 'mc', options: ['Grape', 'Watermelon', 'Same'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-M-Q4-1', q: 'If you have 2 blocks and get 1 more, how many now?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
-        { id: 'K-M-Q4-2', q: 'What does 1 + 1 equal?', type: 'mc', options: ['1', '2', '3'], answer: 1 },
+        { id: 'K-M-Q4-1', q: 'Which has more: 7 toys or 5 toys?', type: 'mc', options: ['7 toys', '5 toys', 'Same'], answer: 0 },
+        { id: 'K-M-Q4-2', q: 'What color is an apple usually?', type: 'mc', options: ['Blue', 'Red', 'Purple'], answer: 1 },
+      ], unitTest: [
+        { id: 'K-M-U4-1', q: 'Compare groups: 8 blocks or 6 blocks has more?', type: 'mc', options: ['8 blocks', '6 blocks', 'Same'], answer: 0 },
+        { id: 'K-M-U4-2', q: 'Name this color: What color is snow?', type: 'mc', options: ['Black', 'White', 'Brown'], answer: 1 },
+        { id: 'K-M-U4-3', q: 'Which is bigger: a book or a library?', type: 'mc', options: ['Book', 'Library', 'Same'], answer: 1 },
       ]},
     ]},
+
+    // LANGUAGE ARTS – 4 units
     { name: 'Language Arts', units: [
-      { name: 'Q1 — Letters & Sounds', lessons: [
-        { title: 'Alphabet Song & Order', summary: 'Lets sing the ABC song together! Can you clap your hands for each letter? Now point to letters you see around our house - on books, signs, or toys!' },
-        { title: 'Letter Sounds (A-M)', summary: 'Lets play with letter sounds! Say "A" like apple and "B" like ball. Can you find something that starts with "M" like mouse?' },
-        { title: 'Letter Sounds (N-Z)', summary: 'Lets make letter sounds together! Say "nnn" like a buzzing bee, then "zzz" like a sleepy snake. Can you march around and make the "mmm" sound like a marching band?' },
+      { name: 'Q1 – Alphabet', lessons: [
+        { title: "Sing the ABC's", summary: "Let's sing the alphabet song together! A, B, C, D... Can you sing with me?", weekTest: [
+          { id: 'K-L-W1-1', q: 'What comes after A in the alphabet?', type: 'mc', options: ['B', 'C', 'D'], answer: 0 },
+          { id: 'K-L-W1-2', q: 'Sing with me: A, B, C... What comes next?', type: 'mc', options: ['B', 'D', 'E'], answer: 1 },
+          { id: 'K-L-W1-3', q: 'What is the first letter of the alphabet?', type: 'mc', options: ['A', 'B', 'Z'], answer: 0 },
+          { id: 'K-L-W1-4', q: 'Point to the letter that comes before C', type: 'mc', options: ['A', 'B', 'D'], answer: 1 },
+        ] },
+        { title: 'Find the Letter A', summary: 'A is the first letter! Can you find the letter A? Point to A when you see it!', weekTest: [
+          { id: 'K-L-W2-1', q: 'Point to the letter A', type: 'mc', options: ['A', 'B', 'C'], answer: 0 },
+          { id: 'K-L-W2-2', q: 'Which one is the letter A?', type: 'mc', options: ['A', 'H', 'T'], answer: 0 },
+          { id: 'K-L-W2-3', q: 'Find A in this group: B, A, D', type: 'mc', options: ['B', 'A', 'D'], answer: 1 },
+          { id: 'K-L-W2-4', q: 'A is the __ letter of the alphabet', type: 'mc', options: ['first', 'last', 'middle'], answer: 0 },
+        ] },
+        { title: 'Capital and Lowercase', summary: 'A is a big letter. a is a small letter. Can you find the big A?', weekTest: [
+          { id: 'K-L-W3-1', q: 'Which is the big letter A?', type: 'mc', options: ['A', 'a', 'both'], answer: 0 },
+          { id: 'K-L-W3-2', q: 'Which is the small letter a?', type: 'mc', options: ['A', 'a', 'both'], answer: 1 },
+          { id: 'K-L-W3-3', q: 'Point to the capital letter: A or a?', type: 'mc', options: ['A', 'a', 'both'], answer: 0 },
+          { id: 'K-L-W3-4', q: 'Find the lowercase letter: B or b?', type: 'mc', options: ['B', 'b', 'both'], answer: 1 },
+        ] },
       ], questions: [
-        { id: 'K-L-Q1-1', q: 'Which letter makes the "buh" sound?', type: 'mc', options: ['A', 'B', 'C'], answer: 1 },
-        { id: 'K-L-Q1-2', q: 'What is the first letter of the alphabet?', type: 'short', answer: 'A' },
+        { id: 'K-L-Q1-1', q: 'What is the first letter you sing in the ABC song?', type: 'mc', options: ['A', 'B', 'Z'], answer: 0 },
+        { id: 'K-L-Q1-2', q: 'Which is the capital letter A?', type: 'mc', options: ['A', 'a', 'B'], answer: 0 },
+      ], unitTest: [
+        { id: 'K-L-U1-1', q: 'Sing the ABC song: A, B, C, D... What comes after D?', type: 'mc', options: ['C', 'E', 'F'], answer: 1 },
+        { id: 'K-L-U1-2', q: 'Find the letter A in this word: CAT', type: 'mc', options: ['C', 'A', 'T'], answer: 1 },
+        { id: 'K-L-U1-3', q: 'Which is bigger: A or a?', type: 'mc', options: ['A', 'a', 'same'], answer: 0 },
       ]},
-      { name: 'Q2 — Rhyming & Print', lessons: [
-        { title: 'Find the Rhyme', summary: 'Lets find words that rhyme! Cat and hat sound the same at the end. Can you think of a word that rhymes with "dog"? Try "log" or "frog"!' },
-        { title: 'Hold a Book', summary: 'Lets hold a book together! Show me how you hold your favorite book. Now wiggle the book and say "book, look, cook" - they all rhyme!' },
-        { title: 'Sight Words (I, see, the)', summary: 'I see the cat! You see the dog! Lets find words that sound the same - cat and hat, see and bee! Point to something you see and make a rhyming word.' },
+      { name: 'Q2 – Letter Sounds', lessons: [
+        { title: 'B says Buh', summary: "B says 'buh' like ball! Can you say 'buh' with me? What starts with B?", weekTest: [
+          { id: 'K-L-W4-1', q: 'What sound does B make?', type: 'mc', options: ['buh', 'duh', 'guh'], answer: 0 },
+          { id: 'K-L-W4-2', q: 'Which word starts with B?', type: 'mc', options: ['ball', 'cat', 'dog'], answer: 0 },
+          { id: 'K-L-W4-3', q: 'B says "buh". What starts with "buh"?', type: 'mc', options: ['book', 'tree', 'sun'], answer: 0 },
+          { id: 'K-L-W4-4', q: 'Say "buh" like the letter B. What else starts with buh?', type: 'mc', options: ['boy', 'girl', 'mom'], answer: 0 },
+        ] },
+        { title: 'M says Mmm', summary: "M says 'mmm' like mom! Say 'mmm' with me. Can you find something that starts with M?", weekTest: [
+          { id: 'K-L-W5-1', q: 'What sound does M make?', type: 'mc', options: ['mmm', 'sss', 'bbb'], answer: 0 },
+          { id: 'K-L-W5-2', q: 'Which word starts with M?', type: 'mc', options: ['mom', 'dad', 'cat'], answer: 0 },
+          { id: 'K-L-W5-3', q: 'M says "mmm". What starts with "mmm"?', type: 'mc', options: ['milk', 'juice', 'water'], answer: 0 },
+          { id: 'K-L-W5-4', q: 'Find the word that starts with M sound', type: 'mc', options: ['mouse', 'house', 'bird'], answer: 0 },
+        ] },
+        { title: 'S says Sss', summary: "S says 'sss' like sun! Say 'sss' with me. What starts with S?", weekTest: [
+          { id: 'K-L-W6-1', q: 'What sound does S make?', type: 'mc', options: ['sss', 'mmm', 'bbb'], answer: 0 },
+          { id: 'K-L-W6-2', q: 'Which word starts with S?', type: 'mc', options: ['sun', 'moon', 'tree'], answer: 0 },
+          { id: 'K-L-W6-3', q: 'S says "sss". What starts with "sss"?', type: 'mc', options: ['snake', 'frog', 'bird'], answer: 0 },
+          { id: 'K-L-W6-4', q: 'Find the S word: Which starts with "sss"?', type: 'mc', options: ['sock', 'hat', 'coat'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-L-Q2-1', q: 'Which word rhymes with "hat"?', type: 'mc', options: ['cat', 'dog', 'sun'], answer: 0 },
-        { id: 'K-L-Q2-2', q: 'We read words from ___ to right.', type: 'mc', options: ['bottom', 'left', 'back'], answer: 1 },
+        { id: 'K-L-Q2-1', q: 'What sound does the letter B make?', type: 'mc', options: ['buh', 'mmm', 'sss'], answer: 0 },
+        { id: 'K-L-Q2-2', q: 'Which word starts with M sound?', type: 'mc', options: ['man', 'car', 'dog'], answer: 0 },
+      ], unitTest: [
+        { id: 'K-L-U2-1', q: 'Say the sound: What does S say?', type: 'mc', options: ['sss', 'bbb', 'mmm'], answer: 0 },
+        { id: 'K-L-U2-2', q: 'Which starts with B sound: ball or tall?', type: 'mc', options: ['ball', 'tall', 'both'], answer: 0 },
+        { id: 'K-L-U2-3', q: 'Find the M word that starts with "mmm"', type: 'mc', options: ['map', 'cat', 'dog'], answer: 0 },
       ]},
-      { name: 'Q3 — Name Writing', lessons: [
-        { title: 'Write Your Name', summary: 'Lets write your name! Get a crayon and paper. Start with the first letter and go slow. You can trace over it with your finger first!' },
-        { title: 'Trace & Copy', summary: 'Lets write your name! First, trace over the dotted letters with your finger. Now try writing your name on the line below!' },
-        { title: 'Listening to Stories', summary: 'Lets listen to a story together! Sit close and use your ears. When you hear your name or a name like yours, clap your hands!' },
+      { name: 'Q3 – Rhyming', lessons: [
+        { title: 'Words That Rhyme', summary: 'Cat and hat sound the same at the end! They rhyme! Can you say cat and hat?', weekTest: [
+          { id: 'K-L-W7-1', q: 'Do cat and hat rhyme?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
+          { id: 'K-L-W7-2', q: 'Which word rhymes with cat?', type: 'mc', options: ['hat', 'dog', 'sun'], answer: 0 },
+          { id: 'K-L-W7-3', q: 'Say cat and hat. Do they sound the same at the end?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
+          { id: 'K-L-W7-4', q: 'Rhyming words sound the same at the __', type: 'mc', options: ['end', 'beginning', 'middle'], answer: 0 },
+        ] },
+        { title: 'Find the Rhyme', summary: 'Dog and log rhyme! Frog and jog rhyme! Can you think of a word that rhymes with dog?', weekTest: [
+          { id: 'K-L-W8-1', q: 'Which word rhymes with dog?', type: 'mc', options: ['log', 'cat', 'ball'], answer: 0 },
+          { id: 'K-L-W8-2', q: 'Find the rhyme for frog', type: 'mc', options: ['jog', 'bird', 'fish'], answer: 0 },
+          { id: 'K-L-W8-3', q: 'Do dog and log rhyme?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
+          { id: 'K-L-W8-4', q: 'Which rhymes with log: dog or cat?', type: 'mc', options: ['dog', 'cat', 'both'], answer: 0 },
+        ] },
+        { title: 'Our Favorite Rhymes', summary: "Let's say silly rhymes together! Big and pig! Red and bed!", weekTest: [
+          { id: 'K-L-W9-1', q: 'Do big and pig rhyme?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
+          { id: 'K-L-W9-2', q: 'Which word rhymes with red?', type: 'mc', options: ['bed', 'blue', 'green'], answer: 0 },
+          { id: 'K-L-W9-3', q: 'Find the rhyme for big', type: 'mc', options: ['pig', 'cow', 'duck'], answer: 0 },
+          { id: 'K-L-W9-4', q: 'Do red and bed sound the same at the end?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-L-Q3-1', q: 'Which is a capital letter?', type: 'mc', options: ['a', 'A', 'b'], answer: 1 },
-        { id: 'K-L-Q3-2', q: 'What might happen in a story?', type: 'mc', options: ['A character goes on an adventure', 'The book closes itself', 'Words disappear'], answer: 0 },
+        { id: 'K-L-Q3-1', q: 'Which word rhymes with hat?', type: 'mc', options: ['cat', 'dog', 'tree'], answer: 0 },
+        { id: 'K-L-Q3-2', q: 'Do pig and big rhyme?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
+      ], unitTest: [
+        { id: 'K-L-U3-1', q: 'Find two words that rhyme: cat, hat, dog', type: 'mc', options: ['cat and hat', 'cat and dog', 'hat and dog'], answer: 0 },
+        { id: 'K-L-U3-2', q: 'Which rhymes with sun: fun or moon?', type: 'mc', options: ['fun', 'moon', 'both'], answer: 0 },
+        { id: 'K-L-U3-3', q: 'Do log and frog rhyme?', type: 'mc', options: ['Yes', 'No', 'Maybe'], answer: 0 },
       ]},
-      { name: 'Q4 — Early Writing', lessons: [
-        { title: 'Draw & Label', summary: 'Lets draw a picture together! Draw your favorite toy and write the first letter of its name next to it. Can you tell me about your drawing?' },
-        { title: 'Sentence Starters', summary: 'Lets start sentences together! I will say "I like" and you finish it. What do you like? Ice cream? Your dog? Tell me more sentences that start with "I like"!' },
-        { title: 'Share a Story', summary: 'Lets tell a story together! You pick your favorite toy and Ill help you make up a fun story about it. Draw a picture of what happens next!' },
+      { name: 'Q4 – Books & Stories', lessons: [
+        { title: 'How to Hold a Book', summary: "Hold your book nicely! The front has a picture. Can you point to the front of the book?", weekTest: [
+          { id: 'K-L-W10-1', q: 'Where is the front of the book?', type: 'mc', options: ['Has the picture', 'Has no picture', 'In the middle'], answer: 0 },
+          { id: 'K-L-W10-2', q: 'How do we hold a book?', type: 'mc', options: ['Nicely', 'Upside down', 'Backwards'], answer: 0 },
+          { id: 'K-L-W10-3', q: 'What does the front cover have?', type: 'mc', options: ['A picture', 'Nothing', 'Words only'], answer: 0 },
+          { id: 'K-L-W10-4', q: 'Point to the front. Where is it?', type: 'mc', options: ['Cover with picture', 'Back of book', 'Inside pages'], answer: 0 },
+        ] },
+        { title: 'We Read Left to Right', summary: 'We read words from left to right. Can you move your finger from left to right on the page?', weekTest: [
+          { id: 'K-L-W11-1', q: 'Which way do we read words?', type: 'mc', options: ['Left to right', 'Right to left', 'Up and down'], answer: 0 },
+          { id: 'K-L-W11-2', q: 'Move your finger to read. Which direction?', type: 'mc', options: ['This way →', 'This way ←', 'Up and down'], answer: 0 },
+          { id: 'K-L-W11-3', q: 'Start reading here. Where do you start?', type: 'mc', options: ['Left side', 'Right side', 'Middle'], answer: 0 },
+          { id: 'K-L-W11-4', q: 'We read from left to __', type: 'mc', options: ['right', 'left', 'up'], answer: 0 },
+        ] },
+        { title: 'What Is a Word?', summary: 'Words are made of letters! This word is CAT. C-A-T. Can you point to a word on this page?', weekTest: [
+          { id: 'K-L-W12-1', q: 'What are words made of?', type: 'mc', options: ['Letters', 'Pictures', 'Numbers'], answer: 0 },
+          { id: 'K-L-W12-2', q: 'CAT is made of which letters?', type: 'mc', options: ['C-A-T', 'D-O-G', 'B-O-Y'], answer: 0 },
+          { id: 'K-L-W12-3', q: 'Point to a word. What do you point to?', type: 'mc', options: ['Letters together', 'Just one letter', 'A picture'], answer: 0 },
+          { id: 'K-L-W12-4', q: 'Words have __ put together', type: 'mc', options: ['letters', 'pictures', 'numbers'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-L-Q4-1', q: 'A sentence begins with a capital ___', type: 'mc', options: ['letter', 'period', 'number'], answer: 0 },
-        { id: 'K-L-Q4-2', q: 'Complete: I like to ___', type: 'mc', options: ['play', 'table', 'purple'], answer: 0 },
+        { id: 'K-L-Q4-1', q: 'Which way do we read?', type: 'mc', options: ['Left to right', 'Right to left', 'Any way'], answer: 0 },
+        { id: 'K-L-Q4-2', q: 'What is a word made of?', type: 'mc', options: ['Letters', 'Pictures', 'Colors'], answer: 0 },
+      ], unitTest: [
+        { id: 'K-L-U4-1', q: 'Where is the front of a book?', type: 'mc', options: ['Cover with picture', 'Back cover', 'Inside'], answer: 0 },
+        { id: 'K-L-U4-2', q: 'We read words from left to __', type: 'mc', options: ['right', 'up', 'down'], answer: 0 },
+        { id: 'K-L-U4-3', q: 'The word DOG has how many letters?', type: 'mc', options: ['3', '2', '4'], answer: 0 },
       ]},
     ]},
+
+    // SPELLING & WORD ORIGINS – 4 units (Pre-Reading focus)
     { name: 'Spelling & Word Origins', units: [
-      { name: 'Q1 — First Words', lessons: [
-        { title: 'Words I Know', summary: 'You know so many words already! Lets find things you can name. Point to your nose, then your toe, then something red!' },
-        { title: 'CVC Words', summary: 'Lets make words with three letters! Say "cat" - c-a-t. Now you try making "bat" and "hat"! Can you find three things in your room that rhyme with "cat"?' },
-        { title: 'Where Words Come From', summary: 'Words are all around us! When you say "mama" or "dog," youre using words. Lets walk around and name everything you see - chair, cup, toy!' },
+      { name: 'Q1 – Sight Words', lessons: [
+        { title: "The Word 'the'", summary: "Look at this word: 'the'. Can you point to 'the'? Let's find it in our book!", weekTest: [
+          { id: 'K-SP-W1-1', q: 'Point to the word "the"', type: 'mc', options: ['the', 'cat', 'dog'], answer: 0 },
+          { id: 'K-SP-W1-2', q: 'Which word is "the"?', type: 'mc', options: ['the', 'see', 'run'], answer: 0 },
+          { id: 'K-SP-W1-3', q: 'Find "the" in this sentence: The cat runs.', type: 'mc', options: ['The', 'cat', 'runs'], answer: 0 },
+          { id: 'K-SP-W1-4', q: 'Can you see the word "the"?', type: 'mc', options: ['the', 'and', 'you'], answer: 0 },
+        ] },
+        { title: "The Word 'I'", summary: "I is a word for yourself! Point to yourself and say 'I'!", weekTest: [
+          { id: 'K-SP-W2-1', q: 'Point to the word "I"', type: 'mc', options: ['I', 'a', 'we'], answer: 0 },
+          { id: 'K-SP-W2-2', q: 'Which word means you? "I like toys."', type: 'mc', options: ['I', 'like', 'toys'], answer: 0 },
+          { id: 'K-SP-W2-3', q: 'Find "I" in: I see a dog.', type: 'mc', options: ['I', 'see', 'dog'], answer: 0 },
+          { id: 'K-SP-W2-4', q: '"I" is a word for __', type: 'mc', options: ['yourself', 'someone else', 'everyone'], answer: 0 },
+        ] },
+        { title: "The Word 'see'", summary: "See means look! Can you say 'see'? I see a tree! Point to something you see.", weekTest: [
+          { id: 'K-SP-W3-1', q: 'Point to the word "see"', type: 'mc', options: ['see', 'look', 'run'], answer: 0 },
+          { id: 'K-SP-W3-2', q: 'What does "see" mean?', type: 'mc', options: ['look', 'run', 'eat'], answer: 0 },
+          { id: 'K-SP-W3-3', q: 'Find "see" in: I see you.', type: 'mc', options: ['I', 'see', 'you'], answer: 1 },
+          { id: 'K-SP-W3-4', q: '"I see a ball." What does see mean?', type: 'mc', options: ['look at', 'throw', 'catch'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-SP-Q1-1', q: 'Spell the word: c-a-t. What is it?', type: 'mc', options: ['cat', 'cap', 'car'], answer: 0 },
-        { id: 'K-SP-Q1-2', q: 'Which is a letter that could start your name?', type: 'mc', options: ['A', '5', '@'], answer: 0 },
+        { id: 'K-SP-Q1-1', q: 'Which word is "the"?', type: 'mc', options: ['the', 'see', 'run'], answer: 0 },
+        { id: 'K-SP-Q1-2', q: 'Point to "I" in: I like books.', type: 'mc', options: ['I', 'like', 'books'], answer: 0 },
+      ], unitTest: [
+        { id: 'K-SP-U1-1', q: 'Find the word "the"', type: 'mc', options: ['the', 'and', 'you'], answer: 0 },
+        { id: 'K-SP-U1-2', q: 'Which word means yourself?', type: 'mc', options: ['I', 'you', 'we'], answer: 0 },
+        { id: 'K-SP-U1-3', q: 'What does "see" mean?', type: 'mc', options: ['look', 'hear', 'touch'], answer: 0 },
       ]},
-      { name: 'Q2 — Sight Words', lessons: [
-        { title: 'List 1', summary: 'Lets find sight words! Look at this word: "the." Can you point to "the" in your favorite book? Lets hunt for more sight words together!' },
-        { title: 'List 2', summary: 'Lets find sight words around us! Look for the word "the" on books or signs. Can you point to "the" and say it out loud?' },
-        { title: 'Word Stories', summary: 'Lets make stories with sight words! Pick three word cards from our pile. Can you tell me a silly story using all three words?' },
+      { name: 'Q2 – Words & Pictures', lessons: [
+        { title: 'Cat Is a Word', summary: "C-A-T spells cat! A cat is a furry animal that says meow. Can you say 'cat'?", weekTest: [
+          { id: 'K-SP-W4-1', q: 'What letters spell "cat"?', type: 'mc', options: ['C-A-T', 'D-O-G', 'B-I-G'], answer: 0 },
+          { id: 'K-SP-W4-2', q: 'What sound does a cat make?', type: 'mc', options: ['meow', 'woof', 'moo'], answer: 0 },
+          { id: 'K-SP-W4-3', q: 'Point to the word that matches this picture of a cat', type: 'mc', options: ['cat', 'dog', 'bird'], answer: 0 },
+          { id: 'K-SP-W4-4', q: 'A cat is __', type: 'mc', options: ['furry', 'feathery', 'scaly'], answer: 0 },
+        ] },
+        { title: 'Dog Is a Word', summary: "D-O-G spells dog! A dog says woof! Can you point to a picture of a dog?", weekTest: [
+          { id: 'K-SP-W5-1', q: 'What letters spell "dog"?', type: 'mc', options: ['D-O-G', 'C-A-T', 'B-O-Y'], answer: 0 },
+          { id: 'K-SP-W5-2', q: 'What sound does a dog make?', type: 'mc', options: ['woof', 'meow', 'chirp'], answer: 0 },
+          { id: 'K-SP-W5-3', q: 'Match the word to the picture of a dog', type: 'mc', options: ['dog', 'cat', 'fish'], answer: 0 },
+          { id: 'K-SP-W5-4', q: 'D-O-G spells __', type: 'mc', options: ['dog', 'dig', 'big'], answer: 0 },
+        ] },
+        { title: 'Sun Is a Word', summary: "S-U-N spells sun! The sun is bright and yellow in the sky. Point to the sun!", weekTest: [
+          { id: 'K-SP-W6-1', q: 'What letters spell "sun"?', type: 'mc', options: ['S-U-N', 'M-O-N', 'R-U-N'], answer: 0 },
+          { id: 'K-SP-W6-2', q: 'What color is the sun?', type: 'mc', options: ['yellow', 'blue', 'green'], answer: 0 },
+          { id: 'K-SP-W6-3', q: 'Where is the sun?', type: 'mc', options: ['in the sky', 'on the ground', 'in water'], answer: 0 },
+          { id: 'K-SP-W6-4', q: 'The sun is __', type: 'mc', options: ['bright', 'dark', 'cold'], answer: 0 },
+        ] },
       ], questions: [
-        { id: 'K-SP-Q2-1', q: 'Which is spelled correctly?', type: 'mc', options: ['teh', 'the', 'het'], answer: 1 },
-        { id: 'K-SP-Q2-2', q: 'Write the word: "see".', type: 'short', answer: 'see' },
+        { id: 'K-SP-Q2-1', q: 'C-A-T spells which word?', type: 'mc', options: ['cat', 'dog', 'sun'], answer: 0 },
+        { id: 'K-SP-Q2-2', q: 'Match the word "dog" to its picture', type: 'mc', options: ['dog picture', 'cat picture', 'bird picture'], answer: 0 },
+      ], unitTest: [
+        { id: 'K-SP-U2-1', q: 'What word do these letters spell: S-U-N?', type: 'mc', options: ['sun', 'fun', 'run'], answer: 0 },
+        { id: 'K-SP-U2-2', q: 'Which animal says "meow"?', type: 'mc', options: ['cat', 'dog', 'cow'], answer: 0 },
+        { id: 'K-SP-U2-3', q: 'Point to the word that matches a yellow thing in the sky', type: 'mc', options: ['sun', 'moon', 'star'], answer: 0 },
       ]},
-      { name: 'Q3 — Word Families', lessons: [
-        { title: '-at Family', summary: 'Lets play with words that end in "at"! Can you say cat, bat, and hat? Now clap your hands each time you hear the "at" sound!' },
-        { title: '-og Family', summary: 'Lets play with -og words! Can you say dog, log, and frog? Now hop like a frog and bark like a dog!' },
-        { title: 'Root Fun', summary: 'Lets play with word families! Words that sound the same at the end are friends. Say "cat" and "hat" - do you hear how they rhyme? Find three things that rhyme with "run" like "sun" and "fun"!' },
+      { name: 'Q3 – Word Families', lessons: [
+        { title: 'Words That End in AT', summary: "Bat, cat, hat all end with 'at'! Can you say 'at'? Bat! Cat! Hat!", weekTest: [
+          { id: 'K-SP-W7-1', q: 'Which words all end with "at"?', type: 'mc', options: ['bat, cat, hat', 'dog, log, frog', 'big, pig, fig'], answer: 0 },
+          { id: 'K-SP-W7-2', q: 'What do bat, cat, and hat have at the end?', type: 'mc', options: ['at', 'og', 'ig'], answer: 0 },
+          { id: 'K-SP-W7-3', q: 'Which word belongs in the "at" family?', type: 'mc', options: ['rat', 'dog', 'sun'], answer: 0 },
+          { id: 'K-SP-W7-4', q: 'Say the "at" words: bat, cat, __', type: 'mc', options: ['hat', 'dog', 'big'], answer: 0 },
+        ] },
+        { title: 'Words That End in OG', summary: "Dog, log, frog all end with 'og'! Can you hop like a frog?", weekTest: [
+          { id: 'K-SP-W8-1', q: 'Which words all end with "og"?', type: 'mc', options: ['dog, log, frog', 'bat, cat, hat', 'big, pig, fig'], answer: 0 },
+          { id: 'K-SP-W8-2', q: 'What sound do you hear at the end of "dog"?', type: 'mc', options: ['og', 'at', 'ig'], answer: 0 },
+          { id: 'K-SP-W8-3', q: 'Which word belongs in the "og" family?', type: 'mc', options: ['frog', 'cat', 'sun'], answer: 0 },
+          { id: 'K-SP-W8-4', q: 'Which word rhymes with "log"?', type: 'mc', options: ['frog', 'cat', 'sun'], answer: 0 },
+        ] },
+        { title: 'Fun with Family Words', summary: "Lets say word families together! Bat, cat, hat! Dog, log, frog!", weekTest: [
+          { id: 'K-SP-W9-1', q: 'Which word belongs to the "at" family?', type: 'mc', options: ['bat', 'dog', 'sun'], answer: 0 },
+          { id: 'K-SP-W9-2', q: 'Which word belongs to the "og" family?', type: 'mc', options: ['frog', 'hat', 'big'], answer: 0 },
+          { id: 'K-SP-W9-3', q: 'Does "cat" end with "at" or "og"?', type: 'mc', options: ['at', 'og', 'neither'], answer: 0 },
+          { id: 'K-SP-W9-4', q: 'Does "dog" end with "at" or "og"?', type: 'mc', options: ['at', 'og', 'neither'], answer: 1 },
+        ] },
       ], questions: [
-        { id: 'K-SP-Q3-1', q: 'Which word is in the -at family?', type: 'mc', options: ['bat', 'big', 'sun'], answer: 0 },
-        { id: 'K-SP-Q3-2', q: 'Which word rhymes with "log"?', type: 'mc', options: ['cat', 'dog', 'tree'], answer: 1 },
+        { id: 'K-SP-Q3-1', q: 'Which ending sound do bat, cat, hat share?', type: 'mc', options: ['at', 'og', 'ig'], answer: 0 },
+        { id: 'K-SP-Q3-2', q: 'Which ending sound do dog, log, frog share?', type: 'mc', options: ['at', 'og', 'ig'], answer: 1 },
       ]},
-      { name: 'Q4 — Review & Pride', lessons: [
-        { title: 'My Spelling Book', summary: 'Look at all the letters you learned this year! You can write A, B, C and so many more. Lets make a special book with your favorite letters and draw pictures for each one.' },
-        { title: 'Word Origins Recap', summary: 'We learned where words come from! Some words started in other countries and came to us. Lets play a word game - can you think of a food word that sounds different, like "pizza"?' },
-        { title: 'Show & Tell', summary: 'You did so many amazing things this year! Pick your favorite toy or drawing to show me. Tell me why you love it and what makes it special to you.' },
+      { name: 'Q4 - Review', lessons: [
+        { title: 'Words I Know', summary: 'Look at all the words we learned! Can you find "the"? You know so many words!' },
+        { title: 'Letters I Know', summary: 'We learned letters A, B, C, M, S! Can you point to the letter A?' },
+        { title: 'Let Us Read Together', summary: "Let's look at a book together! Point to a word you know!" },
       ], questions: [
-        { id: 'K-SP-Q4-1', q: 'A word family shares the same ___ sound.', type: 'mc', options: ['ending', 'first', 'color'], answer: 0 },
-        { id: 'K-SP-Q4-2', q: 'Which is a word you might learn?', type: 'mc', options: ['cat', '123', '###'], answer: 0 },
+        { id: 'K-SP-Q4-1', q: 'Point to the word "the". Which one is "the"?', type: 'mc', options: ['the', 'cat', 'dog'], answer: 0 },
+        { id: 'K-SP-Q4-2', q: 'Which letter makes the "buh" sound?', type: 'mc', options: ['B', 'A', 'C'], answer: 0 },
       ]},
     ]},
     { name: 'Science', units: [
-      { name: 'Q1 — God Made the World', lessons: [
-        { title: 'Day & Night', summary: 'God made the sun to shine during the day. When the sun goes down, it gets dark and we have night. Lets spin around like the Earth - now you make day and night happen!' },
-        { title: 'The Seasons', summary: 'God made spring, summer, fall, and winter! Each season looks different and feels different. Lets go outside and see what season it is right now - is it hot, cold, or just right?' },
-        { title: 'Weather Watch', summary: 'God made all the weather! Look outside your window. Can you see if its sunny, cloudy, or rainy? Draw a picture of what the weather looks like today!' },
+      { name: 'Q1 - Gods World', lessons: [
+        { title: 'Day and Night', summary: 'God made the sun for daytime and the moon for nighttime.' },
+        { title: 'The Sun and Moon', summary: 'The sun is bright and hot. The moon shines at night.' },
+        { title: 'Weather', summary: 'Sometimes it is sunny. Sometimes it rains. What is the weather today?' },
       ], questions: [
-        { id: 'K-SC-Q1-1', q: 'Which is NOT a season?', type: 'mc', options: ['spring', 'summer', 'Tuesday'], answer: 2 },
-        { id: 'K-SC-Q1-2', q: 'The sun gives us ___', type: 'mc', options: ['light', 'rain', 'wind'], answer: 0 },
+        { id: 'K-SC-Q1-1', q: 'When the sun is out, it is ___', type: 'mc', options: ['daytime', 'nighttime', 'bedtime'], answer: 0 },
+        { id: 'K-SC-Q1-2', q: 'The sun gives us ___', type: 'mc', options: ['light', 'rain', 'snow'], answer: 0 },
       ]},
-      { name: 'Q2 — Plants & Animals', lessons: [
-        { title: 'Parts of a Plant', summary: 'Plants have roots, stems, leaves, and flowers - just like you have arms and legs! Lets go outside and find a flower. Can you point to each part?' },
-        { title: 'Living vs Nonliving', summary: 'Lets play a fun game! Look around and find something that grows and moves. Now find something that stays the same forever. Can you sort your toys into living and not living piles?' },
-        { title: 'Farm Animals', summary: 'Farm animals live on farms with farmers. Cows say "moo," pigs say "oink," and chickens say "cluck cluck!" Lets make animal sounds together and guess which farm animal makes each noise.' },
+      { name: 'Q2 - Animals', lessons: [
+        { title: 'Farm Animals', summary: 'A cow says moo! A pig says oink! A chicken says cluck!' },
+        { title: 'Pets', summary: 'A dog is a pet. A cat is a pet. Do you have a pet?' },
+        { title: 'Animal Babies', summary: 'A baby dog is a puppy. A baby cat is a kitten.' },
       ], questions: [
-        { id: 'K-SC-Q2-1', q: 'Which is a living thing?', type: 'mc', options: ['rock', 'dog', 'cup'], answer: 1 },
-        { id: 'K-SC-Q2-2', q: 'A plant drinks water through its ___', type: 'mc', options: ['leaves', 'roots', 'flower'], answer: 1 },
+        { id: 'K-SC-Q2-1', q: 'Which animal says "moo"?', type: 'mc', options: ['cow', 'dog', 'chicken'], answer: 0 },
+        { id: 'K-SC-Q2-2', q: 'Which animal is a pet?', type: 'mc', options: ['dog', 'lion', 'bear'], answer: 0 },
       ]},
-      { name: 'Q3 — My Body', lessons: [
-        { title: 'Five Senses', summary: 'You have five senses! Your eyes see, ears hear, nose smells, tongue tastes, and skin feels. Lets go on a sense hunt - find something soft, something that smells good, and something red!' },
-        { title: 'Healthy Habits', summary: 'Lets brush our teeth together! Show me how you brush up and down. Now lets wash our hands and make them sparkle clean!' },
-        { title: 'Body Parts', summary: 'Lets name your body parts! Touch your head, then your toes. Can you wiggle your nose and clap your hands?' },
+      { name: 'Q3 - My Body', lessons: [
+        { title: 'My Body Parts', summary: 'You have eyes to see, ears to hear, and hands to touch!' },
+        { title: 'My Five Senses', summary: 'We see with our eyes. We hear with our ears. We smell with our nose!' },
+        { title: 'Staying Healthy', summary: 'We wash our hands. We brush our teeth. We eat good food!' },
       ], questions: [
-        { id: 'K-SC-Q3-1', q: 'Which sense do we use to smell a flower?', type: 'mc', options: ['sight', 'smell', 'touch'], answer: 1 },
-        { id: 'K-SC-Q3-2', q: 'What is one way to stay healthy?', type: 'mc', options: ['Eat vegetables', 'Stay up all night', 'Never exercise'], answer: 0 },
+        { id: 'K-SC-Q3-1', q: 'We see with our ___', type: 'mc', options: ['eyes', 'ears', 'nose'], answer: 0 },
+        { id: 'K-SC-Q3-2', q: 'We hear with our ___', type: 'mc', options: ['eyes', 'ears', 'nose'], answer: 1 },
       ]},
-      { name: 'Q4 — Motion & Matter', lessons: [
-        { title: 'Push & Pull', summary: 'You can push and pull things to make them move! Push your toy car across the floor, then pull it back to you. Try pushing and pulling different toys around your room.' },
-        { title: 'Float or Sink', summary: 'Lets play with water! Some things float on top like a toy boat. Other things sink down like a rock. Fill a bowl with water and drop in different toys to see what happens!' },
-        { title: 'Solids & Liquids', summary: 'Ice is hard like a rock. When ice melts, it becomes soft water you can pour. Lets put an ice cube in a cup and watch it change into water!' },
+      { name: 'Q4 - Seasons', lessons: [
+        { title: 'Four Seasons', summary: 'God made four seasons! Spring, summer, fall, winter.' },
+        { title: 'Summer and Winter', summary: 'Summer is hot! We wear shorts. Winter is cold! We wear coats.' },
+        { title: 'Spring and Fall', summary: 'Spring has flowers! Fall has colorful leaves!' },
       ], questions: [
-        { id: 'K-SC-Q4-1', q: 'To open a door you ___ it.', type: 'mc', options: ['push or pull', 'eat', 'sing'], answer: 0 },
-        { id: 'K-SC-Q4-2', q: 'Water is a ___', type: 'mc', options: ['solid', 'liquid', 'gas'], answer: 1 },
+        { id: 'K-SC-Q4-1', q: 'In summer the weather is ___', type: 'mc', options: ['hot', 'cold', 'snowy'], answer: 0 },
+        { id: 'K-SC-Q4-2', q: 'In winter the weather is ___', type: 'mc', options: ['hot', 'cold', 'rainy'], answer: 1 },
       ]},
     ]},
     { name: 'History & Geography', units: [
-      { name: 'Q1 — My Family', lessons: [
-        { title: 'People in My Home', summary: 'Who lives in your home with you? Lets walk around and find each person! Draw a picture of everyone you see in your house today.' },
-        { title: 'Past & Present', summary: 'Look at old pictures of your family! Point to baby you and big you now. Draw yourself as a baby and yourself today on paper.' },
-        { title: 'Family Stories', summary: 'Every family has special stories! Ask someone to tell you a funny story about when you were little. Now draw a picture of your favorite family story!' },
+      { name: 'Q1 - My Family', lessons: [
+        { title: 'People in My Family', summary: 'Every family is special! A mom and dad. Who is in your family?' },
+        { title: 'My Home', summary: 'You live in a home with a kitchen, bedroom, and living room.' },
+        { title: 'Taking Care of Each Other', summary: 'Families take care of each other! You can help by picking up your toys!' },
       ], questions: [
-        { id: 'K-H-Q1-1', q: 'Who helps take care of you at home?', type: 'mc', options: ['Parents', 'Strangers', 'No one'], answer: 0 },
-        { id: 'K-H-Q1-2', q: 'A story from long ago is called the ___', type: 'mc', options: ['past', 'future', 'present'], answer: 0 },
+        { id: 'K-H-Q1-1', q: 'Who takes care of you at home?', type: 'mc', options: ['Mom and Dad', 'A stranger', 'No one'], answer: 0 },
+        { id: 'K-H-Q1-2', q: 'You live in a ___', type: 'mc', options: ['home', 'store', 'school'], answer: 0 },
       ]},
-      { name: 'Q2 — Our Community', lessons: [
-        { title: 'Helpers Around Us', summary: 'Lets play helper! Who helps you every day? Your mom, dad, teacher, and doctor all help you. Can you draw a picture of your favorite helper?' },
-        { title: 'Places in Town', summary: 'Lets take a walk around our town! Point to places you know - the store, the park, your school. Can you draw your favorite place to visit?' },
-        { title: 'Being a Good Neighbor', summary: 'Good neighbors are kind and helpful. You can wave and say "Hi!" to people who live near you. Lets practice waving at everyone you see today!' },
+      { name: 'Q2 - Community Helpers', lessons: [
+        { title: 'Firefighters', summary: 'Firefighters put out fires and keep us safe!' },
+        { title: 'Doctors and Teachers', summary: 'A doctor helps you when you are sick. A teacher helps you learn!' },
+        { title: 'Helpers in Our Town', summary: 'The mailman brings letters. The farmer grows our food.' },
       ], questions: [
-        { id: 'K-H-Q2-1', q: 'Who puts out fires?', type: 'mc', options: ['firefighter', 'baker', 'teacher'], answer: 0 },
-        { id: 'K-H-Q2-2', q: 'A good neighbor ___', type: 'mc', options: ['shares', 'hides', 'yells'], answer: 0 },
+        { id: 'K-H-Q2-1', q: 'Who puts out fires?', type: 'mc', options: ['firefighter', 'teacher', 'baker'], answer: 0 },
+        { id: 'K-H-Q2-2', q: 'Who helps you when you are sick?', type: 'mc', options: ['doctor', 'firefighter', 'mailman'], answer: 0 },
       ]},
-      { name: 'Q3 — Maps & Globe', lessons: [
-        { title: 'The Big Round World', summary: 'Our world is like a big, round ball! You can spin a globe to see all the places on Earth. Find a ball and spin it like our spinning world!' },
-        { title: 'Map Symbols', summary: 'Maps use pictures to show us things! A little house means a real house. A tree picture means real trees. Lets draw your own map symbols for your room!' },
-        { title: 'Where I Live', summary: 'Look around your room! Can you point to your bed, your toys, and the door? Lets draw a map of your room and put a big X where you sleep!' },
+      { name: 'Q3 - Our World', lessons: [
+        { title: 'Earth Is Round', summary: 'Our Earth is round like a ball! We live on Earth.' },
+        { title: 'Maps Show Places', summary: 'A map shows where places are in our town.' },
+        { title: 'Where Do We Live?', summary: 'We live in a town with houses, stores, and schools.' },
       ], questions: [
-        { id: 'K-H-Q3-1', q: 'Earth is shaped like a ___', type: 'mc', options: ['box', 'ball', 'flat plate'], answer: 1 },
-        { id: 'K-H-Q3-2', q: 'We live in the country called ___', type: 'mc', options: ['United States', 'Mars', 'Ocean'], answer: 0 },
+        { id: 'K-H-Q3-1', q: 'Earth is shaped like a ___', type: 'mc', options: ['ball', 'box', 'plate'], answer: 0 },
+        { id: 'K-H-Q3-2', q: 'A map shows ___', type: 'mc', options: ['places', 'food', 'toys'], answer: 0 },
       ]},
-      { name: 'Q4 — Holidays & Heroes', lessons: [
-        { title: 'American Holidays', summary: 'America has special fun days called holidays! We eat turkey on Thanksgiving and watch fireworks on the Fourth of July. Draw your favorite holiday food and tell me why you like it!' },
-        { title: 'Brave People', summary: 'Brave people help others when they feel scared. You are brave too! Lets march around the room like a brave hero and make strong superhero poses.' },
-        { title: 'Thankfulness', summary: 'What makes you happy? Lets draw three things you love! Maybe your family, your pet, or your favorite toy. Show me your pictures and tell me why they make you smile.' },
+      { name: 'Q4 - Holidays', lessons: [
+        { title: 'Christmas', summary: 'Christmas is when we celebrate Jesus birthday! We give gifts.' },
+        { title: 'Thanksgiving', summary: 'On Thanksgiving we say thank you for all we have!' },
+        { title: 'My Birthday', summary: 'Your birthday is the day you were born! We celebrate with cake!' },
       ], questions: [
-        { id: 'K-H-Q4-1', q: 'On Thanksgiving we ___', type: 'mc', options: ['give thanks', 'trick-or-treat', 'sing carols'], answer: 0 },
-        { id: 'K-H-Q4-2', q: 'Which is a holiday we celebrate?', type: 'mc', options: ['Christmas', 'Wednesday', 'Purple Day'], answer: 0 },
+        { id: 'K-H-Q4-1', q: 'At Christmas we celebrate ___ birthday', type: 'mc', options: ['Jesus', 'yours', 'no ones'], answer: 0 },
+        { id: 'K-H-Q4-2', q: 'On Thanksgiving we say ___', type: 'mc', options: ['thank you', 'happy birthday', 'goodnight'], answer: 0 },
       ]},
     ]},
     { name: 'Bible & Character', units: [
-      { name: 'Q1 — God Made Me', lessons: [
-        { title: 'I Am Special', summary: 'God made you special and wonderful! Look in the mirror and smile big. Can you make funny faces and see how amazing you are?' },
-        { title: 'Creation Week', summary: 'God made everything in six days! He made the sun, moon, stars, animals, and you. Lets clap six times and say "Thank you, God" after each clap!' },
-        { title: 'Thank You, God', summary: 'God made you special and wonderful! Lets thank God for all the good things He gives us. Look around and clap your hands for three things you see that make you happy!' },
+      { name: 'Q1 - God Made Me', lessons: [
+        { title: 'I Am Special', summary: 'God made you and you are special! Look in the mirror and smile!' },
+        { title: 'God Made the World', summary: 'God made the sun, moon, stars, trees, and animals!' },
+        { title: 'Thank You God', summary: "Let's say thank you to God for our family, our home, and our toys!" },
       ], questions: [
         { id: 'K-B-Q1-1', q: 'Who made you?', type: 'mc', options: ['God', 'a robot', 'no one'], answer: 0 },
-        { id: 'K-B-Q1-2', q: 'On what day did God rest?', type: 'mc', options: ['the 1st', 'the 7th', 'never'], answer: 1 },
+        { id: 'K-B-Q1-2', q: 'Who made the sun and stars?', type: 'mc', options: ['God', 'a man', 'a bird'], answer: 0 },
       ]},
-      { name: 'Q2 — Jesus Loves Me', lessons: [
-        { title: 'Baby Jesus', summary: 'Baby Jesus was tiny and sweet, just like you were when you were born! God sent Jesus because He loves you so much. Lets rock your stuffed animal like Mary rocked baby Jesus to sleep.' },
-        { title: 'Jesus the Helper', summary: 'Jesus helps people every day. He helps you too! Lets pretend to help someone - give your teddy bear a hug and say "I can help like Jesus!"' },
-        { title: 'My Friend Jesus', summary: 'Jesus is your very best friend! He loves you so much and wants to play and talk with you every day. Lets give Jesus a big hug right now - squeeze yourself tight!' },
+      { name: 'Q2 - Jesus Loves Me', lessons: [
+        { title: 'Baby Jesus', summary: 'Baby Jesus was born. God sent Jesus because He loves us!' },
+        { title: 'Jesus Is My Friend', summary: 'Jesus loves you and is your friend! You can talk to Jesus anytime.' },
+        { title: 'Jesus Helps Us', summary: 'Jesus helps us when we are sad or scared.' },
       ], questions: [
-        { id: 'K-B-Q2-1', q: 'Where was baby Jesus born?', type: 'mc', options: ['a barn', 'a castle', 'a school'], answer: 0 },
+        { id: 'K-B-Q2-1', q: 'Jesus loves ___', type: 'mc', options: ['you', 'no one', 'only grown-ups'], answer: 0 },
         { id: 'K-B-Q2-2', q: 'Jesus is our ___', type: 'mc', options: ['friend', 'enemy', 'stranger'], answer: 0 },
       ]},
-      { name: 'Q3 — Being Kind', lessons: [
-        { title: 'Share Your Toys', summary: 'When you share your toys, you make friends happy! Sharing shows you care about others. Lets practice - give your teddy bear a hug, then let me hold it too!' },
-        { title: 'Use Kind Words', summary: 'Kind words make people smile! Say "please" and "thank you" today. Lets practice saying nice things to your stuffed animals right now!' },
-        { title: 'Obey Quickly', summary: 'When Mom or Dad asks you to do something, do it right away! That shows you love them. Lets practice! Ill ask you to touch your nose, clap your hands, then give me a hug - do each one super fast!' },
+      { name: 'Q3 - Being Kind', lessons: [
+        { title: 'Share with Others', summary: 'Sharing makes everyone happy! Can you share your toy?' },
+        { title: 'Use Kind Words', summary: 'Please and thank you are kind words! Can you say please?' },
+        { title: 'Be a Good Friend', summary: 'A good friend shares, is kind, and helps others!' },
       ], questions: [
-        { id: 'K-B-Q3-1', q: 'When Mom says "no", we should ___', type: 'mc', options: ['obey', 'yell', 'hit'], answer: 0 },
-        { id: 'K-B-Q3-2', q: 'Kind words make others feel ___', type: 'mc', options: ['happy', 'sad', 'angry'], answer: 0 },
+        { id: 'K-B-Q3-1', q: 'When someone gives you something, say ___', type: 'mc', options: ['thank you', 'no', 'go away'], answer: 0 },
+        { id: 'K-B-Q3-2', q: 'A good friend is ___', type: 'mc', options: ['kind', 'mean', 'loud'], answer: 0 },
       ]},
-      { name: 'Q4 — Thankful Hearts', lessons: [
-        { title: 'Count Your Blessings', summary: 'Lets count all the good things we have! Look around your room and count your toys. Now count hugs from your family today!' },
-        { title: 'Say Please & Thank You', summary: 'Lets practice saying magic words! When you want something, say "please." When someone helps you, say "thank you." Now ask me for a hug using your magic word!' },
-        { title: 'Sing to God', summary: 'God loves when we sing to Him! Lets sing "Thank You, God" together. Now clap your hands while you sing your favorite song to God!' },
+      { name: 'Q4 - Thankful Hearts', lessons: [
+        { title: 'Thank You for Food', summary: 'Before we eat, we thank God for this food!' },
+        { title: 'Thank You for Family', summary: 'God gave you your family who love you!' },
+        { title: 'I Am Thankful', summary: "What are you thankful for? Let's thank God for it!" },
       ], questions: [
-        { id: 'K-B-Q4-1', q: 'We say "___" when given something.', type: 'mc', options: ['thank you', 'mine', 'no'], answer: 0 },
-        { id: 'K-B-Q4-2', q: 'What is one thing God gave you?', type: 'mc', options: ['Life', 'Sadness', 'Nothing'], answer: 0 },
+        { id: 'K-B-Q4-1', q: 'Before we eat, we thank ___', type: 'mc', options: ['God', 'the food', 'the table'], answer: 0 },
+        { id: 'K-B-Q4-2', q: 'We say thank you for our ___', type: 'mc', options: ['family', 'garbage', 'nothing'], answer: 0 },
       ]},
     ]},
   ])
