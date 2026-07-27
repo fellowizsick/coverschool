@@ -80,7 +80,7 @@ export const G9: GradeCurriculum = g('9th Grade', 9, '14-15', 'Algebra, world li
         { title: 'Editorial', summary: 'An editorial is your chance to voice your opinion on issues that matter to you and your community, using facts and persuasive language to convince readers to see things from your perspective. Think of it as a well-structured argument where you take a clear stance on a topic like school dress codes, environmental policies, or social media regulations, then support your position with solid evidence, statistics, and logical reasoning while acknowledging opposing viewpoints. For example, if you believe your school should allow students to use phones during lunch, you would present evidence about h' },
       ], questions: [
         { id: '9-L-Q4-1', q: 'Expository writing ___', type: 'mc', options: ['explains', 'argues', 'rhymes'], answer: 0 },
-        { id: '9-L-Q4-2', q: 'Write one sentence stating your view on school uniforms.', type: 'short', answer: 'open' },
+        { id: '9-L-Q4-2', q: 'Which sentence states a clear position on school uniforms?', type: 'mc', options: ['School uniforms promote equality and reduce distractions.', 'Some schools have uniforms.', 'Uniforms are clothes.'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -106,14 +106,14 @@ export const G9: GradeCurriculum = g('9th Grade', 9, '14-15', 'Algebra, world li
         { title: 'Prefix: cata- = "down"', summary: 'The prefix cata- means down and appears in many English words to show downward movement or decline. When you see catastrophe, you can break it down into cata- meaning down and -strophe meaning turn, literally a downward turn or disaster. Other examples include cataract where water falls down, catacomb meaning underground burial chambers, and catalyst which breaks down chemical reactions. Try identifying the cata- prefix in words you encounter this week and think about how the meaning of down connects to each words definition to deepen your vocabulary understanding.' },
       ], questions: [
         { id: '9-SP-Q3-1', q: '"epidemic" is upon the ___', type: 'mc', options: ['people', 'earth', 'sky'], answer: 0 },
-        { id: '9-SP-Q3-2', q: 'Write a word with prefix "cata-".', type: 'short', answer: 'open' },
+        { id: '9-SP-Q3-2', q: 'Which word contains the prefix "cata-" (meaning down)?', type: 'mc', options: ['catastrophe', 'category', 'catch'], answer: 0 },
       ]},
       { name: 'Q4 — Review', lessons: [
         { title: 'Master List', summary: 'As we wrap up our fourth quarter, its time to create your Master List - a powerful study tool that brings together all the key concepts, vocabulary, and skills youve learned this year into one organized reference sheet. Think of it like creating your own personalized textbook page that highlights everything important from each unit, whether thats literary devices from our poetry unit, historical events from social studies, or scientific processes from biology. Your Master List might include terms like symbolism and metaphor alongside their definitions and examples from books weve read, or ' },
         { title: 'Root Map', summary: 'Lets explore how root maps help us understand word families and boost our vocabulary! A root map is a visual tool that shows how one root word connects to many related words, like branches spreading from a tree trunk. For example, the Latin root "spect" meaning "to see" appears in words like inspect, respect, spectacle, and perspective - all sharing that core meaning of seeing or looking. To create your own root map, start with a common root like "port" meaning "to carry" and brainstorm all the words you can think of that contain it, such as transport, import, export, and portable. Draw the r' },
         { title: 'Decode', summary: 'Lets decode what weve learned this quarter by breaking down complex ideas into their essential parts, just like detectives solving a mystery. When you decode something, youre translating confusing information into clear understanding. For example, when reading Shakespeare, you might decode the line "Romeo, Romeo, wherefore art thou Romeo" by recognizing that "wherefore" means "why" not "where," so Juliet is asking why Romeo has to be a Montague, not where he is. Try this decoding activity: take any challenging text from this quarter and create a two-column chart with the original complex ph' },
       ], questions: [
-        { id: '9-SP-Q4-1', q: 'Write a word with root "leg".', type: 'short', answer: 'open' },
+        { id: '9-SP-Q4-1', q: 'Which word contains the root "leg" (meaning law)?', type: 'mc', options: ['legal', 'leg', 'legend'], answer: 0 },
         { id: '9-SP-Q4-2', q: 'Roots help you read at the ___ level.', type: 'mc', options: ['college', 'baby', 'no'], answer: 0 },
       ]},
     ]},
@@ -289,7 +289,7 @@ export const G10: GradeCurriculum = g('10th Grade', 10, '15-16', 'Geometry, Amer
         { title: 'Drama', summary: 'Drama is the art of bringing stories to life through performance, combining dialogue, movement, and emotion to create powerful theatrical experiences. Think about how Shakespeares Romeo and Juliet uses dramatic irony when the audience knows Juliet isnt really dead, but Romeo doesnt, creating intense emotional tension. To explore this concept, work in pairs to create a short scene where one character knows something important that the other doesnt, then perform it for your classmates and discuss how this dramatic technique affected both the performers and audience.' },
       ], questions: [
         { id: '10-L-Q4-1', q: 'A short story needs a ___', type: 'mc', options: ['conflict', 'list', 'joke'], answer: 0 },
-        { id: '10-L-Q4-2', q: 'Write one line of original poetry.', type: 'short', answer: 'open' },
+        { id: '10-L-Q4-2', q: 'Which is an example of original poetry?', type: 'mc', options: ['Roses are red, violets are blue, learning is fun, and so are you.', 'The Gettysburg Address', 'A grocery list'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -315,14 +315,14 @@ export const G10: GradeCurriculum = g('10th Grade', 10, '15-16', 'Geometry, Amer
         { title: 'Suffix: -ness = "quality"', summary: 'The suffix -ness is a powerful word-building tool that transforms adjectives into nouns by expressing the quality or state of being something. When you add -ness to an adjective like kind, you create kindness, which means the quality of being kind. Similarly, dark becomes darkness, happy becomes happiness, and thick becomes thickness. This suffix helps you describe abstract concepts and emotions more precisely in your writing. Try this quick exercise: take five adjectives that describe personality traits and add -ness to create nouns that express those qualities as states of being.' },
       ], questions: [
         { id: '10-SP-Q3-1', q: '"ability" is the state of being ___', type: 'mc', options: ['able', 'kind', 'real'], answer: 0 },
-        { id: '10-SP-Q3-2', q: 'Write a word ending in "-ness".', type: 'short', answer: 'open' },
+        { id: '10-SP-Q3-2', q: 'Which word ends in "-ness"?', type: 'mc', options: ['happiness', 'running', 'walked'], answer: 0 },
       ]},
       { name: 'Q4 — Review', lessons: [
         { title: 'Master List', summary: 'As we wrap up Quarter 4, its time to create your Master List - a powerful study tool that brings together all the key concepts, vocabulary, and skills youve learned this year. Think of it as your personal academic treasure chest where you collect the most important ideas from each unit, like themes from literature, historical events, scientific processes, or math formulas that keep showing up on tests. To build your Master List, grab a notebook or digital document and start by reviewing your notes from each quarter, pulling out the big ideas that connect across different topics - you might n' },
         { title: 'Root Map', summary: 'Lets explore how root maps help us understand word families and boost our vocabulary! A root map is a visual tool that shows how one root word connects to many related words, like branches on a tree. Take the Latin root "spect" meaning "to see" - from this single root, we get words like inspect, respect, spectacle, and perspective. To create your own root map, start with a common root like "port" (to carry) in the center of your paper, then branch out to discover related words like transport, export, portable, and report. Notice how understanding just one root unlocks the meaning of dozens of' },
         { title: 'Decode', summary: 'Lets decode the hidden meanings in texts together! When you decode, youre like a detective uncovering clues that authors embed beneath the surface of their writing. Think about how a simple description of storm clouds gathering might actually signal upcoming trouble for a character, or how an authors choice to repeat certain words creates emphasis and mood. For example, in many stories, a character looking in a mirror isnt just checking their appearance - it often represents self-reflection or a moment of realization about who they really are. Try this decoding activity: take any paragraph' },
       ], questions: [
-        { id: '10-SP-Q4-1', q: 'Write a word with root "ped".', type: 'short', answer: 'open' },
+        { id: '10-SP-Q4-1', q: 'Which word contains the root "ped" (meaning foot)?', type: 'mc', options: ['pedestrian', 'pencil', 'perfect'], answer: 0 },
         { id: '10-SP-Q4-2', q: 'Roots build ___ across subjects.', type: 'mc', options: ['vocabulary', 'nothing', 'confusion'], answer: 0 },
       ]},
     ]},

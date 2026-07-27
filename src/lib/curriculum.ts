@@ -54,11 +54,11 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
           { id: 'K-M-W1-2', q: 'Count to 5. What number comes right before 5?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
           { id: 'K-M-W1-3', q: 'How many toes are on one foot?', type: 'mc', options: ['4', '5', '10'], answer: 1 },
           { id: 'K-M-W1-4', q: 'What number is between 2 and 4?', type: 'mc', options: ['1', '3', '5'], answer: 1 },
-          { id: 'K-M-W1-5', q: 'Point to something in your room that is shaped like a circle.', type: 'activity' },
+          { id: 'K-M-W1-5', q: 'Which of these is shaped like a circle?', type: 'mc', options: ['A book', 'A coin', 'A window'], answer: 1 },
           { id: 'K-M-W1-6', q: 'Count backward from 5: 5, 4, ___, 2, 1. What is missing?', type: 'mc', options: ['6', '3', '0'], answer: 1 },
           { id: 'K-M-W1-7', q: 'Which is bigger: 2 or 7?', type: 'mc', options: ['2', '7', 'they are the same'], answer: 1 },
           { id: 'K-M-W1-8', q: 'Write the number that comes after 9.', type: 'short', answer: '10' },
-          { id: 'K-M-W1-9', q: 'Draw 3 stars. Now draw 2 more. How many stars total?', type: 'activity' },
+          { id: 'K-M-W1-9', q: 'If you have 3 stars and draw 2 more, how many stars total?', type: 'mc', options: ['4', '5', '6'], answer: 1 },
           { id: 'K-M-W1-10', q: 'What is the first number we say when we count?', type: 'mc', options: ['0', '1', '2'], answer: 1 },
         ] },
         { title: 'Basic Shapes', summary: 'Can you find a circle? It is round like a ball. A square has four sides. A triangle has three sides. Point to shapes around you!', weekTest: [
@@ -68,20 +68,20 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
           { id: 'K-M-W2-4', q: 'A dollar bill is shaped like a ___.', type: 'mc', options: ['circle', 'rectangle', 'triangle'], answer: 1 },
           { id: 'K-M-W2-5', q: 'Which shape has no sides at all?', type: 'mc', options: ['square', 'circle', 'triangle'], answer: 1 },
           { id: 'K-M-W2-6', q: 'A stop sign is shaped like an ___.', type: 'mc', options: ['octagon', 'circle', 'square'], answer: 0 },
-          { id: 'K-M-W2-7', q: 'Draw a square and color it blue.', type: 'activity' },
+          { id: 'K-M-W2-7', q: 'Which shape has 4 equal sides?', type: 'mc', options: ['Circle', 'Triangle', 'Square'], answer: 2 },
           { id: 'K-M-W2-8', q: 'A rectangle has how many corners?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
-          { id: 'K-M-W2-9', q: 'Name one thing in your kitchen that is shaped like a rectangle.', type: 'short', answer: 'open' },
+          { id: 'K-M-W2-9', q: 'What in your kitchen is shaped like a rectangle?', type: 'mc', options: ['A plate', 'A refrigerator door', 'A ball'], answer: 1 },
           { id: 'K-M-W2-10', q: 'Which shape can roll?', type: 'mc', options: ['square', 'circle', 'triangle'], answer: 1 },
         ] },
         { title: 'More or Less', summary: 'Which pile has more? Which has less? Count the toys and compare. The group with more things has a bigger number.', weekTest: [
           { id: 'K-M-W3-1', q: 'Which is more: 2 cookies or 6 cookies?', type: 'mc', options: ['2', '6', 'they are the same'], answer: 1 },
           { id: 'K-M-W3-2', q: 'You have 4 toys. Your friend has 7 toys. Who has less?', type: 'mc', options: ['you', 'your friend', 'same'], answer: 0 },
           { id: 'K-M-W3-3', q: 'Which is less: 8 or 3?', type: 'mc', options: ['8', '3', 'they are the same'], answer: 1 },
-          { id: 'K-M-W3-4', q: 'Draw 4 stars. Draw 2 circles. Which group has less?', type: 'activity' },
+          { id: 'K-M-W3-4', q: 'You have 4 stars and 2 circles. Which group has less?', type: 'mc', options: ['Stars', 'Circles', 'They are equal'], answer: 1 },
           { id: 'K-M-W3-5', q: 'A tall glass has more water than a short glass. True or false?', type: 'mc', options: ['true', 'false'], answer: 0 },
           { id: 'K-M-W3-6', q: 'Which group has more: 1 bird or 10 birds?', type: 'mc', options: ['1 bird', '10 birds', 'same'], answer: 1 },
           { id: 'K-M-W3-7', q: 'There are 5 red blocks and 3 blue blocks. Which color has less?', type: 'mc', options: ['red', 'blue', 'same'], answer: 1 },
-          { id: 'K-M-W3-8', q: 'Give an example of something you can have "more" of.', type: 'short', answer: 'open' },
+          { id: 'K-M-W3-8', q: 'What can you have "more" of?', type: 'mc', options: ['Toys', 'Your age', 'Your name'], answer: 0 },
           { id: 'K-M-W3-9', q: 'Which plate has less food: one with 2 crackers or one with 9 crackers?', type: 'mc', options: ['2 crackers', '9 crackers', 'same'], answer: 0 },
           { id: 'K-M-W3-10', q: 'A group of 3 is less than a group of ___.', type: 'mc', options: ['2', '3', '5'], answer: 2 },
         ] },
@@ -92,7 +92,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { id: 'K-M-Q1-U1', q: 'Count the sides: a square has ___ sides.', type: 'mc', options: ['2', '3', '4', '5'], answer: 2 },
         { id: 'K-M-Q1-U2', q: 'Which number comes right after 7?', type: 'mc', options: ['6', '7', '8', '9'], answer: 2 },
         { id: 'K-M-Q1-U3', q: 'A circle has how many sides?', type: 'mc', options: ['0', '1', '2', '3'], answer: 0 },
-        { id: 'K-M-Q1-U4', q: 'Draw a square and a triangle. Color the shape with 3 sides.', type: 'activity' },
+        { id: 'K-M-Q1-U4', q: 'Which shape has 3 sides?', type: 'mc', options: ['Square', 'Triangle', 'Circle'], answer: 1 },
         { id: 'K-M-Q1-U5', q: 'Count from 1 to 10 out loud. Write the number 6.', type: 'short', answer: '6' },
       ]},
       { name: 'Q2 — Numbers to 20', lessons: [
@@ -117,7 +117,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Math All Around Us', summary: 'Lets find numbers everywhere! Can you see 2 shoes plus 1 sock? Count toys in your room and add them together - how many do you have?' },
       ], questions: [
         { id: 'K-M-Q4-1', q: 'If you have 2 blocks and get 1 more, how many now?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
-        { id: 'K-M-Q4-2', q: 'Show 1 + 1 = 2 with a drawing.', type: 'activity' },
+        { id: 'K-M-Q4-2', q: 'What does 1 + 1 equal?', type: 'mc', options: ['1', '2', '3'], answer: 1 },
       ]},
     ]},
     { name: 'Language Arts', units: [
@@ -143,7 +143,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Listening to Stories', summary: 'Lets listen to a story together! Sit close and use your ears. When you hear your name or a name like yours, clap your hands!' },
       ], questions: [
         { id: 'K-L-Q3-1', q: 'Which is a capital letter?', type: 'mc', options: ['a', 'A', 'b'], answer: 1 },
-        { id: 'K-L-Q3-2', q: 'Tell one thing that happened in a story you heard.', type: 'short', answer: 'open' },
+        { id: 'K-L-Q3-2', q: 'What might happen in a story?', type: 'mc', options: ['A character goes on an adventure', 'The book closes itself', 'Words disappear'], answer: 0 },
       ]},
       { name: 'Q4 — Early Writing', lessons: [
         { title: 'Draw & Label', summary: 'Lets draw a picture together! Draw your favorite toy and write the first letter of its name next to it. Can you tell me about your drawing?' },
@@ -151,7 +151,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Share a Story', summary: 'Lets tell a story together! You pick your favorite toy and Ill help you make up a fun story about it. Draw a picture of what happens next!' },
       ], questions: [
         { id: 'K-L-Q4-1', q: 'A sentence begins with a capital ___', type: 'mc', options: ['letter', 'period', 'number'], answer: 0 },
-        { id: 'K-L-Q4-2', q: 'Finish: I like to ___ (write one word).', type: 'short', answer: 'open' },
+        { id: 'K-L-Q4-2', q: 'Complete: I like to ___', type: 'mc', options: ['play', 'table', 'purple'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -161,7 +161,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Where Words Come From', summary: 'Words are all around us! When you say "mama" or "dog," youre using words. Lets walk around and name everything you see - chair, cup, toy!' },
       ], questions: [
         { id: 'K-SP-Q1-1', q: 'Spell the word: c-a-t. What is it?', type: 'mc', options: ['cat', 'cap', 'car'], answer: 0 },
-        { id: 'K-SP-Q1-2', q: 'Write the first letter of your name.', type: 'short', answer: 'open' },
+        { id: 'K-SP-Q1-2', q: 'Which is a letter that could start your name?', type: 'mc', options: ['A', '5', '@'], answer: 0 },
       ]},
       { name: 'Q2 — Sight Words', lessons: [
         { title: 'List 1', summary: 'Lets find sight words! Look at this word: "the." Can you point to "the" in your favorite book? Lets hunt for more sight words together!' },
@@ -177,7 +177,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Root Fun', summary: 'Lets play with word families! Words that sound the same at the end are friends. Say "cat" and "hat" - do you hear how they rhyme? Find three things that rhyme with "run" like "sun" and "fun"!' },
       ], questions: [
         { id: 'K-SP-Q3-1', q: 'Which word is in the -at family?', type: 'mc', options: ['bat', 'big', 'sun'], answer: 0 },
-        { id: 'K-SP-Q3-2', q: 'Write a word that rhymes with "log".', type: 'short', answer: 'open' },
+        { id: 'K-SP-Q3-2', q: 'Which word rhymes with "log"?', type: 'mc', options: ['cat', 'dog', 'tree'], answer: 1 },
       ]},
       { name: 'Q4 — Review & Pride', lessons: [
         { title: 'My Spelling Book', summary: 'Look at all the letters you learned this year! You can write A, B, C and so many more. Lets make a special book with your favorite letters and draw pictures for each one.' },
@@ -185,7 +185,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Show & Tell', summary: 'You did so many amazing things this year! Pick your favorite toy or drawing to show me. Tell me why you love it and what makes it special to you.' },
       ], questions: [
         { id: 'K-SP-Q4-1', q: 'A word family shares the same ___ sound.', type: 'mc', options: ['ending', 'first', 'color'], answer: 0 },
-        { id: 'K-SP-Q4-2', q: 'Write one word you learned this year.', type: 'short', answer: 'open' },
+        { id: 'K-SP-Q4-2', q: 'Which is a word you might learn?', type: 'mc', options: ['cat', '123', '###'], answer: 0 },
       ]},
     ]},
     { name: 'Science', units: [
@@ -211,7 +211,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Body Parts', summary: 'Lets name your body parts! Touch your head, then your toes. Can you wiggle your nose and clap your hands?' },
       ], questions: [
         { id: 'K-SC-Q3-1', q: 'Which sense do we use to smell a flower?', type: 'mc', options: ['sight', 'smell', 'touch'], answer: 1 },
-        { id: 'K-SC-Q3-2', q: 'Name one way to stay healthy.', type: 'short', answer: 'open' },
+        { id: 'K-SC-Q3-2', q: 'What is one way to stay healthy?', type: 'mc', options: ['Eat vegetables', 'Stay up all night', 'Never exercise'], answer: 0 },
       ]},
       { name: 'Q4 — Motion & Matter', lessons: [
         { title: 'Push & Pull', summary: 'You can push and pull things to make them move! Push your toy car across the floor, then pull it back to you. Try pushing and pulling different toys around your room.' },
@@ -228,7 +228,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Past & Present', summary: 'Look at old pictures of your family! Point to baby you and big you now. Draw yourself as a baby and yourself today on paper.' },
         { title: 'Family Stories', summary: 'Every family has special stories! Ask someone to tell you a funny story about when you were little. Now draw a picture of your favorite family story!' },
       ], questions: [
-        { id: 'K-H-Q1-1', q: 'Who helps take care of you at home?', type: 'short', answer: 'open' },
+        { id: 'K-H-Q1-1', q: 'Who helps take care of you at home?', type: 'mc', options: ['Parents', 'Strangers', 'No one'], answer: 0 },
         { id: 'K-H-Q1-2', q: 'A story from long ago is called the ___', type: 'mc', options: ['past', 'future', 'present'], answer: 0 },
       ]},
       { name: 'Q2 — Our Community', lessons: [
@@ -245,7 +245,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Where I Live', summary: 'Look around your room! Can you point to your bed, your toys, and the door? Lets draw a map of your room and put a big X where you sleep!' },
       ], questions: [
         { id: 'K-H-Q3-1', q: 'Earth is shaped like a ___', type: 'mc', options: ['box', 'ball', 'flat plate'], answer: 1 },
-        { id: 'K-H-Q3-2', q: 'We live in the country called ___', type: 'short', answer: 'open' },
+        { id: 'K-H-Q3-2', q: 'We live in the country called ___', type: 'mc', options: ['United States', 'Mars', 'Ocean'], answer: 0 },
       ]},
       { name: 'Q4 — Holidays & Heroes', lessons: [
         { title: 'American Holidays', summary: 'America has special fun days called holidays! We eat turkey on Thanksgiving and watch fireworks on the Fourth of July. Draw your favorite holiday food and tell me why you like it!' },
@@ -253,7 +253,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Thankfulness', summary: 'What makes you happy? Lets draw three things you love! Maybe your family, your pet, or your favorite toy. Show me your pictures and tell me why they make you smile.' },
       ], questions: [
         { id: 'K-H-Q4-1', q: 'On Thanksgiving we ___', type: 'mc', options: ['give thanks', 'trick-or-treat', 'sing carols'], answer: 0 },
-        { id: 'K-H-Q4-2', q: 'Name one holiday we celebrate.', type: 'short', answer: 'open' },
+        { id: 'K-H-Q4-2', q: 'Which is a holiday we celebrate?', type: 'mc', options: ['Christmas', 'Wednesday', 'Purple Day'], answer: 0 },
       ]},
     ]},
     { name: 'Bible & Character', units: [
@@ -287,7 +287,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { title: 'Sing to God', summary: 'God loves when we sing to Him! Lets sing "Thank You, God" together. Now clap your hands while you sing your favorite song to God!' },
       ], questions: [
         { id: 'K-B-Q4-1', q: 'We say "___" when given something.', type: 'mc', options: ['thank you', 'mine', 'no'], answer: 0 },
-        { id: 'K-B-Q4-2', q: 'Name one thing God gave you.', type: 'short', answer: 'open' },
+        { id: 'K-B-Q4-2', q: 'What is one thing God gave you?', type: 'mc', options: ['Life', 'Sadness', 'Nothing'], answer: 0 },
       ]},
     ]},
   ])
@@ -352,7 +352,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'My Opinion', summary: 'What do you like best? Ice cream or cake? Tell me why you picked that one! Draw a picture of your favorite and tell someone all about it.' },
       ], questions: [
         { id: '1-L-Q3-1', q: 'A sentence ends with a ___', type: 'mc', options: ['comma', 'period', 'space'], answer: 1 },
-        { id: '1-L-Q3-2', q: 'Write one sentence about your favorite food.', type: 'short', answer: 'open' },
+        { id: '1-L-Q3-2', q: 'What makes a good sentence about your favorite food?', type: 'mc', options: ['I like pizza because it tastes good.', 'Pizza good me like.', 'Food is.'], answer: 0 },
       ]},
       { name: 'Q4 — Grammar', lessons: [
         { title: 'Nouns', summary: 'A noun is a person, place, or thing! Look around your room. Can you point to three things and say their names out loud?' },
@@ -378,7 +378,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Origin: "cake"', summary: 'The word "cake" has a long A sound! Can you say "cake" and stretch out the A? Lets pretend to blow out birthday candles and say "caaake" each time you blow!' },
       ], questions: [
         { id: '1-SP-Q2-1', q: 'Which uses a long a sound?', type: 'mc', options: ['cap', 'cake', 'cat'], answer: 1 },
-        { id: '1-SP-Q2-2', q: 'Write a word that rhymes with "boat".', type: 'short', answer: 'open' },
+        { id: '1-SP-Q2-2', q: 'Which word rhymes with "boat"?', type: 'mc', options: ['coat', 'dog', 'tree'], answer: 0 },
       ]},
       { name: 'Q3 — Blends & Digraphs', lessons: [
         { title: 'List 5: st-/bl-', summary: 'Lets play with sounds! Say "st" like in "stop" and "bl" like in "blue." Can you stomp your feet and blow like the wind?' },
@@ -386,7 +386,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Origin: "ship"', summary: 'Lets say "ship" together! Can you hear the "sh" sound at the start? Find three things in your room that start with "sh" like ship, shoe, or shirt!' },
       ], questions: [
         { id: '1-SP-Q3-1', q: 'Which starts with "sh"?', type: 'mc', options: ['shop', 'stop', 'block'], answer: 0 },
-        { id: '1-SP-Q3-2', q: 'Write a word that starts with "bl".', type: 'short', answer: 'open' },
+        { id: '1-SP-Q3-2', q: 'Which word starts with "bl"?', type: 'mc', options: ['blue', 'red', 'cat'], answer: 0 },
       ]},
       { name: 'Q4 — Review', lessons: [
         { title: 'Master List', summary: 'Lets make a master list together! We can write down all your favorite things. Draw pictures of your toys, foods, and friends on paper!' },
@@ -496,7 +496,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'My Church', summary: 'God gave us our church family! We can say thank you for all the people who love us there. Lets draw a picture of your favorite person at church and give them a big hug next Sunday!' },
       ], questions: [
         { id: '1-B-Q4-1', q: 'We give thanks to ___', type: 'mc', options: ['God', 'no one', 'TV'], answer: 0 },
-        { id: '1-B-Q4-2', q: 'Name one way you can help at home.', type: 'short', answer: 'open' },
+        { id: '1-B-Q4-2', q: 'How can you help at home?', type: 'mc', options: ['Clean your room', 'Make a mess', 'Hide from chores'], answer: 0 },
       ]},
     ]},
   ])

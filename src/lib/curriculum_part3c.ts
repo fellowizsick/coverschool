@@ -63,7 +63,7 @@ export const G11: GradeCurriculum = g('11th Grade', 11, '16-17', 'Algebra II, Br
         { title: 'Revision', summary: 'Revision isnt just about fixing typosâ€”its your chance to transform good writing into great writing by strengthening your analysis and sharpening your arguments. Think of it like sculpting: your first draft gives you the raw material, but revision is where you chisel away weaknesses and polish your insights until they shine. For example, if you wrote "The character is sad," revision might deepen this to "The protagonists melancholy reflects the authors critique of social isolation in modern society." Try this revision technique: read your analysis aloud and circle any vague words like "good' },
       ], questions: [
         { id: '11-L-Q2-1', q: 'A research paper argues from ___', type: 'mc', options: ['evidence', 'opinion', 'guesses'], answer: 0 },
-        { id: '11-L-Q2-2', q: 'Write a thesis on duty in a Shakespeare play.', type: 'short', answer: 'open' },
+        { id: '11-L-Q2-2', q: "Which is a strong thesis about duty in Shakespeare?", type: 'mc', options: ["Hamlet's struggle with duty reveals the complexity of moral obligation.", 'Shakespeare wrote plays.', 'Hamlet is a character.'], answer: 0 },
       ]},
       { name: 'Q3 â€” Rhetoric', lessons: [
         { title: 'Persuasion', summary: 'Persuasion is the art of convincing others to see things your way through carefully chosen words, emotional appeals, and logical reasoning. Think about how a lawyer argues a case, a politician campaigns for votes, or even how you might convince your parents to extend your curfew - they all use persuasive techniques like ethos (credibility), pathos (emotion), and logos (logic). For instance, when arguing for later school start times, you might establish credibility by citing sleep research, appeal to emotions by describing student exhaustion, and use logic by presenting improved test scores fro' },
@@ -79,7 +79,7 @@ export const G11: GradeCurriculum = g('11th Grade', 11, '16-17', 'Algebra II, Br
         { title: 'Reflection', summary: 'As you reach the culmination of your capstone journey, reflection becomes your most powerful tool for understanding not just what youve accomplished, but how youve grown as a learner and thinker. Reflection is the intentional process of looking back at your experiences, analyzing your decisions, and connecting new insights to your existing knowledge and future goals. Think of it like reviewing game footage after a big match - youre examining both your victories and missed opportunities to understand your development. For example, you might reflect on how your research question evolved throu' },
       ], questions: [
         { id: '11-L-Q4-1', q: 'A portfolio shows your ___', type: 'mc', options: ['growth', 'age', 'grade only'], answer: 0 },
-        { id: '11-L-Q4-2', q: 'Write one sentence on what you learned in English.', type: 'short', answer: 'open' },
+        { id: '11-L-Q4-2', q: 'Which reflects learning in English class?', type: 'mc', options: ['I learned to analyze symbolism in literature.', 'English class exists.', 'We read books.'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -105,14 +105,14 @@ export const G11: GradeCurriculum = g('11th Grade', 11, '16-17', 'Algebra II, Br
         { title: 'Suffix: -graphy = "writing/description"', summary: 'The suffix -graphy comes from Greek and means writing or description, appearing in many academic and professional terms you encounter daily. Words like biography describe someones life story, geography describes Earths features, and photography literally means writing with light. This suffix often creates nouns that name fields of study or methods of recording information, such as choreography for dance notation or calligraphy for decorative writing. To master this suffix, try identifying -graphy words in your textbooks across different subjects and break them down by their root meanings - y' },
       ], questions: [
         { id: '11-SP-Q3-1', q: '"geology" is the study of the ___', type: 'mc', options: ['earth', 'life', 'words'], answer: 0 },
-        { id: '11-SP-Q3-2', q: 'Write a word ending in "-ology".', type: 'short', answer: 'open' },
+        { id: '11-SP-Q3-2', q: 'Which word ends in "-ology" (meaning study of)?', type: 'mc', options: ['psychology', 'apologize', 'long'], answer: 0 },
       ]},
       { name: 'Q4 â€” Review', lessons: [
         { title: 'Master List', summary: 'As we wrap up Q4, lets create your personalized Master List to consolidate everything youve learned this year. Think of it as your academic greatest hits album - a curated collection of key concepts, formulas, vocabulary, and insights that will serve you well beyond this course. For example, if you studied calculus, your Master List might include the fundamental theorem, key derivative rules, and those tricky integration techniques that finally clicked. Start by reviewing your notes, assignments, and tests from each unit, then organize the most important elements into categories that make se' },
         { title: 'Root Map', summary: 'In this quarters review, well create a Root Map to visually connect all the major concepts weve studied and see how they branch out from core ideas, just like a trees root system spreading underground. Think of photosynthesis as your main root - from there, you can map smaller roots showing light reactions, dark reactions, chloroplast structure, and how each connects to cellular respiration and energy flow. For your Root Map activity, choose one central concept from our recent units and draw it as the main root, then add branching roots for related topics, sub-concepts, and real-world appl' },
         { title: 'Decode Mastery', summary: 'Decode Mastery is all about breaking down complex problems into manageable pieces, just like how you might tackle a challenging video game level or decode a tricky social media trend. Think of analyzing a dense poem in English class - instead of feeling overwhelmed, you identify literary devices, examine word choice, and consider historical context piece by piece until the meaning becomes clear. This systematic approach works across all subjects, whether youre solving multi-step calculus problems, understanding chemical reactions, or interpreting historical events. For your review activity, c' },
       ], questions: [
-        { id: '11-SP-Q4-1', q: 'Write a word with root "the".', type: 'short', answer: 'open' },
+        { id: '11-SP-Q4-1', q: 'Which word contains the root "the" (meaning god)?', type: 'mc', options: ['theology', 'the', 'these'], answer: 0 },
         { id: '11-SP-Q4-2', q: 'Roots let you read ___ words confidently.', type: 'mc', options: ['unknown', 'short', 'easy'], answer: 0 },
       ]},
     ]},
@@ -254,7 +254,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Review', summary: 'Welcome to our capstone review where well synthesize the mathematical concepts youve mastered throughout high school! Think of this as connecting the dots between algebra, geometry, trigonometry, and calculus to solve real-world problems. For example, designing a skateboard ramp involves quadratic functions for the curve, trigonometry for optimal angles, and calculus for finding maximum speeds. Your challenge is to create a comprehensive project that demonstrates how multiple mathematical areas work together to solve a problem youre passionate about, whether thats analyzing music frequenci' },
       ], questions: [
         { id: '12-M-Q4-1', q: 'Math models ___', type: 'mc', options: ['real problems', 'nothing', 'only school'], answer: 0 },
-        { id: '12-M-Q4-2', q: 'Write one way you used math this year.', type: 'short', answer: 'open' },
+        { id: '12-M-Q4-2', q: 'How might you use math in daily life?', type: 'mc', options: ['Calculating tips at restaurants', 'Sleeping', 'Watching TV'], answer: 0 },
       ]},
     ]},
     { name: 'Language Arts', units: [
@@ -272,7 +272,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Draft & Defend', summary: 'Welcome to the exciting final stretch of your research journey where youll craft your capstone project and present it with confidence! In this quarter, youll transform all your research, analysis, and insights into a polished final product whether thats a traditional research paper, multimedia presentation, documentary, or innovative project format that best showcases your findings. Think of yourself as both author and advocate as youll not only create something meaningful but also defend your conclusions and methodology before an audience of peers, teachers, or community members. For exam' },
       ], questions: [
         { id: '12-L-Q2-1', q: 'A capstone defends a ___', type: 'mc', options: ['thesis', 'joke', 'list'], answer: 0 },
-        { id: '12-L-Q2-2', q: 'Write a one-sentence thesis on a book you studied.', type: 'short', answer: 'open' },
+        { id: '12-L-Q2-2', q: 'Which is a strong thesis about a classic novel?', type: 'mc', options: ['To Kill a Mockingbird demonstrates how prejudice corrupts justice.', 'The book has chapters.', 'Harper Lee wrote it.'], answer: 0 },
       ]},
       { name: 'Q3 â€” Rhetoric Capstone', lessons: [
         { title: 'Persuade', summary: 'Welcome to your rhetoric capstone where youll master the art of persuasion by combining everything youve learned about ethos, pathos, and logos into powerful arguments that can truly change minds. Think about how Greta Thunberg transformed from an unknown teenager into a global climate activist by skillfully weaving her personal credibility as a young person facing an uncertain future, emotional appeals about planetary destruction, and hard scientific data about rising temperatures into speeches that moved world leaders to action. Now its your turn to tackle a real issue you care about, whe' },
@@ -288,7 +288,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Present', summary: 'As you enter your final high school years, your senior portfolio becomes a powerful tool to showcase who you are right now and demonstrate your growth over time. Think of it as a curated collection that tells your unique story through academic work, creative projects, reflections, and achievements that represent your current skills and interests. For example, you might include a recent research paper that shows your analytical thinking, artwork that reflects your creative voice, or documentation of a community service project that reveals your values and leadership abilities. To get started, g' },
       ], questions: [
         { id: '12-L-Q4-1', q: 'The portfolio shows ___', type: 'mc', options: ['growth', 'age', 'grade'], answer: 0 },
-        { id: '12-L-Q4-2', q: 'Write one sentence on your senior year.', type: 'short', answer: 'open' },
+        { id: '12-L-Q4-2', q: 'Which reflects on your senior year experience?', type: 'mc', options: ['This year taught me the value of perseverance.', 'I am a senior.', 'School has grades.'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -313,7 +313,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Decode Anything', summary: 'Think of decoding as your superpower for understanding any complex text, image, or media you encounter. Whether youre analyzing a political cartoon, dissecting a poems hidden meanings, or figuring out the bias in a news article, decoding means breaking down the layers to reveal whats really being communicated. For example, when you see an advertisement showing a happy family using a product, youre decoding when you recognize theyre selling you an idealized lifestyle, not just soap. To master this skill, try the detective approach with any media you consume today: ask yourself who created ' },
         { title: 'Spelling Bee', summary: 'Mastering spelling at the advanced level means understanding the intricate patterns, etymologies, and exceptions that make English both challenging and fascinating. Consider words like "mnemonic" where the silent m reflects its Greek origins, or "necessary" which follows the pattern of one c and two s letters that many find tricky. To sharpen your spelling expertise, practice with words commonly used in academic and professional writing such as "conscientious," "embarrass," and "millennium." Create personal memory devices by connecting difficult spellings to their word origins or breakin' },
       ], questions: [
-        { id: '12-SP-Q3-1', q: 'Write a word using any root you learned.', type: 'short', answer: 'open' },
+        { id: '12-SP-Q3-1', q: 'Which word uses a root you might have learned?', type: 'mc', options: ['Democracy (demos = people)', 'Cat', 'The'], answer: 0 },
         { id: '12-SP-Q3-2', q: 'Roots unlock ___ of the English language.', type: 'mc', options: ['most words', 'few words', 'no words'], answer: 0 },
       ]},
       { name: 'Q4 â€” Legacy', lessons: [
@@ -321,7 +321,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Teach a Word', summary: 'Legacy represents the lasting impact we leave behind through our actions, values, and contributions to others and society. Think of how Martin Luther King Jr.s commitment to justice continues inspiring social change decades after his death, or how a teachers encouragement might shape a students entire career path. Your legacy isnt just about fame or wealth its about the positive difference you make in peoples lives and communities. To explore this concept, interview someone you admire about what legacy means to them, then reflect on what kind of lasting impact you want to create through ' },
         { title: 'Final', summary: 'As we reach the end of our journey together, its time to reflect on the legacy youll leave behind and carry forward. A legacy isnt just about grand gestures or famous achievements - its about the positive impact you have on others through your daily choices, kindness, and authentic self. Think about a teacher who believed in you, a friend who supported you through tough times, or even a stranger whose smile brightened your day - these seemingly small moments create lasting legacies. Your legacy might be the encouragement you give a struggling classmate, the environmental choices you make, ' },
       ], questions: [
-        { id: '12-SP-Q4-1', q: 'Write one word you will remember.', type: 'short', answer: 'open' },
+        { id: '12-SP-Q4-1', q: 'Which word represents memorable vocabulary?', type: 'mc', options: ['Perseverance', 'And', 'The'], answer: 0 },
         { id: '12-SP-Q4-2', q: 'Etymology helps you ___ words for life.', type: 'mc', options: ['own', 'forget', 'fear'], answer: 0 },
       ]},
     ]},
@@ -340,7 +340,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Present', summary: 'In your capstone science project, presenting your findings effectively transforms months of hard work into compelling communication that showcases your scientific journey. A strong presentation combines clear visual aids, confident delivery, and the ability to explain complex concepts to diverse audiences, from classmates to community members. For example, if you researched local water quality, you might use before-and-after photos, data graphs, and simple analogies to help your audience understand pollution impacts and your proposed solutions. To master this skill, practice your presentation ' },
       ], questions: [
         { id: '12-SC-Q2-1', q: 'A capstone shows ___ study.', type: 'mc', options: ['deep', 'shallow', 'none'], answer: 0 },
-        { id: '12-SC-Q2-2', q: 'Write one science topic you explored.', type: 'short', answer: 'open' },
+        { id: '12-SC-Q2-2', q: 'Which is a science topic you might explore?', type: 'mc', options: ['Climate change', 'Lunch menus', 'TV shows'], answer: 0 },
       ]},
       { name: 'Q3 â€” Ethics of Science', lessons: [
         { title: 'Stewardship', summary: 'Stewardship in science means being responsible guardians of our planet and its resources for future generations. Scientists have an ethical duty to consider the long-term impacts of their research and discoveries on the environment and society. For example, when developing new technologies like genetic engineering or artificial intelligence, researchers must carefully weigh potential benefits against possible risks to ecosystems and human wellbeing. Climate scientists exemplify good stewardship by studying environmental changes and advocating for sustainable practices based on their findings. ' },
@@ -356,7 +356,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Wonder', summary: 'Wonder by R.J. Palacio masterfully demonstrates how perspective shapes our understanding of complex situations by telling the same story through multiple viewpoints, revealing that every person carries hidden struggles and motivations. When we first meet Auggie through his own eyes, we see his humor and resilience, but when classmates like Jack Will and Summer share their perspectives, we discover the social pressures and genuine conflicts they face in befriending someone who looks different. This multi-perspective narrative technique shows how initial judgments often mask deeper truths about ' },
       ], questions: [
         { id: '12-SC-Q4-1', q: 'All science points back to ___', type: 'mc', options: ['the Creator', 'chance', 'nothing'], answer: 0 },
-        { id: '12-SC-Q4-2', q: 'Write one thing you learned in science.', type: 'short', answer: 'open' },
+        { id: '12-SC-Q4-2', q: 'What might you learn in science class?', type: 'mc', options: ['How photosynthesis works', 'What color your backpack is', 'Your favorite food'], answer: 0 },
       ]},
     ]},
     { name: 'History & Geography', units: [
@@ -382,7 +382,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Vote', summary: 'Voting is your most fundamental right as a citizen and the cornerstone of democratic participation. When you turn 18, you gain the power to influence everything from local school board decisions that affect your younger siblings to presidential elections that shape foreign policy. Your vote carries the same weight as any other citizen, whether theyre a CEO or a teacher. Consider how young voters in recent elections have significantly impacted outcomes on issues like climate change, student debt, and social justice. To prepare for this responsibility, research the candidates and ballot measure' },
       ], questions: [
         { id: '12-H-Q3-1', q: 'Voting is a ___', type: 'mc', options: ['duty', 'joke', 'burden only'], answer: 0 },
-        { id: '12-H-Q3-2', q: 'Write one way you will serve.', type: 'short', answer: 'open' },
+        { id: '12-H-Q3-2', q: 'How might you serve after graduation?', type: 'mc', options: ['Volunteer in community organizations', 'Only think about yourself', 'Avoid all responsibilities'], answer: 0 },
       ]},
       { name: 'Q4 â€” Senior Thesis', lessons: [
         { title: 'Choose', summary: 'As you begin your senior thesis journey, remember that choosing your topic is one of the most empowering decisions youll make in high school. This choice should reflect your genuine curiosity and passion, whether thats exploring the psychology behind social media addiction, analyzing climate change solutions in your community, or investigating the cultural impact of hip-hop music. The key is selecting something that genuinely excites you because youll be spending months researching, writing, and presenting on this topic. For your next class, bring three potential thesis topics that youre g' },
@@ -390,7 +390,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Defend', summary: 'Your senior thesis defense is your moment to shine as the expert on your chosen topic, where you confidently present your research findings and respond thoughtfully to questions from your audience. Think of it like being a knowledgeable tour guide who can navigate any route through your subject matter, whether someone asks about your methodology, challenges you encountered, or implications of your conclusions. For example, if you researched the impact of social media on teen mental health, you should be prepared to explain not just your findings, but also why you chose certain studies, how you' },
       ], questions: [
         { id: '12-H-Q4-1', q: 'A thesis argues a ___', type: 'mc', options: ['claim', 'fact', 'joke'], answer: 0 },
-        { id: '12-H-Q4-2', q: 'Write your senior thesis claim.', type: 'short', answer: 'open' },
+        { id: '12-H-Q4-2', q: 'Which represents a senior thesis claim?', type: 'mc', options: ['Education empowers individuals to create positive change.', 'I wrote a paper.', 'Thesis papers exist.'], answer: 0 },
       ]},
     ]},
     { name: 'Bible & Character', units: [
@@ -424,7 +424,7 @@ export const G12: GradeCurriculum = g('12th Grade', 12, '17-18', 'Senior year â€
         { title: 'Diploma', summary: 'The diploma youll receive at graduation represents far more than just a piece of paper - its a powerful symbol of your perseverance, growth, and readiness for the next chapter of your life. Think of it as your official passport to adulthood, opening doors to college applications, job opportunities, and personal independence that seemed distant just a few years ago. When you walk across that stage to receive your diploma, youre not just completing high school; youre proving to yourself and the world that you can set goals, overcome challenges, and see important commitments through to the en' },
       ], questions: [
         { id: '12-B-Q4-1', q: 'Graduation means you are ___', type: 'mc', options: ['ready to serve', 'done learning', 'free'], answer: 0 },
-        { id: '12-B-Q4-2', q: 'Write one thing you will carry forward.', type: 'short', answer: 'open' },
+        { id: '12-B-Q4-2', q: 'What might you carry forward from your education?', type: 'mc', options: ['The importance of serving others', 'Your backpack', 'Nothing at all'], answer: 0 },
       ]},
     ]},
   ])

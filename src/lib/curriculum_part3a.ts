@@ -71,7 +71,7 @@ export const G7: GradeCurriculum = g('7th Grade', 7, '12-13', 'Pre-algebra, lite
         { title: 'Research Basics', summary: 'Research is like being a detective gathering clues to solve a mystery, except youre collecting facts and information to answer questions or support your ideas in writing. Good researchers use multiple reliable sources like books, educational websites, and expert interviews rather than just grabbing the first thing they find online. For example, if youre writing about climate change, you might check NASAs website, read a science textbook chapter, and review recent news articles from trusted sources to get a complete picture. Try this detective activity: pick a topic youre curious about, the' },
       ], questions: [
         { id: '7-L-Q3-1', q: 'A strong essay has a clear ___', type: 'mc', options: ['thesis', 'joke', 'list'], answer: 0 },
-        { id: '7-L-Q3-2', q: 'Write a thesis on why reading builds character.', type: 'short', answer: 'open' },
+        { id: '7-L-Q3-2', q: 'Which is a strong thesis on how reading builds character?', type: 'mc', options: ['Reading literature exposes students to moral dilemmas that develop ethical thinking.', 'Books are made of paper.', 'Reading takes time.'], answer: 0 },
       ]},
       { name: 'Q4 — Speaking & Listening', lessons: [
         { title: 'Oral Presentation', summary: 'In Quarter 4, youll master the art of oral presentation by learning to organize your ideas clearly, speak with confidence, and engage your audience effectively. An oral presentation is when you share information or ideas with others through spoken words, often supported by visual aids like slides or props. For example, you might present a research project about climate change by starting with an attention-grabbing fact, explaining the main causes and effects, and ending with solutions your classmates can try. To practice this skill, youll prepare and deliver a 5-minute presentation on a topi' },
@@ -105,14 +105,14 @@ export const G7: GradeCurriculum = g('7th Grade', 7, '12-13', 'Pre-algebra, lite
         { title: 'Root: therm = "heat"', summary: 'The root therm comes from Greek and means heat, and you can find it in many science words that deal with temperature and thermal energy. A thermometer measures heat or temperature, a thermostat controls the heat in your home, and hypothermia happens when your body loses too much heat and becomes dangerously cold. Geothermal energy uses heat from deep inside the Earth to create electricity. To practice recognizing this root, look around your house and school for devices or systems that involve heat or temperature control, then see if their names contain the root therm and explain how they relat' },
       ], questions: [
         { id: '7-SP-Q3-1', q: '"hydrate" adds ___', type: 'mc', options: ['water', 'heat', 'light'], answer: 0 },
-        { id: '7-SP-Q3-2', q: 'Write a word with root "therm".', type: 'short', answer: 'open' },
+        { id: '7-SP-Q3-2', q: 'Which word contains the root "therm" (meaning heat)?', type: 'mc', options: ['thermal', 'think', 'three'], answer: 0 },
       ]},
       { name: 'Q4 — Review', lessons: [
         { title: 'Master List', summary: 'Welcome to your Q4 Master List review, where well organize all the amazing concepts youve learned this year into one powerful study tool! Think of a master list as your personal academic treasure map that connects related ideas, vocabulary, and skills from different units - like linking photosynthesis from science with fractions from math when calculating leaf surface areas. Creating your master list is like being a detective gathering clues, so grab your notebooks and start by writing down key terms, formulas, and concepts from each subject, then draw connections between topics that relate ' },
         { title: 'Root Map', summary: 'In this Root Map review, well explore how root words are like the foundation of a house - they give meaning to countless English words! Take the Latin root "spect" meaning "to see" - it appears in words like inspect, respect, and spectacle. For your activity, create a visual root map by choosing one root word and drawing branches to show at least five related words, then write a sentence using each word to demonstrate you understand how the roots meaning connects them all.' },
         { title: 'Decode', summary: 'Lets decode like detectives! When we decode, were figuring out the hidden meaning behind words, symbols, or messages by breaking them down into smaller parts we can understand. Think about how you might decode a text from your friend who writes "ur gr8" - you know they mean "youre great" because you understand the pattern of letters and numbers they used. For todays activity, work with a partner to decode these scrambled book titles by looking for familiar word patterns and letter combinations, then create your own coded message for another pair to solve.' },
       ], questions: [
-        { id: '7-SP-Q4-1', q: 'Write a word with root "phil".', type: 'short', answer: 'open' },
+        { id: '7-SP-Q4-1', q: 'Which word contains the root "phil" (meaning love)?', type: 'mc', options: ['philosophy', 'phone', 'physical'], answer: 0 },
         { id: '7-SP-Q4-2', q: 'Roots unlock meaning of ___ words.', type: 'mc', options: ['unknown', 'short', 'easy'], answer: 0 },
       ]},
     ]},
@@ -181,7 +181,7 @@ export const G7: GradeCurriculum = g('7th Grade', 7, '12-13', 'Pre-algebra, lite
         { title: 'Duties', summary: 'Duties are the responsibilities we have as citizens to help our community and country work well for everyone. Just like how you have duties at home like keeping your room clean or helping with chores, citizens have important duties too. Some key duties include following laws, paying taxes when you grow up, serving on juries, and participating in democracy by voting. For example, when your family pays taxes, that money helps build schools, roads, and hospitals that benefit everyone in your community. One of the most important duties is staying informed about whats happening in your government ' },
       ], questions: [
         { id: '7-H-Q4-1', q: 'Laws are made by the ___ branch.', type: 'mc', options: ['legislative', 'executive', 'judicial'], answer: 0 },
-        { id: '7-H-Q4-2', q: 'Name one duty of a citizen.', type: 'short', answer: 'open' },
+        { id: '7-H-Q4-2', q: 'What is one duty of a citizen?', type: 'mc', options: ['Obey laws', 'Ignore elections', 'Avoid community involvement'], answer: 0 },
       ]},
     ]},
     { name: 'Bible & Character', units: [
@@ -288,7 +288,7 @@ export const G8: GradeCurriculum = g('8th Grade', 8, '13-14', 'Algebra, argument
         { title: 'Essay', summary: 'When you write a literary analysis essay, youre like a detective explaining how an author creates meaning through their storytelling choices. Your essay should have a clear thesis that makes a claim about the text, followed by body paragraphs that use specific evidence from the story to support your argument. For example, if youre analyzing how a character changes throughout a novel, you might argue that the main character becomes more confident, then use examples of their actions and dialogue from different chapters to prove your point. Each body paragraph should focus on one main idea that' },
       ], questions: [
         { id: '8-L-Q4-1', q: 'An essay should argue from ___', type: 'mc', options: ['the text', 'opinion only', 'guesses'], answer: 0 },
-        { id: '8-L-Q4-2', q: 'Write one sentence on a book’s theme.', type: 'short', answer: 'open' },
+        { id: '8-L-Q4-2', q: "Which sentence best describes a book's theme?", type: 'mc', options: ['The novel explores the importance of friendship during difficult times.', 'The book has 200 pages.', 'I read this book last week.'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -306,7 +306,7 @@ export const G8: GradeCurriculum = g('8th Grade', 8, '13-14', 'Algebra, argument
         { title: 'Root: chron = "time"', summary: 'The Greek root chron means time and appears in many English words you probably already know. Think about chronological order, which means arranging events in time sequence, or a chronicle, which is a record of events over time. You might wear a chronometer, which is a precise timepiece, or study chronology in history class to understand when things happened. Heres a fun challenge: set a timer for two minutes and see how many chron words you can brainstorm with a partner, then share your discoveries with the class and discuss what each word means.' },
       ], questions: [
         { id: '8-SP-Q2-1', q: '"autobiography" is a life story written by ___', type: 'mc', options: ['self', 'another', 'no one'], answer: 0 },
-        { id: '8-SP-Q2-2', q: 'Write a word with root "chron".', type: 'short', answer: 'open' },
+        { id: '8-SP-Q2-2', q: 'Which word contains the root "chron" (meaning time)?', type: 'mc', options: ['chronology', 'chrome', 'church'], answer: 0 },
       ]},
       { name: 'Q3 — Prefixes 3', lessons: [
         { title: 'List 3: anti-, de-, mis-', summary: 'Ready to tackle three more powerful prefixes that can completely change a words meaning? The prefix anti- means against or opposite, like in antifreeze which works against freezing, while de- means to remove or reverse something, such as defrost meaning to remove frost. The tricky prefix mis- means badly or wrongly, like in misunderstand when you get the wrong idea about something. Try this fun challenge: pick a base word like trust and see how many new words you can create by adding these prefixes - you might discover distrust, mistrust, and antitrust all have slightly different meanings eve' },
@@ -321,7 +321,7 @@ export const G8: GradeCurriculum = g('8th Grade', 8, '13-14', 'Algebra, argument
         { title: 'Root Map', summary: 'Time to explore word roots like detectives discovering hidden treasures! A root map shows how one powerful root word branches out to create an entire family of related words. Take the Latin root spect meaning to see or look - it grows into spectacular, inspect, respect, and perspective, just like branches on a tree. Create your own root map by choosing a common root like port meaning carry, then draw branches connecting it to words like transport, export, portable, and report. Notice how understanding just one root suddenly unlocks the meaning of dozens of words, making you a more confident re' },
         { title: 'Decode', summary: 'Lets decode the hidden messages around us by breaking down complex information into simpler parts, just like solving a puzzle! When you decode something, youre translating it from one form to another to understand its meaning. For example, when you read a text message full of abbreviations like "BRB TTYL" you automatically decode it to "be right back, talk to you later" or when you figure out what your friend really means when they say "fine" in that particular tone. Now try this fun challenge: work with a partner to create a secret message using numbers where A equals 1, B equals 2, and so ' },
       ], questions: [
-        { id: '8-SP-Q4-1', q: 'Write a word with root "ject".', type: 'short', answer: 'open' },
+        { id: '8-SP-Q4-1', q: 'Which word contains the root "ject" (meaning throw)?', type: 'mc', options: ['project', 'jacket', 'jump'], answer: 0 },
         { id: '8-SP-Q4-2', q: 'Roots help you ___ new words.', type: 'mc', options: ['decode', 'ignore', 'misspell'], answer: 0 },
       ]},
     ]},
@@ -390,7 +390,7 @@ export const G8: GradeCurriculum = g('8th Grade', 8, '13-14', 'Algebra, argument
         { title: 'Citizenship', summary: 'Citizenship means being a member of a community with both rights and responsibilities that help make your town, state, and country work better for everyone. As an Alabama citizen, you have the right to speak freely and practice your religion, while also having responsibilities like following laws and helping your neighbors during emergencies like tornadoes. Good citizens participate in their communities by volunteering at local food banks, attending city council meetings, or simply being kind to classmates at school. Try keeping a citizenship journal this week where you write down one right yo' },
       ], questions: [
         { id: '8-H-Q4-1', q: 'Alabama’s governor leads the ___ branch.', type: 'mc', options: ['executive', 'judicial', 'legislative'], answer: 0 },
-        { id: '8-H-Q4-2', q: 'Name one way to serve your community.', type: 'short', answer: 'open' },
+        { id: '8-H-Q4-2', q: 'What is one way to serve your community?', type: 'mc', options: ['Volunteer at local organizations', 'Stay home always', 'Criticize everything'], answer: 0 },
       ]},
     ]},
     { name: 'Bible & Character', units: [

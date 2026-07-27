@@ -72,7 +72,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Friendly Letter', summary: 'Lets write a letter to a friend! Start with "Dear" and your friends name. Draw a picture and write one nice thing about them.' },
       ], questions: [
         { id: '2-L-Q3-1', q: 'A paragraph starts with a ___ sentence.', type: 'mc', options: ['topic', 'ending', 'question'], answer: 0 },
-        { id: '2-L-Q3-2', q: 'Write a friendly letter greeting (e.g. Dear ___).', type: 'short', answer: 'open' },
+        { id: '2-L-Q3-2', q: 'Which is a proper greeting for a friendly letter?', type: 'mc', options: ['Dear Mom,', 'Hey you,', 'To whoever,'], answer: 0 },
       ]},
       { name: 'Q4 — Poetry & Drama', lessons: [
         { title: 'Rhyme & Rhythm', summary: 'Words can sound the same at the end! Cat and hat rhyme. Clap your hands while you say "hop, hop, hop" to make a beat!' },
@@ -80,7 +80,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Book Report', summary: 'Lets tell friends about our favorite book! Draw a picture of the best part. Show your picture and say why you loved the book.' },
       ], questions: [
         { id: '2-L-Q4-1', q: 'A poem often has ___', type: 'mc', options: ['rhyme', 'only facts', 'no lines'], answer: 0 },
-        { id: '2-L-Q4-2', q: 'Name the author of a book you read.', type: 'short', answer: 'open' },
+        { id: '2-L-Q4-2', q: "Who might be the author of a children's book?", type: 'mc', options: ['Dr. Seuss', 'Your teacher', 'The librarian', 'A famous chef'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -89,7 +89,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'List 2: -oat/-eed', summary: 'Lets find words that end in -oat and -eed! A goat can float on a boat. We need to feed and weed the seed. Circle all the -oat and -eed words you can find in your favorite book!' },
         { title: 'Origin: "night"', summary: 'The word "night" came from long ago. People said it to mean dark time. Can you say "night" and listen to the long i sound? **Activity:** Look outside your window. Is it day or night right now?' },
       ], questions: [
-        { id: '2-SP-Q1-1', q: 'Write a word that rhymes with "light".', type: 'short', answer: 'open' },
+        { id: '2-SP-Q1-1', q: 'Which word rhymes with "light"?', type: 'mc', options: ['night', 'dark', 'heavy'], answer: 0 },
         { id: '2-SP-Q1-2', q: '"night" is an ___ word.', type: 'mc', options: ['old English', 'French', 'Spanish'], answer: 0 },
       ]},
       { name: 'Q2 — R-Controlled & Digraphs', lessons: [
@@ -98,7 +98,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Origin: "star"', summary: 'Look up at the night sky! Can you see the bright stars? Draw a star and say "star" - do you hear the "ar" sound?' },
       ], questions: [
         { id: '2-SP-Q2-1', q: 'Which has r-controlled sound?', type: 'mc', options: ['car', 'cat', 'cap'], answer: 0 },
-        { id: '2-SP-Q2-2', q: 'Write a word that starts with "wh".', type: 'short', answer: 'open' },
+        { id: '2-SP-Q2-2', q: 'Which word starts with "wh"?', type: 'mc', options: ['what', 'hat', 'cat'], answer: 0 },
       ]},
       { name: 'Q3 — Compound Words', lessons: [
         { title: 'List 5: sunlight, rainbow, bedroom', summary: 'Compound words are two words stuck together! Sunlight is sun + light. Rainbow is rain + bow. Bedroom is bed + room. Draw a picture of sunlight in your bedroom window!' },
@@ -106,7 +106,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Origin: "sun"', summary: 'The sun is bright and warm! We can make new words with "sun" like sunshine, sunset, and sunflower. Draw a big sun and write "sun" words around it like sunbeam and Sunday!' },
       ], questions: [
         { id: '2-SP-Q3-1', q: '"rainbow" is a ___ word.', type: 'mc', options: ['compound', 'short', 'foreign'], answer: 0 },
-        { id: '2-SP-Q3-2', q: 'Write a compound word (two words joined).', type: 'short', answer: 'open' },
+        { id: '2-SP-Q3-2', q: 'Which is a compound word?', type: 'mc', options: ['sunshine', 'happy', 'run'], answer: 0 },
       ]},
       { name: 'Q4 — Review', lessons: [
         { title: 'Master List', summary: 'Lets make a list of fun things! Write down your favorite toys. Can you add three more things you love?' },
@@ -182,7 +182,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Good Citizens', summary: 'Good citizens help others and follow rules. They are kind to friends and family. Draw a picture of yourself helping someone you love.' },
       ], questions: [
         { id: '2-H-Q4-1', q: 'The capital of Alabama is ___', type: 'mc', options: ['Montgomery', 'Birmingham', 'Mobile'], answer: 0 },
-        { id: '2-H-Q4-2', q: 'Name one way to be a good citizen.', type: 'short', answer: 'open' },
+        { id: '2-H-Q4-2', q: 'What is one way to be a good citizen?', type: 'mc', options: ['Follow the rules', 'Litter everywhere', 'Be mean to neighbors'], answer: 0 },
       ]},
     ]},
     { name: 'Bible & Character', units: [
@@ -281,7 +281,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Narrative', summary: 'A story tells what happens to someone. You can write about your day or make up fun things! Draw a picture first, then write about what you see.' },
       ], questions: [
         { id: '3-L-Q3-1', q: 'An opinion paragraph needs ___', type: 'mc', options: ['reasons', 'no point', 'only facts'], answer: 0 },
-        { id: '3-L-Q3-2', q: 'Write one sentence stating an opinion.', type: 'short', answer: 'open' },
+        { id: '3-L-Q3-2', q: 'Which sentence states an opinion?', type: 'mc', options: ['I think pizza is the best food.', 'The sun is hot.', 'Birds can fly.'], answer: 0 },
       ]},
       { name: 'Q4 — Cursive & Research', lessons: [
         { title: 'Cursive Intro', summary: 'Lets learn cursive writing! Cursive letters connect together like holding hands. Try tracing the letter a in the air with your finger.' },
@@ -289,7 +289,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Simple Report', summary: 'Lets write about your favorite animal! Pick one animal you love. Draw a picture and write three things about it.' },
       ], questions: [
         { id: '3-L-Q4-1', q: 'Guide words in a dictionary show the ___', type: 'mc', options: ['first and last words on page', 'meaning', 'spelling'], answer: 0 },
-        { id: '3-L-Q4-2', q: 'Write one fact you learned this year.', type: 'short', answer: 'open' },
+        { id: '3-L-Q4-2', q: 'Which is an example of a fact you might learn?', type: 'mc', options: ['The Earth is round.', 'I like ice cream.', 'Math is boring.'], answer: 0 },
       ]},
     ]},
     { name: 'Spelling & Word Origins', units: [
@@ -322,7 +322,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Root Recap', summary: 'Lets hunt for word roots! Find a book and look for words that start the same way. Can you spot "un-" words like "unhappy" or "undo"?' },
         { title: 'Use Roots', summary: 'Lets find word roots! The word "play" is in "playing" and "played." Can you find the root word "jump" in "jumping"?' },
       ], questions: [
-        { id: '3-SP-Q4-1', q: 'Write a word with the root "graph".', type: 'short', answer: 'open' },
+        { id: '3-SP-Q4-1', q: 'Which word contains the root "graph" (meaning write)?', type: 'mc', options: ['photograph', 'elephant', 'running'], answer: 0 },
         { id: '3-SP-Q4-2', q: 'Knowing roots helps you ___ new words.', type: 'mc', options: ['guess the meaning of', 'spell backwards', 'ignore'], answer: 0 },
       ]},
     ]},

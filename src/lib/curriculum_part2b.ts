@@ -71,7 +71,7 @@ export const G4: GradeCurriculum = g('4th Grade', 4, '9-10', 'Multi-step thinkin
         { title: 'Narrative Voice', summary: 'When you write a story, you get to choose who tells it! This is called the narrative voice. You can write like you are in the story using words like I, me, and my, which makes readers feel like they are right there with you. Or you can write like you are watching the story happen to someone else using words like he, she, and they, which lets you tell about many different characters. Try rewriting your favorite fairy tale both ways and see how different it feels when Goldilocks says I walked into the house versus She walked into the house.' },
       ], questions: [
         { id: '4-L-Q3-1', q: 'A 5-paragraph essay has ___ body paragraphs.', type: 'mc', options: ['3', '5', '1'], answer: 0 },
-        { id: '4-L-Q3-2', q: 'Write a strong opening sentence for a report on dogs.', type: 'short', answer: 'open' },
+        { id: '4-L-Q3-2', q: 'Which is a strong opening sentence for a report on dogs?', type: 'mc', options: ['Dogs are amazing animals that make great companions.', 'Dogs are animals.', 'I have a dog.'], answer: 0 },
       ]},
       { name: 'Q4 — Poetry & Drama', lessons: [
         { title: 'Forms of Poems', summary: 'Just like songs have different styles, poems come in many fun forms too! A haiku is a tiny three-line poem about nature, like one describing a butterfly dancing in your garden. A limerick is a silly five-line poem that makes you giggle with its bouncy rhythm and funny ending. Free verse poems dont follow strict rules and let you write however feels right, while rhyming poems have words that sound alike at the end of lines. Try writing your own haiku about your favorite animal or create a limerick about something that makes you laugh - you can even mix and match different forms to make your po' },
@@ -112,7 +112,7 @@ export const G4: GradeCurriculum = g('4th Grade', 4, '9-10', 'Multi-step thinkin
         { title: 'Root Map', summary: 'Lets explore how words are like plants with roots! A root word is the main part of a word that gives it meaning, just like a trees roots give it strength. For example, the root word play can grow into player, playing, and playful by adding different parts. When you see a long word you dont know, try to find the root word hiding inside it - its like being a word detective! Practice by taking the word helpful and finding the root word help, then think of other words that use the same root like helper and helping.' },
         { title: 'Decode', summary: 'When we decode, we use our reading superpowers to figure out what words say by looking at letters and letter patterns. Think of yourself as a word detective breaking a secret code! For example, when you see the word "night" you can decode it by recognizing the "igh" pattern that makes the long i sound. Lets practice decoding together by looking at words with tricky letter patterns like "ough" in words such as "tough" and "cough" - notice how the same letters can make different sounds! Try this fun activity: write down three mystery words with silent letters like "knee," "write," and "thumb" t' },
       ], questions: [
-        { id: '4-SP-Q4-1', q: 'Write a word with root "struct".', type: 'short', answer: 'open' },
+        { id: '4-SP-Q4-1', q: 'Which word contains the root "struct" (meaning build)?', type: 'mc', options: ['construct', 'street', 'strong'], answer: 0 },
         { id: '4-SP-Q4-2', q: 'Breaking words into roots helps you ___', type: 'mc', options: ['understand them', 'forget them', 'misspell'], answer: 0 },
       ]},
     ]},
@@ -181,7 +181,7 @@ export const G4: GradeCurriculum = g('4th Grade', 4, '9-10', 'Multi-step thinkin
         { title: 'Civic Duty', summary: 'Civic duty means doing our part to help our community and state be a better place for everyone. Just like how we have responsibilities at home and school, we also have responsibilities as citizens of Alabama. Some examples of civic duty include following rules and laws, being kind to our neighbors, helping keep our neighborhoods clean, and learning about important issues so we can make good choices when we grow up. Even as kids, we can practice civic duty by participating in community service projects like food drives or park cleanups, volunteering to help elderly neighbors, or writing letters' },
       ], questions: [
         { id: '4-H-Q4-1', q: 'The state flower of Alabama is the ___', type: 'mc', options: ['camellia', 'rose', 'tulip'], answer: 0 },
-        { id: '4-H-Q4-2', q: 'Name one way to serve your state.', type: 'short', answer: 'open' },
+        { id: '4-H-Q4-2', q: 'What is one way to serve your state?', type: 'mc', options: ["Vote when you're old enough", 'Move away', 'Complain about everything'], answer: 0 },
       ]},
     ]},
     { name: 'Bible & Character', units: [
@@ -215,7 +215,7 @@ export const G4: GradeCurriculum = g('4th Grade', 4, '9-10', 'Multi-step thinkin
         { title: 'By the Spirit', summary: 'When we believe in Jesus, God gives us His Holy Spirit to live inside our hearts, and the Spirit helps us show love, joy, peace, and kindness to others just like Jesus did. Think about how a apple tree doesnt try really hard to grow apples - the apples just grow naturally because thats what healthy apple trees do! In the same way, when the Holy Spirit lives in us, good things like patience and gentleness start growing in our lives naturally. This week, lets play the Fruit Detective game where you look for one piece of the fruit of the Spirit in your family and friends each day, like catchin' },
       ], questions: [
         { id: '4-B-Q4-1', q: 'Self-control is a fruit of the ___', type: 'mc', options: ['Spirit', 'body', 'school'], answer: 0 },
-        { id: '4-B-Q4-2', q: 'Name one fruit of the Spirit.', type: 'short', answer: 'open' },
+        { id: '4-B-Q4-2', q: 'Which is one of the fruits of the Spirit?', type: 'mc', options: ['Love', 'Anger', 'Selfishness'], answer: 0 },
       ]},
     ]},
   ])
@@ -280,7 +280,7 @@ export const G5: GradeCurriculum = g('5th Grade', 5, '10-11', 'Prepping for midd
         { title: 'Research Paper', summary: 'A research paper is like being a detective who gathers facts about a topic youre curious about and shares what you discovered with others. Just like how a detective collects clues to solve a mystery, you collect information from books, websites, and other sources to learn everything you can about your chosen subject, whether its dinosaurs, your favorite animal, or how rainbows form. Then you organize all those interesting facts into your own special report to teach your classmates something new. Lets practice by picking one animal youd love to learn more about, then well spend time findin' },
       ], questions: [
         { id: '5-L-Q3-1', q: 'A persuasive essay needs a ___', type: 'mc', options: ['claim', 'joke', 'list'], answer: 0 },
-        { id: '5-L-Q3-2', q: 'Write one claim about why kids should read.', type: 'short', answer: 'open' },
+        { id: '5-L-Q3-2', q: 'Which is a good claim about why kids should read?', type: 'mc', options: ['Reading improves vocabulary and imagination.', 'Books are heavy.', 'Libraries exist.'], answer: 0 },
       ]},
       { name: 'Q4 — Vocabulary', lessons: [
         { title: 'Synonyms/Antonyms', summary: 'Learning about synonyms and antonyms is like discovering word families that are best friends or complete opposites! Synonyms are words that mean almost the same thing, like happy and joyful, or big and large. Antonyms are words that mean the opposite, such as hot and cold, or loud and quiet. When you read stories or write your own, using different synonyms makes your writing more interesting instead of repeating the same word over and over. Try this fun game with a partner: one person says a word like small, and the other person has to quickly shout out both a synonym like tiny and an antonym ' },
@@ -321,7 +321,7 @@ export const G5: GradeCurriculum = g('5th Grade', 5, '10-11', 'Prepping for midd
         { title: 'Root Map', summary: 'In this Root Map review, well explore how roots are like underground treasure maps that help plants find what they need to grow strong and healthy. Just like how a map shows you where to find different places, plant roots spread out in all directions under the soil to locate water and nutrients. Think about a big oak tree - its roots stretch out as wide as the tree is tall, creating an invisible underground network. For our activity, well create our own root maps by drawing a plant above ground, then sketching the hidden root system below the soil line, showing how roots branch out like unde' },
         { title: 'Decode Challenge', summary: 'Ready for an exciting Decode Challenge that will make you feel like a secret agent? When we decode something, we figure out hidden messages or solve puzzles by looking for clues and patterns. For example, if someone writes A=1, B=2, C=3, then the numbers 8-9 would spell HI! In this challenge, youll crack different codes using letters, numbers, and symbols. You might need to count backwards, swap letters around, or use special keys to unlock the mysteries. Each puzzle gets a little trickier, so put on your detective hat and use your problem-solving superpowers to reveal the secret messages hid' },
       ], questions: [
-        { id: '5-SP-Q4-1', q: 'Write a word with root "bio".', type: 'short', answer: 'open' },
+        { id: '5-SP-Q4-1', q: 'Which word contains the root "bio" (meaning life)?', type: 'mc', options: ['biology', 'bicycle', 'beautiful'], answer: 0 },
         { id: '5-SP-Q4-2', q: 'Roots help you read ___ words.', type: 'mc', options: ['harder', 'shorter', 'fewer'], answer: 0 },
       ]},
     ]},
