@@ -61,13 +61,13 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       { title: 'Recognizing Numbers 1-5', summary: 'Looking at and naming numbers 1, 2, 3, 4, 5', weekTest: [
         { id: 'K-M-W3-1', q: 'Which number is this: 3', type: 'mc', options: ['two', 'three', 'four'], answer: 1 },
         { id: 'K-M-W3-2', q: 'Find the number 1', type: 'mc', options: ['1', '2', '5'], answer: 0 },
-        { id: 'K-M-W3-3', q: 'Point to number 4', type: 'mc', options: ['2', '3', '4'], answer: 2 },
+        { id: 'K-M-W3-3', q: 'Which number is 4?', type: 'mc', options: ['2', '3', '4'], answer: 2 },
       ] },
     ], questions: [
       { id: 'K-M-U1-1', q: 'Count: 🐸🐸🐸 How many frogs?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
       { id: 'K-M-U1-2', q: 'What number is this: 2', type: 'mc', options: ['one', 'two', 'three'], answer: 1 },
     ], unitTest: [
-      { id: 'K-M-UT1-1', q: 'Show 5 fingers. How many is that?', type: 'mc', options: ['4', '5', '6'], answer: 1 },
+      { id: 'K-M-UT1-1', q: 'Count the dots: • • • • • How many dots?', type: 'mc', options: ['4', '5', '6'], answer: 1 },
       { id: 'K-M-UT1-2', q: 'Count the apples: 🍎🍎🍎🍎', type: 'mc', options: ['3', '4', '5'], answer: 1 },
       { id: 'K-M-UT1-3', q: 'Count: 1, 2, 3, 4, ___ What comes next?', type: 'mc', options: ['3', '5', '6'], answer: 1 },
     ] },
@@ -90,9 +90,9 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       ] },
     ], questions: [
       { id: 'K-M-U2-1', q: 'Count the cars: 🚗🚗🚗🚗🚗🚗🚗🚗', type: 'mc', options: ['7', '8', '9'], answer: 1 },
-      { id: 'K-M-U2-2', q: 'What number comes before 10?', type: 'mc', options: ['8', '9', '11'], answer: 1 },
+      { id: 'K-M-U2-2', q: 'Count with me: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10! What number comes after 7?', type: 'mc', options: ['6', '8', '10'], answer: 1 },
     ], unitTest: [
-      { id: 'K-M-UT2-1', q: 'Point to the number 8', type: 'mc', options: ['6', '7', '8'], answer: 2 },
+      { id: 'K-M-UT2-1', q: 'Which number is 8?', type: 'mc', options: ['6', '7', '8'], answer: 2 },
       { id: 'K-M-UT2-2', q: 'Count from 1 to 10. What is the last number?', type: 'mc', options: ['9', '10', '11'], answer: 1 },
       { id: 'K-M-UT2-3', q: 'How many: 🎈🎈🎈🎈🎈🎈🎈🎈🎈', type: 'mc', options: ['8', '9', '10'], answer: 1 },
     ] },
@@ -118,7 +118,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       { id: 'K-M-U3-2', q: 'A pizza slice looks like a...', type: 'mc', options: ['circle', 'square', 'triangle'], answer: 2 },
     ], unitTest: [
       { id: 'K-M-UT3-1', q: 'Sort the shapes: Which is round?', type: 'mc', options: ['square', 'triangle', 'circle'], answer: 2 },
-      { id: 'K-M-UT3-2', q: 'Count the triangles: △○△□△', type: 'mc', options: ['2', '3', '4'], answer: 1 },
+      { id: 'K-M-UT3-2', q: 'Count the triangles: △○□△', type: 'mc', options: ['2', '3', '4'], answer: 0 },
       { id: 'K-M-UT3-3', q: 'Which shape has 4 equal sides?', type: 'mc', options: ['circle', 'square', 'triangle'], answer: 1 },
     ] },
     
@@ -163,7 +163,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       { title: 'Letter D and ABC Review', summary: 'Adding letter D and practicing A, B, C, D', weekTest: [
         { id: 'K-LA-W3-1', q: 'Which letter is D?', type: 'mc', options: ['B', 'P', 'D'], answer: 2 },
         { id: 'K-LA-W3-2', q: 'What comes after C?', type: 'mc', options: ['B', 'D', 'E'], answer: 1 },
-        { id: 'K-LA-W3-3', q: 'Point to letter A: B A D', type: 'mc', options: ['first', 'second', 'third'], answer: 1 },
+        { id: 'K-LA-W3-3', q: 'Find letter A: B A D', type: 'mc', options: ['first', 'second', 'third'], answer: 1 },
       ] },
     ], questions: [
       { id: 'K-LA-U1-1', q: 'How does the alphabet song start?', type: 'mc', options: ['A, B, C', 'D, E, F', '1, 2, 3'], answer: 0 },
@@ -398,7 +398,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       { id: 'K-S-U2-1', q: 'Our body has many parts. We taste with our...', type: 'mc', options: ['nose', 'mouth', 'ears'], answer: 1 },
       { id: 'K-S-U2-2', q: 'God gave us five senses to...', type: 'mc', options: ['learn about our world', 'make noise', 'hide'], answer: 0 },
     ], unitTest: [
-      { id: 'K-S-UT2-1', q: 'Point to your nose. Your nose helps you...', type: 'mc', options: ['see', 'smell', 'hear'], answer: 1 },
+      { id: 'K-S-UT2-1', q: 'Your nose helps you...', type: 'mc', options: ['see', 'smell', 'hear'], answer: 1 },
       { id: 'K-S-UT2-2', q: 'We touch things with our...', type: 'mc', options: ['eyes', 'hands', 'ears'], answer: 1 },
       { id: 'K-S-UT2-3', q: 'To stay healthy, we should...', type: 'mc', options: ['never wash', 'eat good food and stay clean', 'only sleep'], answer: 1 },
     ] },
