@@ -3,7 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { getGradeCurriculum } from '@/lib/curriculum_index'
 import { gradeToNum } from '@/lib/gradeMap'
-import { Card, CardContent } from '@/components/ui/Card'
+import CurriculumPlayer from '@/components/CurriculumPlayer'
+import { GraduationCap, Shield, Lock, CheckCircle } from 'lucide-react'
+import Link from 'next/link'
 
 const GRADE_NAMES: Record<string, string> = {
   kindergarten: 'Kindergarten', '1st': '1st Grade', '2nd': '2nd Grade',
@@ -27,50 +29,33 @@ export default async function AdminGradePreview({
   const curriculum = getGradeCurriculum(gradeNum)
 
   if (!curriculum) {
-    return <div className="p-8 text-center text-gray-500">Grade not found</div>
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white p-8 text-center">
+        <GraduationCap className="mx-auto h-12 w-12 text-gray-300" />
+        <h2 className="mt-4 text-lg font-semibold text-gray-900">Grade not found</h2>
+        <Link href="/curriculum" className="text-sm text-emerald-600 hover:underline mt-2 inline-block">← Back to curriculum</Link>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <a href="/curriculum" className="text-sm text-emerald-600 hover:underline mb-4 inline-block">← Back to curriculum</a>
-        <h1 className="text-3xl font-bold text-sky-900 mb-2">{gradeLabel}</h1>
-        <p className="text-slate-500 mb-8">{curriculum.age} · {curriculum.subjects.length} subjects · Admin Preview</p>
-
-        {curriculum.subjects.map((subject: any) => (
-          <Card key={subject.name} className="mb-6">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold text-sky-800 mb-4">{subject.name}</h2>
-              {subject.units.map((unit: any) => (
-                <div key={unit.name} className="mb-4">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">{unit.name}</h3>
-                  <div className="space-y-2">
-                    {unit.lessons.map((lesson: any, i: number) => (
-                      <details key={i} className="rounded-lg border border-slate-200 overflow-hidden">
-                        <summary className="px-4 py-2.5 bg-white hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800">
-                          {lesson.title}
-                        </summary>
-                        <div className="px-4 py-3 bg-slate-50 border-t border-slate-200">
-                          <p className="text-sm text-slate-600 leading-relaxed">{lesson.summary}</p>
-                          {lesson.weekTest && lesson.weekTest.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-slate-200">
-                              <p className="text-xs font-medium text-slate-500 mb-2">Week Test ({lesson.weekTest.length} questions)</p>
-                              {lesson.weekTest.slice(0, 3).map((q: any) => (
-                                <p key={q.id} className="text-xs text-slate-500 mb-1">• {q.q}</p>
-                              ))}
-                              {lesson.weekTest.length > 3 && <p className="text-xs text-slate-400">+{lesson.weekTest.length - 3} more...</p>}
-                            </div>
-                          )}
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
+      {/* Admin banner */}
+      <div className="bg-amber-500/10 border-b border-amber-200">
+        <div className="max-w-4xl mx-auto px-4 py-2 flex items-center gap-2 text-sm text-amber-700">
+          <Shield className="h-4 w-4" />
+          <span>Admin Preview — {gradeLabel} · You are viewing the full curriculum as an enrolled student would see it.</span>
+          <Link href="/curriculum" className="ml-auto text-xs underline">← Back</Link>
+        </div>
       </div>
+      
+      {/* Actual CurriculumPlayer - same component students use */}
+      <CurriculumPlayer
+        grade={curriculum}
+        enrollmentId={`admin-preview-${grade.toLowerCase()}`}
+        studentName={`Admin Preview`}
+        gradeNum={gradeNum}
+      />
     </div>
   )
 }
