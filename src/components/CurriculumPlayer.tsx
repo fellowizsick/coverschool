@@ -194,7 +194,13 @@ export default function CurriculumPlayer({
   const node = sequence[current]
   const total = sequence.length
   const completedCount = done.filter(Boolean).length
-  const pct = Math.round((completedCount / total) * 100)
+  
+  // Calculate subject-relative progress
+  const subjectStart = sequence.findIndex(s => s.subject === node.subject)
+  const subjectEnd = sequence.length - 1 - [...sequence].reverse().findIndex(s => s.subject === node.subject)
+  const subjectTotal = subjectEnd - subjectStart + 1
+  const subjectDone = done.slice(subjectStart, subjectEnd + 1).filter(Boolean).length
+  const pct = Math.round((subjectDone / subjectTotal) * 100)
 
   // Is this node a question node?
   let selectedVoice: SpeechSynthesisVoice | null = null
@@ -381,7 +387,7 @@ export default function CurriculumPlayer({
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between text-sm text-slate-500 mb-1">
             <span>
-              {grade.grade} · Step {current + 1} of {total}
+              {node.subject} · {current - subjectStart + 1} of {subjectTotal}
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -409,7 +415,7 @@ export default function CurriculumPlayer({
 
         {isYoung && (
           <div className="mb-4">
-            <AdventureMap progress={completedCount} total={total} onSelectUnit={() => {}} />
+            <AdventureMap progress={subjectDone} total={subjectTotal} onSelectUnit={() => {}} />
           </div>
         )}
         <Card className="backdrop-blur bg-white/80">
