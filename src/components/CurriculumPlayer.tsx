@@ -362,7 +362,16 @@ export default function CurriculumPlayer({
               isYoung && !flashDone ? (
                 <FlashLesson summary={node.summary} title={node.lessonTitle} onDone={() => setShowGame(true)} />
               ) : isYoung && showGame ? (
-                <FlashGame summary={node.summary} title={node.lessonTitle} onComplete={() => { markComplete(); setFlashDone(true); setShowGame(false) }} />
+                <FlashGame summary={node.summary} title={node.lessonTitle} onComplete={() => { 
+                  const next = [...done]
+                  next[current] = true
+                  persist(next)
+                  setFlashDone(true)
+                  setShowGame(false)
+                  if (current < total - 1) {
+                    setTimeout(() => setCurrent(c => c + 1), 500)
+                  }
+                }} />
               ) : (
               <>
                 <div className="flex items-center gap-3 mb-2">
