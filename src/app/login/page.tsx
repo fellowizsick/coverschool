@@ -47,6 +47,9 @@ function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-700 text-center">
+          🎓 Student? <a href="/student-login" className="font-semibold underline">Sign in here</a>
+        </div>
         {error && (
           <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
             {error}

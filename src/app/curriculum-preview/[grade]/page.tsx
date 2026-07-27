@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 import { GRADES_K3, SUBJECT_INFO } from '@/lib/curriculum_skills_data'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -94,6 +95,11 @@ const SUBJECT_ORDER = ['math', 'english', 'science', 'history', 'bible', 'electi
 
 export default async function GradePage({ params }: { params: Promise<{ grade: string }> }) {
   const { grade } = await params
+  // Logged-in users should go to the real curriculum
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) redirect('/curriculum')
+
   const data = GRADES_K3.find((g) => g.slug === grade)
   if (!data) notFound()
 

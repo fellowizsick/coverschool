@@ -1,6 +1,8 @@
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import { 
   GraduationCap, BookOpen, CheckCircle, Star, 
   BookText, Calculator, FlaskConical, Globe, 
@@ -39,7 +41,12 @@ const features = [
   { icon: Sparkles, title: 'Christian Worldview', desc: 'Every subject taught from a biblical perspective.' },
 ]
 
-export default function CurriculumPreviewPage() {
+export default async function CurriculumPreviewPage() {
+  // Logged-in users should go to the real curriculum, not the marketing preview
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) redirect('/curriculum')
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white">
       {/* Hero */}
