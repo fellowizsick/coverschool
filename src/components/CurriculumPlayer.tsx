@@ -94,11 +94,13 @@ export default function CurriculumPlayer({
   enrollmentId,
   studentName,
   gradeNum,
+  backUrl,
 }: {
   grade: GradeCurriculum
   enrollmentId: string
   studentName: string
   gradeNum: number
+  backUrl?: string
 }) {
   const sequence = useMemo(() => buildSequence(grade), [grade])
   const [done, setDone] = useState<boolean[]>([])
@@ -386,9 +388,16 @@ export default function CurriculumPlayer({
       <div className="sticky top-0 z-10 bg-white/70 backdrop-blur border-b border-white/60">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between text-sm text-slate-500 mb-1">
-            <span>
-              {node.subject} · {current - subjectStart + 1} of {subjectTotal}
-            </span>
+            <div className="flex items-center gap-2">
+              {backUrl && (
+                <a href={backUrl} className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600 hover:bg-emerald-100 transition">
+                  ← Subjects
+                </a>
+              )}
+              <span>
+                {node.subject} · {current - subjectStart + 1} of {subjectTotal}
+              </span>
+            </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowRestartConfirm(true)}
