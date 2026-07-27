@@ -22,7 +22,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Even & Odd', summary: 'Lets sort numbers into two groups! Even numbers can be split into pairs with no one left over. Odd numbers always have one left over. Try this: Count your toys and see if you have an even or odd number!' },
       ], questions: [
         { id: '2-M-Q1-1', q: '23 + 14 = ?', type: 'mc', options: ['37', '38', '36'], answer: 0 },
-        { id: '2-M-Q1-2', q: 'Is 8 even or odd?', type: 'short', answer: 'even' },
+        { id: '2-M-Q1-2', q: 'Is 8 even or odd?', type: 'mc', options: ['even', 'odd'], answer: 0 },
       ]},
       { name: 'Q2 — Place Value & Money', lessons: [
         { title: 'Hundreds', summary: 'Lets count to one hundred! Stack up 100 pennies or blocks. Can you make 10 groups of 10? Count by tens: 10, 20, 30... all the way to 100!' },
@@ -30,7 +30,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Make Change', summary: 'You buy a toy for 3 cents. You pay with 5 cents. How much money do you get back? Practice with real pennies and nickels from a jar!' },
       ], questions: [
         { id: '2-M-Q2-1', q: 'Value of 5 in 352?', type: 'mc', options: ['5', '50', '500'], answer: 1 },
-        { id: '2-M-Q2-2', q: 'How many quarters in $1?', type: 'short', answer: '4' },
+        { id: '2-M-Q2-2', q: 'How many quarters in $1?', type: 'mc', options: ['3', '4', '5'], answer: 1 },
       ]},
       { name: 'Q3 — Intro Multiplication', lessons: [
         { title: 'Equal Groups', summary: 'Lets make equal groups! Put 6 toys into 2 piles with the same amount in each pile. Count how many are in each group - they should match!' },
@@ -38,7 +38,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Arrays', summary: 'Lets make rows with toys! Put 3 toys in a line. Now make 2 more rows with 3 toys each. Count all your toys!' },
       ], questions: [
         { id: '2-M-Q3-1', q: '3 × 4 = ?', type: 'mc', options: ['7', '12', '9'], answer: 1 },
-        { id: '2-M-Q3-2', q: '5 × 10 = ?', type: 'short', answer: '50' },
+        { id: '2-M-Q3-2', q: '5 × 10 = ?', type: 'mc', options: ['40', '50', '60'], answer: 1 },
       ]},
       { name: 'Q4 — Measurement & Fractions', lessons: [
         { title: 'Inches & Centimeters', summary: 'We can measure things with rulers! Find a crayon and measure how long it is. Is your crayon more inches or more centimeters long?' },
@@ -64,7 +64,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Adjectives', summary: 'Adjectives tell us about things! The cat is fluffy. The ball is red. Look around and find something big, then find something small!' },
       ], questions: [
         { id: '2-L-Q2-1', q: 'Which is a pronoun?', type: 'mc', options: ['she', 'run', 'red'], answer: 0 },
-        { id: '2-L-Q2-2', q: 'Past of "walk" is ___', type: 'short', answer: 'walked' },
+        { id: '2-L-Q2-2', q: 'Past of "walk" is ___', type: 'mc', options: ['walking', 'walked', 'walks'], answer: 1 },
       ]},
       { name: 'Q3 — Writing', lessons: [
         { title: 'Paragraphs', summary: 'A paragraph is a group of sentences about one thing. All the sentences talk about the same idea. Write three sentences about your pet or toy!' },
@@ -113,7 +113,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Word Origins Recap', summary: 'Words come from many places! Some words are old and some are new. Draw a picture of your favorite word and tell someone where you think it came from!' },
         { title: 'Dictation', summary: 'Lets play dictation! I will say a word and you write it down. Can you write "cat" when I say it?' },
       ], questions: [
-        { id: '2-SP-Q4-1', q: 'Write the word: "bright".', type: 'short', answer: 'bright' },
+        { id: '2-SP-Q4-1', q: 'Write the word: "bright".', type: 'mc', options: ['bright', 'light', 'night'], answer: 0 },
         { id: '2-SP-Q4-2', q: 'A compound word is made of ___', type: 'mc', options: ['two words', 'one letter', 'numbers'], answer: 0 },
       ]},
     ]},
@@ -132,7 +132,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Simple Machines', summary: 'Simple machines help us do work easier. A lever is like a seesaw that lifts things up. Find a spoon and use it to lift a toy - thats a lever too!' },
       ], questions: [
         { id: '2-SC-Q2-1', q: 'A lever helps us ___', type: 'mc', options: ['lift heavy things', 'sleep', 'eat'], answer: 0 },
-        { id: '2-SC-Q2-2', q: 'The sun gives ___ and light.', type: 'short', answer: 'heat' },
+        { id: '2-SC-Q2-2', q: 'The sun gives ___ and light.', type: 'mc', options: ['cold', 'heat', 'wind'], answer: 1 },
       ]},
       { name: 'Q3 — Earth', lessons: [
         { title: 'Rocks & Soil', summary: 'Rocks are everywhere around us! Look outside and find three different rocks. Feel how some rocks are smooth and others are bumpy.' },
@@ -140,7 +140,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Weather Tools', summary: 'Weather tools help us learn about the weather. A thermometer tells us if it is hot or cold. Go outside and feel if the air is warm or cool on your skin!' },
       ], questions: [
         { id: '2-SC-Q3-1', q: 'Clouds make rain through ___', type: 'mc', options: ['condensation', 'evaporation', 'melting'], answer: 0 },
-        { id: '2-SC-Q3-2', q: 'We measure temperature with a ___', type: 'short', answer: 'thermometer' },
+        { id: '2-SC-Q3-2', q: 'We measure temperature with a ___', type: 'mc', options: ['ruler', 'thermometer', 'scale'], answer: 1 },
       ]},
       { name: 'Q4 — Space', lessons: [
         { title: 'The Solar System', summary: 'Our sun is a big bright star. Eight planets go around the sun in a circle. Lets spin around like a planet! Turn in a slow circle and count to ten.' },
@@ -148,7 +148,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'Seasons', summary: 'Earth moves around the sun in one year. This makes our seasons change! Draw a picture of your favorite season and show someone special.' },
       ], questions: [
         { id: '2-SC-Q4-1', q: 'How many planets orbit the sun?', type: 'mc', options: ['8', '9', '7'], answer: 0 },
-        { id: '2-SC-Q4-2', q: 'Earth spins to make ___ and night.', type: 'short', answer: 'day' },
+        { id: '2-SC-Q4-2', q: 'Earth spins to make ___ and night.', type: 'mc', options: ['day', 'week', 'month'], answer: 0 },
       ]},
     ]},
     { name: 'History & Geography', units: [
@@ -174,7 +174,7 @@ export const G2: GradeCurriculum = g('2nd Grade', 2, '7-8', 'Independent reading
         { title: 'The Constitution', summary: 'The Constitution is like rules for our whole country. It tells grown-ups how to be fair leaders. Draw a picture of your familys rules at home!' },
       ], questions: [
         { id: '2-H-Q3-1', q: 'The President is part of the ___ branch.', type: 'mc', options: ['executive', 'judicial', 'legislative'], answer: 0 },
-        { id: '2-H-Q3-2', q: 'Our country’s rule book is the ___', type: 'short', answer: 'Constitution' },
+        { id: '2-H-Q3-2', q: 'Our country\'s rule book is the ___', type: 'mc', options: ['Constitution', 'Dictionary', 'Bible'], answer: 0 },
       ]},
       { name: 'Q4 — Alabama', lessons: [
         { title: 'Our State', summary: 'We live in Alabama! Alabama is our state. Draw a picture of your home and family in Alabama.' },
@@ -231,7 +231,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Division Intro', summary: 'Lets share treats with friends! Put 8 cookies in groups of 2. How many groups did you make? Try it with toys too!' },
       ], questions: [
         { id: '3-M-Q1-1', q: '7 × 8 = ?', type: 'mc', options: ['54', '56', '49'], answer: 1 },
-        { id: '3-M-Q1-2', q: '12 ÷ 3 = ?', type: 'short', answer: '4' },
+        { id: '3-M-Q1-2', q: '12 ÷ 3 = ?', type: 'mc', options: ['3', '4', '5'], answer: 1 },
       ]},
       { name: 'Q2 — Fractions', lessons: [
         { title: 'Numerator & Denominator', summary: 'A fraction has two parts! The top number is the numerator. The bottom number is the denominator. Draw a circle and cut it into 4 parts. Color 2 parts red. You made 2/4!' },
@@ -247,7 +247,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Word Problems', summary: 'Lets solve fun puzzles with shapes! A garden is 4 steps long and 3 steps wide. Walk around your room and count your steps to find how far you went!' },
       ], questions: [
         { id: '3-M-Q3-1', q: 'Perimeter of 3×5 rectangle?', type: 'mc', options: ['16', '15', '8'], answer: 0 },
-        { id: '3-M-Q3-2', q: 'Area of 3×5 rectangle?', type: 'short', answer: '15' },
+        { id: '3-M-Q3-2', q: 'Area of 3×5 rectangle?', type: 'mc', options: ['12', '15', '18'], answer: 1 },
       ]},
       { name: 'Q4 — Graphs & Time', lessons: [
         { title: 'Bar & Pictographs', summary: 'Lets make a graph with toys! Count your cars, dolls, and blocks. Draw a picture for each one in rows. Which row is longest?' },
@@ -255,7 +255,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Elapsed Time', summary: 'Lets see how time passes! Look at a clock when you start playing. Look again when you stop. How long did you play?' },
       ], questions: [
         { id: '3-M-Q4-1', q: 'A bar graph shows ___', type: 'mc', options: ['amounts', 'colors', 'sounds'], answer: 0 },
-        { id: '3-M-Q4-2', q: 'From 2:00 to 2:30 is ___ minutes.', type: 'short', answer: '30' },
+        { id: '3-M-Q4-2', q: 'From 2:00 to 2:30 is ___ minutes.', type: 'mc', options: ['20', '30', '40'], answer: 1 },
       ]},
     ]},
     { name: 'Language Arts', units: [
@@ -273,7 +273,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Comparatives', summary: 'A cat is big. An elephant is bigger! Find two toys. Which one is bigger?' },
       ], questions: [
         { id: '3-L-Q2-1', q: 'Plural of "child"?', type: 'mc', options: ['childs', 'children', 'childes'], answer: 1 },
-        { id: '3-L-Q2-2', q: 'Comparative of "small" is ___', type: 'short', answer: 'smaller' },
+        { id: '3-L-Q2-2', q: 'Comparative of "small" is ___', type: 'mc', options: ['smallest', 'smaller', 'smallish'], answer: 1 },
       ]},
       { name: 'Q3 — Writing', lessons: [
         { title: 'Opinion Paragraph', summary: 'Tell everyone what you like best! Ice cream or cake? Dogs or cats? Write one sentence about your pick. Draw a picture to show why you love it most!' },

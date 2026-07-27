@@ -29,7 +29,7 @@ export const G4: GradeCurriculum = g('4th Grade', 4, '9-10', 'Multi-step thinkin
         { title: 'Fractions = Decimals', summary: 'Did you know that fractions and decimals are actually the same thing written in different ways? When you see 1/2, that means one part out of two equal parts, which is the same as 0.5 in decimal form! Think of it like this: if you have half a pizza, you could write it as the fraction 1/2 or as the decimal 0.5 - both mean exactly the same amount of pizza. Try this fun activity with a friend: draw a circle and color in 1/4 of it, then see if you can figure out what decimal number that represents!' },
       ], questions: [
         { id: '4-M-Q2-1', q: '0.5 = which fraction?', type: 'mc', options: ['1/2', '1/4', '1/10'], answer: 0 },
-        { id: '4-M-Q2-2', q: '2/4 = ___ (simplified).', type: 'short', answer: '1/2' },
+        { id: '4-M-Q2-2', q: '2/4 = ___ (simplified).', type: 'mc', options: ['1/2', '1/3', '2/3'], answer: 0 },
       ]},
       { name: 'Q3 — Geometry', lessons: [
         { title: 'Angles', summary: 'Angles are everywhere around us and theyre simply the space between two lines that meet at a point, just like the corner of your desk or the opening of a door! When you open a door just a little bit, you make a small angle, but when you open it wide, you create a big angle. You can even use your arms to make angles by holding them out like clock hands - try making a small angle by keeping your arms close together, then stretch them far apart to make a large angle. Look around your classroom and playground to spot angles in windows, slides, and even the letter A in your name - angles are amazi' },
@@ -230,7 +230,7 @@ export const G5: GradeCurriculum = g('5th Grade', 5, '10-11', 'Prepping for midd
         { title: 'Multiply Decimals', summary: 'Multiplying decimals is like multiplying whole numbers, but we need to count decimal places! When you multiply 2.3 times 1.2, first multiply 23 times 12 to get 276, then count the decimal places in both numbers (one in 2.3 and one in 1.2 makes two total), so put the decimal point two places from the right to get 2.76. Try this fun activity: use play money to multiply $1.50 times 3 items - thats $4.50 total, helping you see how decimals work in real shopping situations you know!' },
       ], questions: [
         { id: '5-M-Q1-1', q: '0.3 + 0.4 = ?', type: 'mc', options: ['0.7', '0.07', '7.0'], answer: 0 },
-        { id: '5-M-Q1-2', q: '0.5 × 2 = ?', type: 'short', answer: '1.0' },
+        { id: '5-M-Q1-2', q: '0.5 × 2 = ?', type: 'mc', options: ['1.0', '1.5', '2.0'], answer: 0 },
       ]},
       { name: 'Q2 — Fractions', lessons: [
         { title: 'Multiply Fractions', summary: 'Lets learn how to multiply fractions together! When we multiply fractions, we simply multiply the top numbers together and then multiply the bottom numbers together. For example, if we want to find 1/2 × 1/3, we multiply 1 × 1 to get 1 on top, and 2 × 3 to get 6 on the bottom, giving us 1/6. Think of it like sharing pizza slices - if you have half a pizza and you want to give away one-third of that half, you end up with one-sixth of the whole pizza! Now try this fun activity: use colorful paper rectangles and fold them to show different fractions, then see what happens when you multiply them ' },

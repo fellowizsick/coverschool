@@ -21,7 +21,7 @@ export const G6: GradeCurriculum = g('6th Grade', 6, '11-12', 'Bridge to middle 
         { title: 'Percent', summary: 'Percent means parts out of 100, and its everywhere around us! When you see 25%, that means 25 out of every 100 parts. Think about your phone battery at 75% - that means 75 out of 100 parts are charged up. If your class has 20 students and 5 wear glasses, thats 5 out of 20, which equals 25%. Try this fun activity: look around your classroom and count different things like students wearing sneakers versus other shoes, then figure out what percent each group represents. You can also practice with your test scores - if you got 18 out of 20 questions right, thats 90%! Understanding percent helps' },
       ], questions: [
         { id: '6-M-Q1-1', q: 'What is 50% as a decimal?', type: 'mc', options: ['0.5', '0.05', '5.0'], answer: 0 },
-        { id: '6-M-Q1-2', q: 'Ratio 2:3 means for every 2 of A there are ___ of B.', type: 'short', answer: '3' },
+        { id: '6-M-Q1-2', q: 'Ratio 2:3 means for every 2 of A there are ___ of B.', type: 'mc', options: ['2', '3', '5'], answer: 1 },
       ]},
       { name: 'Q2 — Fractions/Decimals/Percent', lessons: [
         { title: 'Convert All Three', summary: 'Converting between fractions, decimals, and percentages is like learning to speak three different math languages that all say the same thing! Think of 1/2, 0.5, and 50% as three ways to describe half of something. To convert a fraction to a decimal, divide the top number by the bottom number, like 3/4 becomes 0.75. To make a decimal into a percentage, multiply by 100, so 0.75 becomes 75%. To change a percentage back to a fraction, put it over 100 and simplify, so 75% becomes 75/100 which reduces to 3/4. Try this fun activity: pick your favorite pizza topping and imagine ordering different amou' },
@@ -29,7 +29,7 @@ export const G6: GradeCurriculum = g('6th Grade', 6, '11-12', 'Bridge to middle 
         { title: 'Real Life', summary: 'Fractions, decimals, and percentages are everywhere in your daily life and understanding them helps you make smart decisions! When youre shopping with your family, you might see that a video game is 25% off, which means you save 1/4 of the original price, or 0.25 as a decimal. If your favorite pizza place gives you 3/4 of a large pizza and your friend gets 0.75 of the same size, you both got exactly the same amount since 3/4 equals 0.75 and also equals 75%. Try this fun activity: look around your home and find three examples of fractions, decimals, or percentages, like measuring cups showing ' },
       ], questions: [
         { id: '6-M-Q2-1', q: '20% of 80 = ?', type: 'mc', options: ['16', '20', '8'], answer: 0 },
-        { id: '6-M-Q2-2', q: '1/4 = ___%', type: 'short', answer: '25' },
+        { id: '6-M-Q2-2', q: '1/4 = ___%', type: 'mc', options: ['20', '25', '30'], answer: 1 },
       ]},
       { name: 'Q3 — Integers', lessons: [
         { title: 'Negative Numbers', summary: 'Negative numbers are numbers that are less than zero, and we use a minus sign in front of them to show theyre below zero on the number line. Think of negative numbers like going down floors in a building or temperatures below freezing - if its 5 degrees below zero, we write it as -5. You can see negative numbers everywhere, from elevator buttons that show basement levels like -1 and -2, to winter temperatures, to owing money or points in games. Lets practice by drawing a number line from -10 to 10 and taking turns calling out temperatures or elevator floors while pointing to where they belo' },
@@ -45,7 +45,7 @@ export const G6: GradeCurriculum = g('6th Grade', 6, '11-12', 'Bridge to middle 
         { title: 'Simple Equations', summary: 'Simple equations are like math puzzles where we need to find the missing number, and we use a letter like x to represent that mystery number! Think of it as a balance scale where both sides must be equal. For example, if we have x + 3 = 7, we ask ourselves what number plus 3 equals 7, and we discover that x = 4 because 4 + 3 = 7. To practice, try solving n + 5 = 12 by thinking about what number added to 5 gives us 12, then check your answer by substituting it back into the original equation to make sure both sides balance perfectly.' },
       ], questions: [
         { id: '6-M-Q4-1', q: '3 + 4 × 2 = ? (order of operations)', type: 'mc', options: ['11', '14', '20'], answer: 0 },
-        { id: '6-M-Q4-2', q: 'If x + 5 = 12, then x = ___', type: 'short', answer: '7' },
+        { id: '6-M-Q4-2', q: 'If x + 5 = 12, then x = ___', type: 'mc', options: ['6', '7', '8'], answer: 1 },
       ]},
     ]},
     { name: 'Language Arts', units: [
@@ -181,7 +181,7 @@ export const G6: GradeCurriculum = g('6th Grade', 6, '11-12', 'Bridge to middle 
         { title: 'A New Nation', summary: 'A New Nation means the exciting time when America became its own country after winning independence from Britain in 1783! The new United States had to figure out how to govern itself, create laws, and work together as one nation instead of separate colonies. For example, the founders wrote the Constitution in 1787 to establish rules for how the government would work, including having a president, Congress, and courts. George Washington became the first president and helped set important traditions that future leaders would follow. Try this activity: imagine you and your classmates started a ne' },
       ], questions: [
         { id: '6-H-Q4-1', q: 'Before Europeans, America was home to ___', type: 'mc', options: ['indigenous nations', 'no one', 'one tribe'], answer: 0 },
-        { id: '6-H-Q4-2', q: 'The Constitution was written in ___', type: 'short', answer: '1787' },
+        { id: '6-H-Q4-2', q: 'The Constitution was written in ___', type: 'mc', options: ['1776', '1787', '1791'], answer: 1 },
       ]},
     ]},
     { name: 'Bible & Character', units: [

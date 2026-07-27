@@ -536,7 +536,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Fact Families', summary: 'Lets play with number friends! The numbers 2, 3, and 5 are best buddies because 2+3=5 and 3+2=5. Find 5 toys and split them into two groups to make your own number family!' },
       ], questions: [
         { id: '1-M-Q1-1', q: '7 - 3 = ?', type: 'mc', options: ['3', '4', '10'], answer: 1 },
-        { id: '1-M-Q1-2', q: 'There are 4 red and 3 blue blocks. How many total?', type: 'short', answer: '7' },
+        { id: '1-M-Q1-2', q: 'There are 4 red and 3 blue blocks. How many total?', type: 'mc', options: ['6', '7', '8'], answer: 1 },
       ]},
       { name: 'Q2 — Place Value', lessons: [
         { title: 'Tens & Ones', summary: 'Lets make groups of ten! Grab some toys or snacks. Put ten in one pile and the rest in another pile. Count how many piles of ten you made!' },
@@ -544,7 +544,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Compare Numbers', summary: 'Lets see which number is bigger! Look at 3 and 7. Which pile has more toys? Point to the bigger number and make a silly face!' },
       ], questions: [
         { id: '1-M-Q2-1', q: 'How many tens in 46?', type: 'mc', options: ['4', '6', '46'], answer: 0 },
-        { id: '1-M-Q2-2', q: 'Is 32 < 45? (yes/no)', type: 'short', answer: 'yes' },
+        { id: '1-M-Q2-2', q: 'Is 32 < 45? (yes/no)', type: 'mc', options: ['yes', 'no'], answer: 0 },
       ]},
       { name: 'Q3 — Measurement', lessons: [
         { title: 'Short & Long', summary: 'Lets find short and long things! Look at your pencil, then look at your bed. Which one is longer? Now find something short and something long in your room!' },
@@ -552,7 +552,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Count Money', summary: 'Lets count money together! Look at these coins and count them one by one. Find some pennies around the house and put them in a pile to count!' },
       ], questions: [
         { id: '1-M-Q3-1', q: 'What coin is worth 25 cents?', type: 'mc', options: ['penny', 'quarter', 'dime'], answer: 1 },
-        { id: '1-M-Q3-2', q: 'When the little hand points to 3, it is ___ o’clock.', type: 'short', answer: '3' },
+        { id: '1-M-Q3-2', q: 'When the little hand points to 3, it is ___ o\'clock.', type: 'mc', options: ['2', '3', '4'], answer: 1 },
       ]},
       { name: 'Q4 — Geometry & Graphs', lessons: [
         { title: '2D & 3D Shapes', summary: 'Look around your room! Can you find something round like a circle? Now find something with corners like a square. Lets go on a shape hunt together!' },
@@ -603,7 +603,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'List 2: -ig/-og', summary: 'Lets make -ig and -og words! Say "pig" and "dog" with me. Can you hop like a frog and oink like a pig?' },
         { title: 'Origin: "dog"', summary: 'Lets say "dog" together! Can you hear the "o" sound in the middle? Find three things in your room that rhyme with dog, like log or frog!' },
       ], questions: [
-        { id: '1-SP-Q1-1', q: 'Spell: c-a-t', type: 'short', answer: 'cat' },
+        { id: '1-SP-Q1-1', q: 'Spell: c-a-t', type: 'mc', options: ['cat', 'bat', 'hat'], answer: 0 },
         { id: '1-SP-Q1-2', q: '"dog" comes from an old word meaning ___', type: 'mc', options: ['a friendly animal', 'a toy', 'a food'], answer: 0 },
       ]},
       { name: 'Q2 — Long Vowels', lessons: [
@@ -627,7 +627,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Word Stories Recap', summary: 'We learned so many fun word stories! Can you tell me about the three little pigs? Lets act out your favorite story together!' },
         { title: 'Dictation', summary: 'Lets play word writing! Ill say a word and you write the letters you hear. Can you write "cat" when I say it out loud?' },
       ], questions: [
-        { id: '1-SP-Q4-1', q: 'Write the word: "make".', type: 'short', answer: 'make' },
+        { id: '1-SP-Q4-1', q: 'Write the word: "make".', type: 'mc', options: ['make', 'take', 'cake'], answer: 0 },
         { id: '1-SP-Q4-2', q: 'A word’s "origin" is ___', type: 'mc', options: ['where it came from', 'how it sounds', 'its color'], answer: 0 },
       ]},
     ]},

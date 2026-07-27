@@ -21,15 +21,15 @@ export const G7: GradeCurriculum = g('7th Grade', 7, '12-13', 'Pre-algebra, lite
         { title: 'Distributive Property', summary: 'The distributive property is like sharing equally - when you multiply a number by a group of numbers being added or subtracted, you can distribute that multiplication to each number in the group. For example, 3(4 + 5) equals 3 times 4 plus 3 times 5, which gives us 12 + 15 = 27, the same as 3 times 9. Try this with your friend: one person calculates 2(6 + 3) by adding first, while the other uses the distributive property by calculating 2×6 + 2×3, then compare your answers to see they match.' },
       ], questions: [
         { id: '7-M-Q1-1', q: '|-7| = ?', type: 'mc', options: ['7', '-7', '0'], answer: 0 },
-        { id: '7-M-Q1-2', q: '3(2+4) = ?', type: 'short', answer: '18' },
+        { id: '7-M-Q1-2', q: '3(2+4) = ?', type: 'mc', options: ['15', '18', '21'], answer: 1 },
       ]},
       { name: 'Q2 — Expressions & Equations', lessons: [
         { title: 'One-Step Equations', summary: 'One-step equations are like math puzzles where you need to find the missing number that makes both sides equal. Think of an equation as a balanced scale - whatever you do to one side, you must do to the other to keep it balanced. For example, in x + 5 = 12, we subtract 5 from both sides to get x = 7. Try this activity: write down your age plus some number equals 20, then solve backwards to find what number you added - you just solved a one-step equation about yourself!' },
         { title: 'Two-Step Equations', summary: 'Two-step equations are like puzzles where you need to undo two operations to find the mystery number! Think of it as working backwards - if someone multiplies a number by 3 and then adds 5 to get 17, you can find their original number by doing the opposite steps in reverse order. For example, with 3x + 5 = 17, first subtract 5 from both sides to get 3x = 12, then divide both sides by 3 to find x = 4. Try this fun challenge: solve 2y - 8 = 10 by adding 8 to both sides first, then dividing by 2 - you should get y = 9!' },
         { title: 'Inequalities', summary: 'Inequalities are mathematical statements that compare two expressions using symbols like greater than, less than, or equal to, just like how you might compare your height to a friends or the number of slices of pizza left at a party. Unlike equations that show exact equality, inequalities tell us when one side is bigger, smaller, or could be equal to the other side. For example, if you have at least 15 dollars to spend on lunch, we can write this as x ≥ 15, where x represents your money and the symbol means greater than or equal to. The cool thing about inequalities is that they often have ma' },
       ], questions: [
-        { id: '7-M-Q2-1', q: 'Solve: 2x = 14', type: 'short', answer: '7' },
-        { id: '7-M-Q2-2', q: 'x + 3 < 8 means x < ___', type: 'short', answer: '5' },
+        { id: '7-M-Q2-1', q: 'Solve: 2x = 14', type: 'mc', options: ['6', '7', '8'], answer: 1 },
+        { id: '7-M-Q2-2', q: 'x + 3 < 8 means x < ___', type: 'mc', options: ['4', '5', '6'], answer: 1 },
       ]},
       { name: 'Q3 — Ratios & Proportion', lessons: [
         { title: 'Proportions', summary: 'Proportions are special equations that show two ratios are equal to each other, like saying 2:4 equals 3:6 because both simplify to 1:2. Think of it like this: if 3 apples cost $6, then 6 apples should cost $12 because youre keeping the same relationship between apples and price. We can write this as 3/6 = 6/12, which is a proportion. To solve proportions with missing numbers, we use cross multiplication - multiply diagonally across the equal sign and solve for the unknown. Try this fun challenge: if your heart beats 20 times in 15 seconds, how many times does it beat in one minute? Set up th' },
@@ -37,7 +37,7 @@ export const G7: GradeCurriculum = g('7th Grade', 7, '12-13', 'Pre-algebra, lite
         { title: 'Percent Applications', summary: 'Percent applications help us solve real-world problems involving discounts, tips, taxes, and interest that we encounter every day. When you want to calculate a 20% tip on a $25 restaurant bill, you multiply 25 by 0.20 to get $5, making your total payment $30. To practice this skill, try calculating the final price of items during a shopping trip where everything is 15% off, then check your mental math with a calculator to see how close you came to the actual discounted prices.' },
       ], questions: [
         { id: '7-M-Q3-1', q: 'If 2/3 = x/9, x = ?', type: 'mc', options: ['6', '4', '8'], answer: 0 },
-        { id: '7-M-Q3-2', q: 'A 10% tip on $50 is $___', type: 'short', answer: '5' },
+        { id: '7-M-Q3-2', q: 'A 10% tip on $50 is $___', type: 'mc', options: ['4', '5', '6'], answer: 1 },
       ]},
       { name: 'Q4 — Geometry Basics', lessons: [
         { title: 'Angle Pairs', summary: 'Angle pairs are special relationships between two angles that help us solve geometry problems! When two angles are complementary, they add up to 90 degrees, like a 30-degree angle paired with a 60-degree angle. Supplementary angles add up to 180 degrees, such as a 120-degree angle with a 60-degree angle. Try this fun activity: use a protractor to measure angles around your classroom, then find a partner whose angle measurement would make your angles either complementary or supplementary - you might discover that the corner of your desk and the angle of an open book create a perfect 90-degree p' },
@@ -45,7 +45,7 @@ export const G7: GradeCurriculum = g('7th Grade', 7, '12-13', 'Pre-algebra, lite
         { title: 'Area & Circumference', summary: 'Area and circumference are two key measurements we use with circles that help us understand their size and space. The circumference is the distance around the outside edge of a circle, like measuring how far youd walk around a circular track, and we calculate it using the formula C = 2πr where r is the radius. The area tells us how much space is inside the circle, like how much pizza you get with a circular pie, and we find it using A = πr². For example, if a circular garden has a radius of 3 meters, its circumference would be 2π(3) = 18.8 meters around the edge, while its area would be π(3²)' },
       ], questions: [
         { id: '7-M-Q4-1', q: 'Two angles summing to 90° are ___', type: 'mc', options: ['complementary', 'supplementary', 'vertical'], answer: 0 },
-        { id: '7-M-Q4-2', q: 'Area of circle r=3? (use 3.14)', type: 'short', answer: '28.26' },
+        { id: '7-M-Q4-2', q: 'Area of circle r=3? (use 3.14)', type: 'mc', options: ['18.84', '28.26', '37.68'], answer: 1 },
       ]},
     ]},
     { name: 'Language Arts', units: [
@@ -165,7 +165,7 @@ export const G7: GradeCurriculum = g('7th Grade', 7, '12-13', 'Pre-algebra, lite
         { title: 'Civil War', summary: 'The Civil War from 1861 to 1865 was Americas deadliest conflict, fought between the Northern states (Union) and Southern states (Confederacy) primarily over slavery and states rights. When Abraham Lincoln became president, eleven Southern states seceded because they feared he would end slavery, which their economy depended on for cotton plantations. The war began at Fort Sumter and included major battles like Gettysburg, where over 50,000 soldiers were killed or wounded in just three days. To understand the wars impact on families, create a fictional diary entry from either a Union or Confe' },
       ], questions: [
         { id: '7-H-Q2-1', q: 'The Civil War was fought over ___', type: 'mc', options: ['slavery and union', 'taxes only', 'land'], answer: 0 },
-        { id: '7-H-Q2-2', q: 'The Constitution was signed in ___', type: 'short', answer: '1787' },
+        { id: '7-H-Q2-2', q: 'The Constitution was signed in ___', type: 'mc', options: ['1776', '1787', '1791'], answer: 1 },
       ]},
       { name: 'Q3 — US History 1865-1945', lessons: [
         { title: 'Reconstruction', summary: 'After the Civil War ended in 1865, America faced a huge challenge: how to rebuild the South and bring formerly enslaved people into society as free citizens during a period called Reconstruction. Think of it like trying to put a broken friendship back together while also making sure everyone gets treated fairly this time. The government created new laws like the 14th Amendment that gave citizenship to all people born in America, and the 15th Amendment that protected voting rights regardless of race. For example, many African Americans were elected to Congress and state governments for the firs' },
@@ -229,7 +229,7 @@ export const G8: GradeCurriculum = g('8th Grade', 8, '13-14', 'Algebra, argument
         { title: 'Graphing Lines', summary: 'Graphing lines is like creating a picture of math! When you have a linear equation like y = 2x + 1, you can turn it into a straight line on a coordinate plane by finding points that make the equation true. Lets try x = 0: y = 2(0) + 1 = 1, so we get the point (0,1). Now try x = 2: y = 2(2) + 1 = 5, giving us (2,5). Plot these points and draw a line through them - thats your equation as a graph! Try this fun activity: pick your favorite number as the slope and another as the y-intercept to create your own equation, then graph it and see what awesome line youve made.' },
         { title: 'Systems', summary: 'Systems of linear equations are like solving puzzles with two clues at once! When you have two different equations that share the same variables, youre working with a system. Think of it like this: if x + y = 10 and x - y = 2, you need to find values for x and y that make both equations true simultaneously. By adding these equations together, the y terms cancel out, giving you 2x = 12, so x = 6, and then y = 4. Try this fun activity with a partner: one person creates two simple equations using the same two variables, and the other person solves the system to find where the lines would interse' },
       ], questions: [
-        { id: '8-M-Q1-1', q: 'In y=2x+3, the slope is ___', type: 'short', answer: '2' },
+        { id: '8-M-Q1-1', q: 'In y=2x+3, the slope is ___', type: 'mc', options: ['1', '2', '3'], answer: 1 },
         { id: '8-M-Q1-2', q: 'A system may have ___ solution(s).', type: 'mc', options: ['one', 'zero', 'one, zero, or infinite'], answer: 2 },
       ]},
       { name: 'Q2 — Functions', lessons: [
@@ -237,7 +237,7 @@ export const G8: GradeCurriculum = g('8th Grade', 8, '13-14', 'Algebra, argument
         { title: 'Function Notation', summary: 'Function notation is a special way mathematicians write functions using letters like f, g, or h followed by parentheses. When you see f(x) = 2x + 3, this means the function f takes any input x and follows the rule of multiplying by 2 and adding 3. For example, f(5) = 2(5) + 3 = 13, so when you input 5, you get 13 as output. Try this with your partner: create your own function like g(x) = x + 7, then take turns giving each other input numbers and calculating the outputs together!' },
         { title: 'Domain & Range', summary: 'Think of a function like a magical machine that takes inputs and creates outputs! The domain is all the possible inputs you can feed into your function machine, while the range is all the possible outputs it can produce. For example, if your function is f(x) = x + 3, and you can only use whole numbers from 1 to 5 as inputs, then your domain is {1, 2, 3, 4, 5} and your range would be {4, 5, 6, 7, 8} since adding 3 to each input gives you those outputs. Try this fun activity: create your own vending machine function where you input coins and output snacks, then list all possible coin amounts you' },
       ], questions: [
-        { id: '8-M-Q2-1', q: 'f(2) means plug ___ in for x.', type: 'short', answer: '2' },
+        { id: '8-M-Q2-1', q: 'f(2) means plug ___ in for x.', type: 'mc', options: ['1', '2', '3'], answer: 1 },
         { id: '8-M-Q2-2', q: 'A function has ___ output per input.', type: 'mc', options: ['one', 'many', 'none'], answer: 0 },
       ]},
       { name: 'Q3 — Exponents & Roots', lessons: [
@@ -245,15 +245,15 @@ export const G8: GradeCurriculum = g('8th Grade', 8, '13-14', 'Algebra, argument
         { title: 'Square Roots', summary: 'Square roots are like mathematical detectives that help us find which number was multiplied by itself to create a perfect square! When you see the square root symbol, youre being asked to discover what number times itself equals the number under the symbol. For example, the square root of 16 is 4 because 4 × 4 = 16, and the square root of 25 is 5 because 5 × 5 = 25. Try this fun challenge: grab some small squares or tiles and arrange them into perfect square shapes, then count how many tiles fit along one side to find the square root of your total number of tiles!' },
         { title: 'Scientific Notation', summary: 'Scientific notation is a super useful way to write really big or really small numbers using powers of 10, making them much easier to work with! Instead of writing 300,000,000 (which is hard to count), we can write it as 3 × 10⁸, where the 8 tells us to move the decimal point 8 places to the right. For tiny numbers like 0.0005, we write 5 × 10⁻⁴, where the negative exponent means we move the decimal 4 places left. Try converting the distance from Earth to the sun (93,000,000 miles) into scientific notation by moving the decimal point until you have just one digit before it, then count how many ' },
       ], questions: [
-        { id: '8-M-Q3-1', q: 'x³ · x² = x^___', type: 'short', answer: '5' },
-        { id: '8-M-Q3-2', q: '√49 = ___', type: 'short', answer: '7' },
+        { id: '8-M-Q3-1', q: 'x² × x³ = x^___', type: 'mc', options: ['4', '5', '6'], answer: 1 },
+        { id: '8-M-Q3-2', q: '√49 = ___', type: 'mc', options: ['6', '7', '8'], answer: 1 },
       ]},
       { name: 'Q4 — Geometry & Stats', lessons: [
         { title: 'Pythagorean Theorem', summary: 'The Pythagorean Theorem is like a mathematical superpower that helps us find missing sides of right triangles! This amazing formula, a² + b² = c², tells us that when we square the two shorter sides and add them together, we get the square of the longest side called the hypotenuse. Imagine you have a right triangle where one leg is 3 units and another is 4 units - using our formula, 3² + 4² = 9 + 16 = 25, so the hypotenuse equals √25 = 5 units. Try this hands-on activity: grab some graph paper and draw different right triangles, then measure each side and test the theorem yourself to see this a' },
         { title: 'Transformations', summary: 'Get ready to become a transformation magician! Transformations are ways to move, flip, turn, or resize shapes on a coordinate plane while keeping their basic form intact. The four main types are translations where you slide a shape to a new position, reflections where you flip it like looking in a mirror, rotations where you turn it around a point like spinning a pinwheel, and dilations where you make it bigger or smaller like zooming in or out on a photo. For example, if you have triangle ABC at coordinates A(1,2), B(3,2), C(2,4) and translate it 4 units right and 3 units up, your new triangl' },
         { title: 'Scatter Plots', summary: 'Scatter plots are like detective tools that help us discover hidden relationships between two different measurements! Imagine you want to see if taller students tend to have larger shoe sizes - youd plot each students height on one axis and their shoe size on the other, creating dots that might form a pattern going upward from left to right. When points cluster along an imaginary line, it shows a correlation, while scattered dots everywhere suggest no clear relationship. Lets create our own scatter plot by measuring how many hours classmates spend on homework versus their test scores, then ' },
       ], questions: [
-        { id: '8-M-Q4-1', q: 'In a right triangle, a²+b² = ___', type: 'short', answer: 'c²' },
+        { id: '8-M-Q4-1', q: 'In a right triangle, a²+b² = ___', type: 'mc', options: ['c²', 'c', '2c'], answer: 0 },
         { id: '8-M-Q4-2', q: 'A scatter plot shows ___ between two variables.', type: 'mc', options: ['relationships', 'colors', 'sounds'], answer: 0 },
       ]},
     ]},
