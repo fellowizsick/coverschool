@@ -108,7 +108,6 @@ export const CURRICULUM_NOTE =
 export const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'States', href: '/states' },
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Curriculum', href: '/curriculum-preview' },

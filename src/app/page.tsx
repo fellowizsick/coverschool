@@ -441,56 +441,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== STATE COVERAGE ===== */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-50/30 via-indigo-50/20 to-white" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-200 to-transparent" />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center animate-on-scroll">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-50 to-indigo-50 px-4 py-1.5 text-sm font-medium text-sky-700 mb-4 emoji-badge">
-              🗺️ Nationwide Coverage
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 font-heading sm:text-4xl">
-              States We{' '}
-              <span className="gradient-text-rainbow">Currently Serve</span>
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              From our home in Alabama, we serve families across the country. 🇺🇸
-            </p>
-          </div>
-
-          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 max-w-3xl mx-auto animate-on-scroll">
-            {COVERED_STATES.map((state, i) => {
-              const stateColors = ['#d1fae5', '#fce7f3', '#ede9fe', '#e0f2fe', '#fef3c7', '#fce7f3', '#d1fae5', '#ede9fe', '#e0f2fe']
-              const iconColors = ['text-emerald-500', 'text-pink-400', 'text-purple-400', 'text-sky-400', 'text-amber-400', 'text-rose-400', 'text-emerald-400', 'text-violet-400', 'text-blue-400']
-              return (
-                <div
-                  key={state.code}
-                  className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white/80 px-4 py-3 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 animate-pop"
-                  style={{ backgroundColor: stateColors[i % stateColors.length] + '80', transitionDelay: `${i * 50}ms` }}
-                >
-                  <CheckCircle className={`h-4 w-4 flex-shrink-0 ${iconColors[i % iconColors.length]}`} />
-                  <div>
-                    <span className="font-bold text-gray-900 text-sm">{state.code}</span>
-                    <span className="ml-1 text-xs text-gray-500">{state.name}</span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="mt-8 text-center animate-on-scroll">
-            <Link href="/states">
-              <Button variant="sky" className="shadow-lg shadow-sky-500/20">
-                🗺️ View Full Coverage Map
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* ===== CTA ===== */}
       <section className="relative py-24 md:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-800 to-gray-900" />
