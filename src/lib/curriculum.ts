@@ -49,7 +49,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
   { name: 'Mathematics', units: [
     { name: 'Q1 - Numbers 1-5', lessons: [
       { title: 'Counting 1 to 3', summary: 'Learning to count 1, 2, 3 with fingers and objects', weekTest: [
-        { id: 'K-M-W1-1', q: 'How many fingers are held up? 👆👆', type: 'mc', options: ['1', '2', '3'], answer: 1 },
+        { id: 'K-M-W1-1', q: 'How many fingers? ✌️', type: 'mc', options: ['1', '2', '3'], answer: 1 },
         { id: 'K-M-W1-2', q: 'Count the dots: • • •', type: 'mc', options: ['2', '3', '4'], answer: 1 },
         { id: 'K-M-W1-3', q: 'Which number comes after 1?', type: 'mc', options: ['2', '3', '0'], answer: 0 },
       ] },
