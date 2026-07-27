@@ -544,7 +544,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Compare Numbers', summary: 'Lets see which number is bigger! Look at 3 and 7. Which pile has more toys? Point to the bigger number and make a silly face!' },
       ], questions: [
         { id: '1-M-Q2-1', q: 'How many tens in 46?', type: 'mc', options: ['4', '6', '46'], answer: 0 },
-        { id: '1-M-Q2-2', q: 'Is 32 < 45? (yes/no)', type: 'mc', options: ['yes', 'no'], answer: 0 },
+        { id: '1-M-Q2-2', q: 'Is 32 less than 45?', type: 'mc', options: ['yes', 'no'], answer: 0 },
       ]},
       { name: 'Q3 — Measurement', lessons: [
         { title: 'Short & Long', summary: 'Lets find short and long things! Look at your pencil, then look at your bed. Which one is longer? Now find something short and something long in your room!' },
@@ -705,7 +705,7 @@ export const G1: GradeCurriculum = g('1st Grade', 1, '6-7', 'Building skill and 
         { title: 'Abraham', summary: 'Abraham loved God very much. God told Abraham to move to a new home far away. Lets pack a pretend suitcase with your toys like Abraham packed for his big trip!' },
         { title: 'Trusting God', summary: 'God loves you so much! He takes care of you every day. Close your eyes and think of three people who help you - thats how God shows His love!' },
       ], questions: [
-        { id: '1-B-Q1-1', q: 'Noah built a big ___', type: 'mc', options: ['ark', 'house', 'boat', 'tower'], answer: 0 },
+        { id: '1-B-Q1-1', q: 'Noah built a big ___', type: 'mc', options: ['ark', 'house', 'tower'], answer: 0 },
         { id: '1-B-Q1-2', q: 'God always ___ us.', type: 'mc', options: ['cares for', 'forgets', 'ignores'], answer: 0 },
       ]},
       { name: 'Q2 — Jesus’ Life', lessons: [
