@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { NAV_LINKS, SCHOOL_CONFIG } from '@/lib/constants'
 import { Menu, X, GraduationCap, Sparkles } from 'lucide-react'
 import { Button } from './ui/Button'
@@ -10,6 +10,10 @@ import { Button } from './ui/Button'
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [holdProgress, setHoldProgress] = useState(0)
+  const holdTimer = useRef<NodeJS.Timeout | null>(null)
+  const progressTimer = useRef<NodeJS.Timeout | null>(null)
+  const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
@@ -23,6 +27,43 @@ export default function Navbar() {
     setIsOpen(false)
   }, [pathname])
 
+  // Secret admin long-press: hold the graduation cap emblem for 3 seconds
+  const cancelHold = useCallback(() => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current)
+      holdTimer.current = null
+    }
+    if (progressTimer.current) {
+      clearInterval(progressTimer.current)
+      progressTimer.current = null
+    }
+    setHoldProgress(0)
+  }, [])
+
+  const startHold = useCallback(() => {
+    cancelHold()
+    let progress = 0
+    progressTimer.current = setInterval(() => {
+      progress += 3.33 // ~30 updates over 3 seconds
+      if (progress >= 100) {
+        progress = 100
+        clearInterval(progressTimer.current!)
+        progressTimer.current = null
+        clearTimeout(holdTimer.current!)
+        holdTimer.current = null
+        setHoldProgress(0)
+        router.push('/login?redirect=/dashboard/students')
+        return
+      }
+      setHoldProgress(progress)
+    }, 100)
+    holdTimer.current = setTimeout(() => {
+      // Safety: if the interval didn't fire
+      cancelHold()
+      router.push('/login?redirect=/dashboard/students')
+    }, 3100)
+  }, [cancelHold, router])
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -33,20 +74,36 @@ export default function Navbar() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between md:h-20">
-          {/* Logo */}
-          <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-700 via-emerald-500 to-amber-400 text-white shadow-lg shadow-emerald-900/20 transition-all duration-300 group-hover:shadow-emerald-900/30 group-hover:scale-110 group-hover:rotate-3">
-              <GraduationCap className="h-5 w-5" />
+          {/* Logo with secret admin long-press (hold 3s) */}
+          <div className="group flex items-center gap-3">
+            <div
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-700 via-emerald-500 to-amber-400 text-white shadow-lg shadow-emerald-900/20 transition-all duration-300 group-hover:shadow-emerald-900/30 group-hover:scale-110 group-hover:rotate-3 cursor-pointer select-none overflow-hidden"
+              onMouseDown={() => startHold()}
+              onMouseUp={() => cancelHold()}
+              onMouseLeave={() => cancelHold()}
+              onTouchStart={() => startHold()}
+              onTouchEnd={() => cancelHold()}
+              onTouchCancel={() => cancelHold()}
+              onClick={() => router.push('/')}
+            >
+              <GraduationCap className="h-5 w-5 relative z-10" />
+              {/* Progress ring */}
+              {holdProgress > 0 && (
+                <div
+                  className="absolute bottom-0 left-0 right-0 bg-white/30 transition-all duration-100"
+                  style={{ height: `${holdProgress}%` }}
+                />
+              )}
             </div>
-            <div className="flex flex-col">
+            <Link href="/" className="flex flex-col">
               <span className="text-base font-bold leading-tight text-gray-900 font-heading">
                 {SCHOOL_CONFIG.name}
               </span>
               <span className="text-[10px] font-medium tracking-wide bg-gradient-to-r from-emerald-600 to-amber-500 bg-clip-text text-transparent uppercase">
                 ✦ Alabama Church School
               </span>
-            </div>
-          </Link>
+            </Link>
+          </div>
 
           {/* Desktop Nav */}
           <nav className="hidden items-center gap-1 md:flex">

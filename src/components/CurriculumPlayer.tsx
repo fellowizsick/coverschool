@@ -4,6 +4,9 @@ import { useState, useEffect, useMemo } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import CompletionCertificate from '@/components/CompletionCertificate'
+import FlashLesson from '@/components/FlashLesson'
+import FlashGame from '@/components/FlashGame'
+import AdventureMap from '@/components/AdventureMap'
 import type { GradeCurriculum } from '@/lib/curriculum'
 
 type LessonRef = {
@@ -106,6 +109,11 @@ export default function CurriculumPlayer({
   const [streak, setStreak] = useState(0)
   const [stars, setStars] = useState(0)
   const [showStarsAnimation, setShowStarsAnimation] = useState(false)
+  const [speaking, setSpeaking] = useState(false)
+  const speechSynth = typeof window !== 'undefined' ? window.speechSynthesis : null
+  const [flashDone, setFlashDone] = useState(false)
+  const [showGame, setShowGame] = useState(false)
+  const isYoung = gradeNum <= 2
 
   // Load progress: prefer Supabase (cross-device), fall back to localStorage
   useEffect(() => {
@@ -340,13 +348,44 @@ export default function CurriculumPlayer({
           {node.subject} · {node.unit}
         </div>
 
+        {isYoung && (
+          <div className="mb-4">
+            <AdventureMap progress={completedCount} total={total} onSelectUnit={() => {}} />
+          </div>
+        )}
         <Card className="backdrop-blur bg-white/80">
           <CardContent className="p-6">
             {!isQuestion ? (
+              isYoung && !flashDone ? (
+                <FlashLesson summary={node.summary} title={node.lessonTitle} onDone={() => setShowGame(true)} />
+              ) : isYoung && showGame ? (
+                <FlashGame summary={node.summary} title={node.lessonTitle} onComplete={() => { setFlashDone(true); setShowGame(false) }} />
+              ) : (
               <>
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl animate-bob">{pt.mascot}</span>
                   <h2 className="text-2xl font-bold text-slate-900">{node.lessonTitle}</h2>
+                  <button
+                    onClick={() => {
+                      if (speaking) {
+                        speechSynth?.cancel()
+                        setSpeaking(false)
+                      } else if (node.summary) {
+                        const u = new SpeechSynthesisUtterance(node.summary)
+                        u.rate = 0.9
+                        u.pitch = 1.1
+                        u.onend = () => setSpeaking(false)
+                        speechSynth?.speak(u)
+                        setSpeaking(true)
+                      }
+                    }}
+                    className={`ml-auto rounded-full p-2 transition ${
+                      speaking ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400 hover:bg-sky-100 hover:text-sky-600'
+                    }`}
+                    title={speaking ? 'Stop' : 'Listen'}
+                  >
+                    {speaking ? '⏹' : '🔊'}
+                  </button>
                 </div>
                 <p className="text-lg text-slate-600 leading-relaxed mb-6">{node.summary}</p>
                 <div className={`rounded-xl bg-white/70 p-4 ${pt.chip} text-sm border border-white`}>
@@ -364,6 +403,7 @@ export default function CurriculumPlayer({
                   )}
                 </div>
               </>
+              )
             ) : (
               <>
                 <div className="flex items-center gap-3 mb-2">
