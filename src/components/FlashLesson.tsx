@@ -24,9 +24,26 @@ function parseFlashCards(summary: string, title: string): FlashItem[] {
   const isLetters = title.match(/letter|sound|phonic|alphabet|spell/i)
   const isShapes = title.match(/shape|circle|square|triangle|rectangle/i)
   
-  // COUNTING: Show numbers 1-10 with dots
+  // COUNTING: Show numbers based on the lesson's actual range
   if (isCounting) {
-    for (let i = 1; i <= 10; i++) {
+    let maxNum = 10 // default
+    let minNum = 1  // default
+    // Try to extract range from title: "Counting 1 to 3", "Numbers 1-5", "Numbers 4 and 5", "Counting to 10"
+    const rangeMatch = title.match(/(\d+)\s*(?:to|and|-|through)\s*(\d+)/i)
+    const singleMaxMatch = !rangeMatch && title.match(/to\s+(\d+)/i)
+    if (rangeMatch) {
+      minNum = parseInt(rangeMatch[1])
+      maxNum = parseInt(rangeMatch[2])
+    } else if (singleMaxMatch) {
+      maxNum = parseInt(singleMaxMatch[1])
+      // Also try to find a min from the summary
+      const sumMatch = summary.match(/(\d+)\s*(?:to|and|-)\s*(\d+)/i)
+      if (sumMatch) minNum = parseInt(sumMatch[1])
+    }
+    // Also check if unit name has a smaller range (e.g. "Q1 - Numbers 1-5")
+    if (maxNum > 10) maxNum = 10 // safety cap
+    if (minNum < 1) minNum = 1
+    for (let i = minNum; i <= maxNum; i++) {
       items.push({
         text: String(i),
          subtext: '•'.repeat(Math.min(i, 20)),
@@ -35,7 +52,8 @@ function parseFlashCards(summary: string, title: string): FlashItem[] {
          dots: i,
       })
     }
-    items.push({ text: 'You can count to 10!', color: 'from-yellow-400 to-amber-500', icon: '🎉' })
+    const congrats = maxNum === 10 ? 'You can count to 10!' : `You can count to ${maxNum}!`
+    items.push({ text: congrats, color: 'from-yellow-400 to-amber-500', icon: '🎉' })
     return items
   }
   
