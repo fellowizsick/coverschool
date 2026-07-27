@@ -216,7 +216,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { id: 'K-LA-W9-3', q: 'Which letter sounds like a snake?', type: 'mc', options: ['B', 'M', 'S'], answer: 2 },
       ] },
     ], questions: [
-      { id: 'K-LA-U3-1', q: 'Letters have names AND sounds. B says...', type: 'mc', options: ['buh', 'bee', 'both'], answer: 2 },
+      { id: 'K-LA-U3-1', q: 'What sound does the letter B make?', type: 'mc', options: ['buh', 'mmm', 'sss'], answer: 0 },
       { id: 'K-LA-U3-2', q: 'What do we call the sound a letter makes?', type: 'mc', options: ['letter sound', 'letter name', 'letter shape'], answer: 0 },
     ], unitTest: [
       { id: 'K-LA-UT3-1', q: 'Match the sound: "mmm" goes with which letter?', type: 'mc', options: ['B', 'M', 'S'], answer: 1 },
@@ -271,7 +271,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       { id: 'K-SW-U1-1', q: 'Sight words are words we know by looking. "I" is a...', type: 'mc', options: ['sight word', 'big word', 'new word'], answer: 0 },
       { id: 'K-SW-U1-2', q: 'We see these words a lot: I, a, the. They are...', type: 'mc', options: ['hard words', 'sight words', 'long words'], answer: 1 },
     ], unitTest: [
-      { id: 'K-SW-UT1-1', q: 'Circle all the "I" words: I see I am I go', type: 'mc', options: ['1', '2', '3'], answer: 2 },
+      { id: 'K-SW-UT1-1', q: 'How many times do you see "I"? I see I am I go', type: 'mc', options: ['1', '2', '3'], answer: 2 },
       { id: 'K-SW-UT1-2', q: 'Find "the" and "a": I see a big the dog', type: 'mc', options: ['see, big', 'a, the', 'I, dog'], answer: 1 },
       { id: 'K-SW-UT1-3', q: 'Which is a sight word we learned?', type: 'mc', options: ['elephant', 'the', 'beautiful'], answer: 1 },
     ] },
@@ -313,8 +313,8 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { id: 'K-SW-W8-3', q: 'Words on signs help us...', type: 'mc', options: ['know things', 'play games', 'sleep'], answer: 0 },
       ] },
       { title: 'Pointing to Words', summary: 'Using our finger to point at words while someone reads', weekTest: [
-        { id: 'K-SW-W9-1', q: 'When someone reads "I see a cat", we can point to each...', type: 'mc', options: ['word', 'page', 'picture'], answer: 0 },
-        { id: 'K-SW-W9-2', q: 'Pointing to words helps us...', type: 'mc', options: ['follow along', 'turn pages', 'close book'], answer: 0 },
+        { id: 'K-SW-W9-1', q: 'When someone reads "I see a cat", how many words are there?', type: 'mc', options: ['3', '4', '5'], answer: 1 },
+        { id: 'K-SW-W9-2', q: 'Following words with our eyes helps us...', type: 'mc', options: ['follow along', 'turn pages', 'close book'], answer: 0 },
         { id: 'K-SW-W9-3', q: 'Words are separated by...', type: 'mc', options: ['lines', 'spaces', 'dots'], answer: 1 },
       ] },
     ], questions: [
