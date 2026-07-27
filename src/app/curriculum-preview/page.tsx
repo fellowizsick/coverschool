@@ -8,19 +8,19 @@ import {
 } from 'lucide-react'
 
 const grades = [
-  { label: 'Kindergarten', age: '5-6', subjects: 6, tag: 'Foundations in faith, number, and wonder.' },
-  { label: '1st Grade', age: '6-7', subjects: 6, tag: 'Building readers, writers, and thinkers.' },
-  { label: '2nd Grade', age: '7-8', subjects: 6, tag: 'Growing skills, confidence, and curiosity.' },
-  { label: '3rd Grade', age: '8-9', subjects: 6, tag: 'Strengthening foundations, exploring ideas.' },
-  { label: '4th Grade', age: '9-10', subjects: 6, tag: 'Deepening knowledge, expanding worldview.' },
-  { label: '5th Grade', age: '10-11', subjects: 6, tag: 'Preparing for middle school with confidence.' },
-  { label: '6th Grade', age: '11-12', subjects: 6, tag: 'Critical thinking meets core academics.' },
-  { label: '7th Grade', age: '12-13', subjects: 6, tag: 'Transitioning to deeper analysis.' },
-  { label: '8th Grade', age: '13-14', subjects: 6, tag: 'Building high school readiness.' },
-  { label: '9th Grade', age: '14-15', subjects: 6, tag: 'High school foundations with a Christian worldview.' },
-  { label: '10th Grade', age: '15-16', subjects: 6, tag: 'Advanced academics, deeper faith integration.' },
-  { label: '11th Grade', age: '16-17', subjects: 6, tag: 'College prep meets character development.' },
-  { label: '12th Grade', age: '17-18', subjects: 6, tag: 'Senior year — graduation, diploma, and beyond.' },
+  { label: 'Kindergarten', slug: 'k', age: '5-6', subjects: 6, tag: 'Foundations in faith, number, and wonder.' },
+  { label: '1st Grade', slug: '1', age: '6-7', subjects: 6, tag: 'Building readers, writers, and thinkers.' },
+  { label: '2nd Grade', slug: '2', age: '7-8', subjects: 6, tag: 'Growing skills, confidence, and curiosity.' },
+  { label: '3rd Grade', slug: '3', age: '8-9', subjects: 6, tag: 'Strengthening foundations, exploring ideas.' },
+  { label: '4th Grade', slug: null, age: '9-10', subjects: 6, tag: 'Deepening knowledge, expanding worldview.' },
+  { label: '5th Grade', slug: null, age: '10-11', subjects: 6, tag: 'Preparing for middle school with confidence.' },
+  { label: '6th Grade', slug: null, age: '11-12', subjects: 6, tag: 'Critical thinking meets core academics.' },
+  { label: '7th Grade', slug: null, age: '12-13', subjects: 6, tag: 'Transitioning to deeper analysis.' },
+  { label: '8th Grade', slug: null, age: '13-14', subjects: 6, tag: 'Building high school readiness.' },
+  { label: '9th Grade', slug: null, age: '14-15', subjects: 6, tag: 'High school foundations with a Christian worldview.' },
+  { label: '10th Grade', slug: null, age: '15-16', subjects: 6, tag: 'Advanced academics, deeper faith integration.' },
+  { label: '11th Grade', slug: null, age: '16-17', subjects: 6, tag: 'College prep meets character development.' },
+  { label: '12th Grade', slug: null, age: '17-18', subjects: 6, tag: 'Senior year — graduation, diploma, and beyond.' },
 ]
 
 const subjects = [
@@ -102,18 +102,32 @@ export default function CurriculumPreviewPage() {
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">All Grades, One Curriculum</h2>
         <p className="text-center text-gray-500 mb-10">13 grades &middot; 6 subjects each &middot; 936 lessons &middot; 1 diploma</p>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {grades.map((g) => (
-            <Card key={g.label} className="hover:border-emerald-300 transition-colors">
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-gray-900 text-sm">{g.label}</h3>
-                  <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">{g.age}</span>
-                </div>
-                <p className="text-xs text-gray-500">{g.tag}</p>
-                <p className="text-xs text-gray-400 mt-2">{g.subjects} subjects &middot; 72 lessons</p>
-              </CardContent>
-            </Card>
-          ))}
+          {grades.map((g) => {
+            const card = (
+              <Card key={g.label} className={`hover:border-emerald-300 transition-all ${g.slug ? 'cursor-pointer hover:-translate-y-1 hover:shadow-lg' : ''}`}>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-semibold text-gray-900 text-sm">{g.label}</h3>
+                    <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">{g.age}</span>
+                  </div>
+                  <p className="text-xs text-gray-500">{g.tag}</p>
+                  <p className="text-xs text-gray-400 mt-2">{g.subjects} subjects &middot; 72 lessons</p>
+                  {g.slug && (
+                    <span className="inline-block mt-2 text-xs text-emerald-600 font-medium">
+                      See full scope &rarr;
+                    </span>
+                  )}
+                </CardContent>
+              </Card>
+            )
+            return g.slug ? (
+              <Link key={g.label} href={`/curriculum-preview/${g.slug}`}>
+                {card}
+              </Link>
+            ) : (
+              card
+            )
+          })}
         </div>
       </section>
 
