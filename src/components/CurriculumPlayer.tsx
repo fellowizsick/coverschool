@@ -113,6 +113,7 @@ export default function CurriculumPlayer({
   const speechSynth = typeof window !== 'undefined' ? window.speechSynthesis : null
   const [flashDone, setFlashDone] = useState(false)
   const [showGame, setShowGame] = useState(false)
+  const [showRestartConfirm, setShowRestartConfirm] = useState(false)
   const isYoung = gradeNum <= 2
   
   // Reset flash state when moving to a new lesson
@@ -178,6 +179,16 @@ export default function CurriculumPlayer({
     } catch {
       /* offline — localStorage already saved */
     }
+  }
+
+  function handleRestart() {
+  const next = new Array(sequence.length).fill(false)
+  persist(next)
+  setCurrent(0)
+  setShowRestartConfirm(false)
+  setAnswer(null)
+  setAnsweredCorrect(null)
+  setStreak(0)
   }
 
   const node = sequence[current]
@@ -334,7 +345,16 @@ export default function CurriculumPlayer({
             <span>
               {grade.grade} · Step {current + 1} of {total}
             </span>
-            <span>{pct}% complete</span>
+            <div className="flex items-center gap-2">
+              <span>{pct}% complete</span>
+              <button
+                onClick={() => setShowRestartConfirm(true)}
+                className="text-xs text-red-400 hover:text-red-600 hover:underline transition"
+                title="Restart from beginning"
+              >
+                🔄
+              </button>
+            </div>
           </div>
           <div className="h-2 rounded-full bg-white/60 overflow-hidden">
             <div
@@ -531,6 +551,33 @@ export default function CurriculumPlayer({
                 {e}
               </span>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* RESTART CONFIRMATION */}
+      {showRestartConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl p-6 max-w-sm mx-4 shadow-2xl text-center">
+            <div className="text-4xl mb-3">🔄</div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Restart from the beginning?</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              This will reset all your progress for {grade.grade}. You can always come back.
+            </p>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => setShowRestartConfirm(false)}
+                className="px-5 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition font-medium text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRestart}
+                className="px-5 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition font-medium text-sm"
+              >
+                Yes, Restart
+              </button>
+            </div>
           </div>
         </div>
       )}
