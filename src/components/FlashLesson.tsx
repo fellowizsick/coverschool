@@ -29,10 +29,10 @@ function parseFlashCards(summary: string, title: string): FlashItem[] {
     for (let i = 1; i <= 10; i++) {
       items.push({
         text: String(i),
-        subtext: '•'.repeat(Math.min(i, 20)),
-        color: colors[(i - 1) % colors.length],
-        icon: '🔢',
-        dots: i,
+         subtext: '•'.repeat(Math.min(i, 20)),
+         color: colors[(i - 1) % colors.length],
+         icon: '',
+         dots: i,
       })
     }
     items.push({ text: 'You can count to 10!', color: 'from-yellow-400 to-amber-500', icon: '🎉' })
@@ -137,7 +137,9 @@ export default function FlashLesson({ summary, title, onDone }: { summary: strin
         </div>
         
         {/* Icon */}
-        <span className="text-4xl mb-2 relative z-10">{current.icon}</span>
+        {current.icon && (
+          <span className="text-4xl mb-2 relative z-10">{current.icon}</span>
+        )}
         
         {/* Main text - BIG */}
         <span className="text-6xl md:text-7xl font-bold text-center px-4 leading-tight drop-shadow-lg relative z-10">
