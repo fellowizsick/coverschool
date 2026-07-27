@@ -55,7 +55,7 @@ export default function CurriculumPreviewPage() {
             6 core subjects across 13 grades — each lesson designed to build knowledge, 
             character, and faith. Included with your Larose Christian Academy membership.
           </p>
-          <Link href="/enroll">
+          <Link href="/curriculum">
             <Button className="bg-gradient-to-r from-amber-500 to-yellow-400 text-amber-950 text-base px-8 py-6 rounded-xl font-semibold hover:shadow-xl hover:shadow-amber-500/30 transition-all">
               <Sparkles className="h-5 w-5 mr-2" />
               Start Your Journey
