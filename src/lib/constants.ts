@@ -6,7 +6,7 @@ export const SCHOOL_CONFIG: SchoolConfig = {
   description:
     'Larose Christian Academy is an Alabama-based church school providing cover school services for homeschooling families. Founded by an ordained minister, we provide the legal oversight, record-keeping, and support families need to homeschool with confidence.',
   email: 'larosechristianacademy@gmail.com',
-  phone: '251-201-9991',
+  phone: '251-295-7688',
   address: 'Mobile, AL',
   formspreeId: 'mykqplgw',
 }
@@ -114,5 +114,6 @@ export const NAV_LINKS = [
   { label: 'Curriculum', href: '/curriculum-preview' },
   { label: 'Assessment', href: '/assessment' },
   { label: 'Contact', href: '/contact' },
+  { label: 'Parent Portal', href: '/parent' },
   { label: 'Enroll', href: '/enroll', highlight: true },
 ]
