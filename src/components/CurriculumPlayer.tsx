@@ -114,6 +114,9 @@ export default function CurriculumPlayer({
   const [flashDone, setFlashDone] = useState(false)
   const [showGame, setShowGame] = useState(false)
   const isYoung = gradeNum <= 2
+  
+  // Reset flash state when moving to a new lesson
+  useEffect(() => { setFlashDone(false); setShowGame(false) }, [current])
 
   // Load progress: prefer Supabase (cross-device), fall back to localStorage
   useEffect(() => {
@@ -359,7 +362,7 @@ export default function CurriculumPlayer({
               isYoung && !flashDone ? (
                 <FlashLesson summary={node.summary} title={node.lessonTitle} onDone={() => setShowGame(true)} />
               ) : isYoung && showGame ? (
-                <FlashGame summary={node.summary} title={node.lessonTitle} onComplete={() => { setFlashDone(true); setShowGame(false) }} />
+                <FlashGame summary={node.summary} title={node.lessonTitle} onComplete={() => { markComplete(); setFlashDone(true); setShowGame(false) }} />
               ) : (
               <>
                 <div className="flex items-center gap-3 mb-2">
