@@ -49,7 +49,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
   [
     { name: 'Mathematics', units: [
       { name: 'Q1 — Counting & Shapes', lessons: [
-        { title: 'Counting 1 to 10', summary: 'Let's count together! One, two, three, four, five, six, seven, eight, nine, ten! Point to each number as you say it.', weekTest: [
+        { title: 'Counting 1 to 10', summary: 'Lets count together! One, two, three, four, five, six, seven, eight, nine, ten! Point to each number as you say it.', weekTest: [
           { id: 'K-M-W1-1', q: 'What number comes after 3?', type: 'mc', options: ['2', '4', '5'], answer: 1 },
           { id: 'K-M-W1-2', q: 'Count to 5. What number comes right before 5?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
           { id: 'K-M-W1-3', q: 'How many toes are on one foot?', type: 'mc', options: ['4', '5', '10'], answer: 1 },
@@ -96,8 +96,8 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
         { id: 'K-M-Q1-U5', q: 'Count from 1 to 10 out loud. Write the number 6.', type: 'short', answer: '6' },
       ]},
       { name: 'Q2 — Numbers to 20', lessons: [
-        { title: 'Counting 11-20', summary: 'Let's count higher! After 10 comes 11, 12, 13, all the way to 20. Practice counting with your fingers and toes!' },
-        { title: 'Writing Numerals', summary: 'Let's practice writing numbers! Trace a 1, then a 2, then a 3. Keep going until you can write all your numbers.' },
+        { title: 'Counting 11-20', summary: 'Lets count higher! After 10 comes 11, 12, 13, all the way to 20. Practice counting with your fingers and toes!' },
+        { title: 'Writing Numerals', summary: 'Lets practice writing numbers! Trace a 1, then a 2, then a 3. Keep going until you can write all your numbers.' },
         { title: 'One More, One Less', summary: 'Lets play a number game! Pick any number and add one more. Now take one away! Try this with your toys or snacks.' },
       ], questions: [
         { id: 'K-M-Q2-1', q: 'What comes after 14?', type: 'mc', options: ['13', '15', '16', '4'], answer: 1 },
