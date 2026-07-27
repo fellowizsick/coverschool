@@ -225,7 +225,7 @@ export default function CurriculumPlayer({
       setSpeaking(false)
     } else {
       const u = new SpeechSynthesisUtterance(text)
-      u.rate = 0.85
+      u.rate = 1.0
       u.pitch = 1.05
       const voice = getBestVoice()
       if (voice) u.voice = voice
@@ -440,7 +440,7 @@ export default function CurriculumPlayer({
                         setSpeaking(false)
                       } else if (node.summary) {
                         const u = new SpeechSynthesisUtterance(node.summary)
-                        u.rate = 0.9
+                        u.rate = 1.0
                         u.pitch = 1.1
                         u.onend = () => setSpeaking(false)
                         speechSynth?.speak(u)
@@ -513,7 +513,7 @@ export default function CurriculumPlayer({
                         setSpeaking(false)
                       } else {
                         const u = new SpeechSynthesisUtterance(question.q)
-                        u.rate = 0.85
+                        u.rate = 1.0
                         u.pitch = 1.1
                         u.onend = () => setSpeaking(false)
                         speechSynth?.speak(u)
