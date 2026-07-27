@@ -597,7 +597,13 @@ export default function CurriculumPlayer({
 
                 {answeredCorrect === false && (
                   <div className="mt-4 rounded-xl bg-red-50 border border-red-200 p-4 text-red-700 text-sm">
-                    Not quite — read the lesson again and try! You’ve got this. 💪
+                    <p>Not quite — try again! You’ve got this. 💪</p>
+                    <button
+                      onClick={() => { setAnswer(null); setAnsweredCorrect(null) }}
+                      className="mt-3 rounded-lg bg-red-100 hover:bg-red-200 px-5 py-2 font-semibold text-red-700 transition"
+                    >
+                      🔄 Try Again
+                    </button>
                   </div>
                 )}
               </>
