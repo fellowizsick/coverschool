@@ -359,9 +359,7 @@ export default function CurriculumPlayer({
         <Card className="backdrop-blur bg-white/80">
           <CardContent className="p-6">
             {!isQuestion ? (
-              isYoung && !flashDone ? (
-                <FlashLesson summary={node.summary} title={node.lessonTitle} onDone={() => setShowGame(true)} />
-              ) : isYoung && showGame ? (
+              isYoung && showGame ? (
                 <FlashGame summary={node.summary} title={node.lessonTitle} onComplete={() => { 
                   const next = [...done]
                   next[current] = true
@@ -372,6 +370,8 @@ export default function CurriculumPlayer({
                     setTimeout(() => setCurrent(c => c + 1), 500)
                   }
                 }} />
+              ) : isYoung && !flashDone ? (
+                <FlashLesson summary={node.summary} title={node.lessonTitle} onDone={() => setShowGame(true)} />
               ) : (
               <>
                 <div className="flex items-center gap-3 mb-2">
