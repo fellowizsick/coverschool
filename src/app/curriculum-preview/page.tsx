@@ -58,7 +58,7 @@ export default function CurriculumPreviewPage() {
           <Link href="/enroll">
             <Button className="bg-gradient-to-r from-amber-500 to-yellow-400 text-amber-950 text-base px-8 py-6 rounded-xl font-semibold hover:shadow-xl hover:shadow-amber-500/30 transition-all">
               <Sparkles className="h-5 w-5 mr-2" />
-              Start Your Free Trial
+              Start Your Journey
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </Link>
