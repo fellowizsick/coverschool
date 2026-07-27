@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { GraduationCap, Lock, CheckCircle } from 'lucide-react'
+import { GraduationCap, Lock, CheckCircle, Shield } from 'lucide-react'
 import { getGradeCurriculum } from '@/lib/curriculum_index'
 import { gradeToNum } from '@/lib/gradeMap'
+import { isAuthorizedAdmin } from '@/lib/adminAccess'
 
 export default async function CurriculumPage() {
   const supabase = await createClient()
@@ -18,12 +19,19 @@ export default async function CurriculumPage() {
     redirect('/login?redirect=/curriculum')
   }
 
+  const isAdmin = isAuthorizedAdmin(user.email)
+
   // Enrolled children for this parent (matching logged-in email)
-  const { data: enrollments } = await supabase
-    .from('enrollments')
-    .select('*')
-    .eq('email', user.email)
-    .order('created_at', { ascending: false })
+  // Admins see all grades for preview
+  let enrollments: any[] = []
+  if (!isAdmin) {
+    const { data: e } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('email', user.email)
+      .order('created_at', { ascending: false })
+    enrollments = e || []
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white">
@@ -38,6 +46,29 @@ export default async function CurriculumPage() {
         </p>
 
         {!enrollments || enrollments.length === 0 ? (
+          isAdmin ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <Shield className="mx-auto h-12 w-12 text-emerald-500" />
+                <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                  Admin Preview — All Grades
+                </h3>
+                <p className="mt-2 text-sm text-gray-500 mb-6">
+                  You are logged in as an administrator. All grades are unlocked for preview.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-xl mx-auto">
+                  {['Kindergarten','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th'].map(g => (
+                    <Link key={g} href={`/curriculum/preview/${g.toLowerCase()}`}>
+                      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 hover:shadow-md hover:border-emerald-400 transition-all cursor-pointer">
+                        <div className="text-sm font-medium text-emerald-900">{g}</div>
+                        <div className="text-xs text-emerald-600 mt-1">Click to view</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
           <Card>
             <CardContent className="p-12 text-center">
               <GraduationCap className="mx-auto h-12 w-12 text-gray-300" />
@@ -53,6 +84,7 @@ export default async function CurriculumPage() {
               </Link>
             </CardContent>
           </Card>
+          )
         ) : (
           <div className="grid gap-5">
             {enrollments.map((e: any) => {
