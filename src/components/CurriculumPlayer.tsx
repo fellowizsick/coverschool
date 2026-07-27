@@ -346,13 +346,11 @@ export default function CurriculumPlayer({
               {grade.grade} · Step {current + 1} of {total}
             </span>
             <div className="flex items-center gap-2">
-              <span>{pct}% complete</span>
               <button
                 onClick={() => setShowRestartConfirm(true)}
-                className="text-xs text-red-400 hover:text-red-600 hover:underline transition"
-                title="Restart from beginning"
+                className="flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-600 hover:bg-red-100 hover:border-red-300 transition"
               >
-                🔄
+                ↺ Restart
               </button>
             </div>
           </div>
@@ -454,7 +452,30 @@ export default function CurriculumPlayer({
                     End of week test — how well do you remember what you learned?
                   </div>
                 )}
-                <p className="text-lg text-slate-700 mb-6">{question.q}</p>
+                <p className="text-lg text-slate-700 mb-6">
+                  {question.q}
+                  <button
+                    onClick={() => {
+                      if (speaking) {
+                        speechSynth?.cancel()
+                        setSpeaking(false)
+                      } else {
+                        const u = new SpeechSynthesisUtterance(question.q)
+                        u.rate = 0.85
+                        u.pitch = 1.1
+                        u.onend = () => setSpeaking(false)
+                        speechSynth?.speak(u)
+                        setSpeaking(true)
+                      }
+                    }}
+                    className={`ml-2 align-middle rounded-full p-1.5 transition ${
+                      speaking ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400 hover:bg-sky-100 hover:text-sky-600'
+                    }`}
+                    title={speaking ? 'Stop' : 'Listen'}
+                  >
+                    {speaking ? '⏹' : '🔊'}
+                  </button>
+                </p>
                 {question.type === 'mc' ? (
                   <div className="grid gap-3">
                     {question.options.map((opt: string, i: number) => {
@@ -466,11 +487,15 @@ export default function CurriculumPlayer({
                           key={i}
                           disabled={answeredCorrect !== null}
                           onClick={() => onAnswer(i)}
-                          className={`text-left rounded-xl border-2 px-4 py-3 font-medium transition ${
+                          className={`text-left rounded-xl border-2 font-medium transition ${
+                            isYoung ? 'px-6 py-5 text-lg min-h-[60px]' : 'px-4 py-3'
+                          } ${
                             showRight
                               ? 'border-emerald-500 bg-emerald-50 text-emerald-800'
                               : showWrong
                               ? 'border-red-400 bg-red-50 text-red-700'
+                              : isYoung
+                              ? 'border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 text-lg'
                               : 'border-slate-200 hover:border-indigo-400 hover:bg-indigo-50'
                           }`}
                         >
