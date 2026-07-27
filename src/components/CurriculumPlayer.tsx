@@ -197,6 +197,28 @@ export default function CurriculumPlayer({
   const pct = Math.round((completedCount / total) * 100)
 
   // Is this node a question node?
+  let selectedVoice: SpeechSynthesisVoice | null = null
+  
+  function getBestVoice(): SpeechSynthesisVoice | null {
+    if (selectedVoice) return selectedVoice
+    const voices = speechSynth?.getVoices() || []
+    // Prefer: Google US English (smooth female), then Microsoft Zira, then any English
+    selectedVoice = voices.find(v => v.name.includes('Google US English') && v.lang.startsWith('en'))
+      || voices.find(v => v.name.includes('Zira') && v.lang.startsWith('en'))
+      || voices.find(v => v.name.includes('Microsoft') && v.lang.startsWith('en'))
+      || voices.find(v => v.lang.startsWith('en'))
+      || voices[0]
+      || null
+    return selectedVoice
+  }
+
+  // Try to load voices (they load async, so we need the onvoiceschanged event)
+  if (typeof window !== 'undefined' && speechSynth) {
+    speechSynth.onvoiceschanged = () => { selectedVoice = null; getBestVoice() }
+    // Force initial load attempt
+    getBestVoice()
+  }
+
   function speakText(text: string) {
     if (speaking) {
       speechSynth?.cancel()
@@ -204,7 +226,9 @@ export default function CurriculumPlayer({
     } else {
       const u = new SpeechSynthesisUtterance(text)
       u.rate = 0.85
-      u.pitch = 1.1
+      u.pitch = 1.05
+      const voice = getBestVoice()
+      if (voice) u.voice = voice
       u.onend = () => setSpeaking(false)
       speechSynth?.speak(u)
       setSpeaking(true)
