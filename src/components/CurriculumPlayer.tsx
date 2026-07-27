@@ -197,6 +197,20 @@ export default function CurriculumPlayer({
   const pct = Math.round((completedCount / total) * 100)
 
   // Is this node a question node?
+  function speakText(text: string) {
+    if (speaking) {
+      speechSynth?.cancel()
+      setSpeaking(false)
+    } else {
+      const u = new SpeechSynthesisUtterance(text)
+      u.rate = 0.85
+      u.pitch = 1.1
+      u.onend = () => setSpeaking(false)
+      speechSynth?.speak(u)
+      setSpeaking(true)
+    }
+  }
+
   const isQuestion = node.qIndex >= 0
   // find the actual question object
   let question: any = null
@@ -418,9 +432,15 @@ export default function CurriculumPlayer({
                   </button>
                 </div>
                 <p className="text-lg text-slate-600 leading-relaxed mb-6">{node.summary}</p>
-                <div className={`rounded-xl bg-white/70 p-4 ${pt.chip} text-sm border border-white`}>
-                  Read this carefully. When you’re ready, tap “Mark as Done” to
-                  unlock the next step. 📖
+                <div className={`rounded-xl bg-white/70 p-4 ${pt.chip} text-sm border border-white flex items-start gap-2`}>
+                  <span className="flex-1">
+                    Read this carefully. When you’re ready, tap “Mark as Done” to
+                    unlock the next step. 📖
+                  </span>
+                  <button onClick={() => speakText("Read this carefully. When you are ready, tap Mark as Done to unlock the next step.")}
+                    className="shrink-0 rounded-full p-1 text-slate-300 hover:text-sky-500 hover:bg-sky-50 transition text-xs" title="Listen">
+                    🔊
+                  </button>
                 </div>
                 <div className="mt-6 flex gap-3">
                   <Button onClick={markComplete} variant="gold" size="lg" className="flex-1">
@@ -443,13 +463,21 @@ export default function CurriculumPlayer({
                   </h2>
                 </div>
                 {node.isUnitTest && (
-                  <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-700">
-                    This test covers everything you learned in this section. Take your time!
+                  <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-700 flex items-start gap-2">
+                    <span className="flex-1">This test covers everything you learned in this section. Take your time!</span>
+                    <button onClick={() => speakText("This test covers everything you learned in this section. Take your time!")}
+                      className="shrink-0 rounded-full p-1 text-amber-400 hover:bg-amber-100 transition" title="Listen">
+                      🔊
+                    </button>
                   </div>
                 )}
                 {node.isWeekTest && (
-                  <div className="mb-4 rounded-lg bg-blue-50 border border-blue-200 p-3 text-sm text-blue-700">
-                    End of week test — how well do you remember what you learned?
+                  <div className="mb-4 rounded-lg bg-blue-50 border border-blue-200 p-3 text-sm text-blue-700 flex items-start gap-2">
+                    <span className="flex-1">End of week test — how well do you remember what you learned?</span>
+                    <button onClick={() => speakText("End of week test. How well do you remember what you learned?")}
+                      className="shrink-0 rounded-full p-1 text-blue-400 hover:bg-blue-100 transition" title="Listen">
+                      🔊
+                    </button>
                   </div>
                 )}
                 <p className="text-lg text-slate-700 mb-6">
@@ -499,7 +527,19 @@ export default function CurriculumPlayer({
                               : 'border-slate-200 hover:border-indigo-400 hover:bg-indigo-50'
                           }`}
                         >
-                          {String.fromCharCode(65 + i)}. {opt}
+                          <span className="flex items-center gap-2">
+                            <span>{String.fromCharCode(65 + i)}.</span>
+                            <span className="flex-1">{opt}</span>
+                            {!answeredCorrect && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); speakText(opt) }}
+                                className="shrink-0 rounded-full p-1 text-slate-300 hover:text-sky-500 hover:bg-sky-50 transition text-xs"
+                                title="Read this option aloud"
+                              >
+                                🔊
+                              </button>
+                            )}
+                          </span>
                         </button>
                       )
                     })}
