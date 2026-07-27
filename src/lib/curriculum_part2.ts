@@ -231,7 +231,7 @@ export const G3: GradeCurriculum = g('3rd Grade', 3, '8-9', 'Roots of words and 
         { title: 'Division Intro', summary: 'Lets share treats with friends! Put 8 cookies in groups of 2. How many groups did you make? Try it with toys too!' },
       ], questions: [
         { id: '3-M-Q1-1', q: '7 × 8 = ?', type: 'mc', options: ['54', '56', '49'], answer: 1 },
-        { id: '3-M-Q1-2', q: '12 ÷ 3 = ?', type: 'mc', options: ['3', '4', '5'], answer: 1 },
+        { id: '3-M-Q1-2', q: '12 divided by 3 = ?', type: 'mc', options: ['3', '4', '5'], answer: 1 },
       ]},
       { name: 'Q2 — Fractions', lessons: [
         { title: 'Numerator & Denominator', summary: 'A fraction has two parts! The top number is the numerator. The bottom number is the denominator. Draw a circle and cut it into 4 parts. Color 2 parts red. You made 2/4!' },
