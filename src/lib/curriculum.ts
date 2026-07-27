@@ -49,15 +49,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
   [
     { name: 'Mathematics', units: [
       { name: 'Q1 — Counting & Shapes', lessons: [
-        { title: 'Counting 1 to 10', summary: `Numbers help us know how many of something we have. Today we will learn to count from 1 to 10!
-
-Let's start with our fingers. Hold up one finger. That is the number 1. Now hold up two fingers. That is 2. Keep going: 3, 4, 5, 6, 7, 8, 9, 10!
-
-Practice by counting things around you. Count your toys. Count the stairs. Count the apples in the kitchen. The more you count, the better you will get.
-
-Try this: point to each object as you say its number. This helps you keep track so you don't count the same thing twice. That is called "one-to-one correspondence," and it is a very important math skill!
-
-When you get to 10, you have counted a whole group. Great job! Tomorrow we will learn to write these numbers too.`, weekTest: [
+        { title: 'Counting 1 to 10', summary: 'Let's count together! One, two, three, four, five, six, seven, eight, nine, ten! Point to each number as you say it.', weekTest: [
           { id: 'K-M-W1-1', q: 'What number comes after 3?', type: 'mc', options: ['2', '4', '5'], answer: 1 },
           { id: 'K-M-W1-2', q: 'Count to 5. What number comes right before 5?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
           { id: 'K-M-W1-3', q: 'How many toes are on one foot?', type: 'mc', options: ['4', '5', '10'], answer: 1 },
@@ -69,17 +61,7 @@ When you get to 10, you have counted a whole group. Great job! Tomorrow we will 
           { id: 'K-M-W1-9', q: 'Draw 3 stars. Now draw 2 more. How many stars total?', type: 'activity' },
           { id: 'K-M-W1-10', q: 'What is the first number we say when we count?', type: 'mc', options: ['0', '1', '2'], answer: 1 },
         ] },
-        { title: 'Basic Shapes', summary: `Shapes are everywhere! Let's learn to see them.
-
-A circle is round like a ball or the sun. It has no straight lines and no corners. Can you find something round in your room?
-
-A square has 4 sides that are all the same length. A window or a checkerboard square is a good example. Count the sides: 1, 2, 3, 4!
-
-A triangle has 3 sides and 3 corners. A piece of pizza or a yield sign is a triangle. Triangles are strong shapes that builders use.
-
-A rectangle has 4 sides too, but two sides are longer than the other two. A door or a book is a rectangle. Look around — how many rectangles can you spot?
-
-Activity: find one circle, one square, one triangle, and one rectangle in your house. Point to each one and say its name out loud!`, weekTest: [
+        { title: 'Basic Shapes', summary: 'Can you find a circle? It is round like a ball. A square has four sides. A triangle has three sides. Point to shapes around you!', weekTest: [
           { id: 'K-M-W2-1', q: 'Which shape has 4 equal sides?', type: 'mc', options: ['circle', 'square', 'triangle'], answer: 1 },
           { id: 'K-M-W2-2', q: 'A pizza slice looks most like which shape?', type: 'mc', options: ['square', 'triangle', 'circle'], answer: 1 },
           { id: 'K-M-W2-3', q: 'How many sides does a triangle have?', type: 'mc', options: ['2', '3', '4'], answer: 1 },
@@ -91,15 +73,7 @@ Activity: find one circle, one square, one triangle, and one rectangle in your h
           { id: 'K-M-W2-9', q: 'Name one thing in your kitchen that is shaped like a rectangle.', type: 'short', answer: 'open' },
           { id: 'K-M-W2-10', q: 'Which shape can roll?', type: 'mc', options: ['square', 'circle', 'triangle'], answer: 1 },
         ] },
-        { title: 'More or Less', summary: `Being able to tell which group has more and which has less is a very useful skill!
-
-Imagine you have 4 cookies and your friend has 7 cookies. Who has more? Your friend does! Who has less? You do!
-
-Here is how to compare: line up the items in two rows. Match one item from each group together. The group that has items left over has more. The group that runs out first has less.
-
-Try this at snack time. Put some crackers on one plate and some on another. Count each plate. Which plate has more? Which has less? You can do this with toys, books, or anything!
-
-Bigger numbers mean more. Smaller numbers mean less. Remember: 10 is more than 3. 2 is less than 8. Practice comparing numbers every day and you will become a math superstar!`, weekTest: [
+        { title: 'More or Less', summary: 'Which pile has more? Which has less? Count the toys and compare. The group with more things has a bigger number.', weekTest: [
           { id: 'K-M-W3-1', q: 'Which is more: 2 cookies or 6 cookies?', type: 'mc', options: ['2', '6', 'they are the same'], answer: 1 },
           { id: 'K-M-W3-2', q: 'You have 4 toys. Your friend has 7 toys. Who has less?', type: 'mc', options: ['you', 'your friend', 'same'], answer: 0 },
           { id: 'K-M-W3-3', q: 'Which is less: 8 or 3?', type: 'mc', options: ['8', '3', 'they are the same'], answer: 1 },
@@ -122,12 +96,8 @@ Bigger numbers mean more. Smaller numbers mean less. Remember: 10 is more than 3
         { id: 'K-M-Q1-U5', q: 'Count from 1 to 10 out loud. Write the number 6.', type: 'short', answer: '6' },
       ]},
       { name: 'Q2 — Numbers to 20', lessons: [
-        { title: 'Counting 11-20', summary: `` },
-        { title: 'Writing Numerals', summary: `Let's explore the world of numbers! You see them every day, like on your clock or when you count your toys. Today, we will learn to write numbers from one to ten. Start with number one. It is like a tall tree. Draw a line from top to bottom. Now, number two is like a swan. Curve around at the top and slide to the right.
-
-Next, we have numbers three, four, and five. Number three is like a pair of lips. Make two curves on top of each other. Number four is like a little house. Draw a line down, across, and down. Number five is like a belly with a hat. Draw a line across, curve down, and a line on top. You have five fingers on each hand!
-
-Now for numbers six, seven, eight, nine` },
+        { title: 'Counting 11-20', summary: 'Let's count higher! After 10 comes 11, 12, 13, all the way to 20. Practice counting with your fingers and toes!' },
+        { title: 'Writing Numerals', summary: 'Let's practice writing numbers! Trace a 1, then a 2, then a 3. Keep going until you can write all your numbers.' },
         { title: 'One More, One Less', summary: 'Lets play a number game! Pick any number and add one more. Now take one away! Try this with your toys or snacks.' },
       ], questions: [
         { id: 'K-M-Q2-1', q: 'What comes after 14?', type: 'mc', options: ['13', '15', '16', '4'], answer: 1 },
