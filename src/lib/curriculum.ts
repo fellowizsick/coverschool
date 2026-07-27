@@ -55,7 +55,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
       ] },
       { title: 'Numbers 4 and 5', summary: 'Learning numbers 4 and 5 with counting practice', weekTest: [
         { id: 'K-M-W2-1', q: 'Count the stars: ⭐⭐⭐⭐⭐', type: 'mc', options: ['4', '5', '6'], answer: 1 },
-        { id: 'K-M-W2-2', q: 'Show 4 with your fingers. How many fingers?', type: 'mc', options: ['3', '4', '5'], answer: 1 },
+        { id: 'K-M-W2-2', q: 'You have 3 fingers up. Put up 1 more. How many now?', type: 'mc', options: ['3', '4', '5'], answer: 1 },
         { id: 'K-M-W2-3', q: 'Which is the number 5?', type: 'mc', options: ['3', '4', '5'], answer: 2 },
       ] },
       { title: 'Recognizing Numbers 1-5', summary: 'Looking at and naming numbers 1, 2, 3, 4, 5', weekTest: [
@@ -69,7 +69,7 @@ export const K: GradeCurriculum = g('Kindergarten', 0, '5-6', 'Foundations in fa
     ], unitTest: [
       { id: 'K-M-UT1-1', q: 'Show 5 fingers. How many is that?', type: 'mc', options: ['4', '5', '6'], answer: 1 },
       { id: 'K-M-UT1-2', q: 'Count the apples: 🍎🍎🍎🍎', type: 'mc', options: ['3', '4', '5'], answer: 1 },
-      { id: 'K-M-UT1-3', q: 'Which number comes before 5?', type: 'mc', options: ['3', '4', '6'], answer: 1 },
+      { id: 'K-M-UT1-3', q: 'Count: 1, 2, 3, 4, ___ What comes next?', type: 'mc', options: ['3', '5', '6'], answer: 1 },
     ] },
     
     { name: 'Q2 - Numbers 1-10', lessons: [
