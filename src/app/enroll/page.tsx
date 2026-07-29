@@ -19,6 +19,7 @@ export default function EnrollPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [defaultGrade, setDefaultGrade] = useState('')
+  const [billingMode, setBillingMode] = useState('monthly')
 
   // Read URL params for pre-filled values from assessment (client-side to avoid Suspense boundary)
   useEffect(() => {
@@ -76,6 +77,7 @@ export default function EnrollPage() {
           email: payload.email,
           studentName: `${payload.student_first_name} ${payload.student_last_name}`,
           parentName: `${payload.parent_first_name} ${payload.parent_last_name}`,
+          billing: billingMode,
         }),
       })
 
@@ -162,18 +164,45 @@ export default function EnrollPage() {
         </p>
 
         {/* Pricing summary */}
-        <Card fun="amber" className="mt-6">
+        {/* Billing toggle */}
+        <div className="flex items-center justify-center gap-3 mt-6 mb-2">
+          <button
+            type="button"
+            onClick={() => setBillingMode('monthly')}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              billingMode === 'monthly'
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            $45/month
+          </button>
+          <button
+            type="button"
+            onClick={() => setBillingMode('yearly')}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              billingMode === 'yearly'
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            $450/year <span className="text-xs opacity-80">(save 2 months)</span>
+          </button>
+        </div>
+
+        <Card fun="amber" className="mt-4">
           <CardContent className="flex items-center gap-4 p-5">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-200 to-amber-100 shadow-sm">
               <CreditCard className="h-6 w-6 text-amber-700" />
             </div>
             <div>
               <p className="font-semibold text-gray-900 flex items-center gap-1">
-                $45/month per student — Tuition Only 💰
+                {billingMode === 'yearly' ? '$450/year per student' : '$45/month per student'} — Tuition Only 💰
               </p>
               <p className="text-sm text-gray-600">
-                Recurring monthly subscription. Cancel anytime. First payment due at
-                enrollment.{' '}
+                {billingMode === 'yearly'
+                  ? 'One payment covers the full school year. No recurring charges.'
+                  : 'Recurring monthly subscription. Cancel anytime. First payment due at enrollment.'}{' '}
                 <strong className="text-amber-700">
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
                 </strong>
