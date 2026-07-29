@@ -7,8 +7,7 @@ import { redirect } from 'next/navigation'
 // everything server-side. So the human allowlist is exactly these two.
 export const AUTHORIZED_ADMIN_EMAILS = [
   '1990jonathanbbrown@gmail.com', // Batman
-  'anneb7669@gmail.com', // Mom (Anne) — Vercel/Google SSO
-  'larosechristianacademy@gmail.com', // Mom (Anne) — school email/password
+  'anneb7669@gmail.com', // Mom (Anne)
 ]
 
 export function isAuthorizedAdmin(email?: string | null): boolean {
