@@ -37,7 +37,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MIN_DIMENSION = 300;
 const MAX_DIMENSION = 2000;
-const SCHOOL_YEAR = '2026–2027';
+const SCHOOL_YEAR = '2026-2027';
 
 const HOLO_CSS = `
   @keyframes holoShift {
