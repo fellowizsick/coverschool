@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { Pool } from 'pg'
 
 const RLS_SQL = `
 DO $$ 
@@ -24,99 +25,60 @@ ORDER BY c.relname;
 
 export async function GET() {
   const results: string[] = []
-
-  // Extract project ref from Supabase URL
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
   const projectRef = supabaseUrl.match(/https:\/\/(.+)\.supabase/)?.[1]
-  const pat = process.env.SUPABASE_PAT
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-  if (!projectRef) {
-    return NextResponse.json({ error: 'Could not extract project ref from SUPABASE_URL' })
-  }
-  if (!pat) {
-    return NextResponse.json({ error: 'SUPABASE_PAT not set — need an sbp_ token from Supabase Account → Access Tokens' })
-  }
+  if (!projectRef) return NextResponse.json({ error: 'No project ref' })
+  if (!serviceKey) return NextResponse.json({ error: 'No service role key' })
 
-  const apiUrl = `https://api.supabase.com/v1/projects/${projectRef}/database/query`
+  // Connect to the database using the service_role JWT as the password
+  const pool = new Pool({
+    host: `db.${projectRef}.supabase.co`,
+    port: 5432,
+    user: 'postgres',
+    password: serviceKey,
+    database: 'postgres',
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 10000,
+  })
 
   try {
-    // Step 1: Check current RLS state
-    results.push(`Project ref: ${projectRef}`)
-    results.push('--- Checking current RLS state ---')
-
-    const checkRes = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${pat}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: CHECK_SQL }),
-    })
-
-    const checkData = await checkRes.json()
-    if (!checkRes.ok) {
-      results.push(`Check failed: ${JSON.stringify(checkData)}`)
-      return NextResponse.json({ results, status: 'check_failed' })
-    }
-
-    // Parse and report which tables need fixing
-    const tables: Array<{ tablename: string; rls_enabled: boolean }> = checkData
-    const disabled = tables.filter(t => !t.rls_enabled)
-    results.push(`Tables found: ${tables.length}`)
-    results.push(`RLS already on: ${tables.filter(t => t.rls_enabled).length}`)
-    results.push(`RLS disabled: ${disabled.length}`)
-    for (const t of disabled) {
-      results.push(`  ❌ ${t.tablename} — RLS OFF`)
+    // Step 1: Check current state
+    results.push(`Project: ${projectRef}`)
+    results.push('--- Checking RLS state ---')
+    const checkRes = await pool.query(CHECK_SQL)
+    const rows = checkRes.rows
+    const disabled = rows.filter((r: any) => !r.rls_enabled)
+    results.push(`Tables: ${rows.length}, RLS on: ${rows.length - disabled.length}, RLS off: ${disabled.length}`)
+    for (const r of rows) {
+      results.push(`  ${(r as any).rls_enabled ? '✅' : '❌'} ${(r as any).tablename}`)
     }
 
     if (disabled.length === 0) {
-      results.push('✅ All tables already have RLS enabled. Nothing to do.')
-      return NextResponse.json({ results, status: 'already_ok' })
+      results.push('✅ All good already')
+      await pool.end()
+      return NextResponse.json({ results })
     }
 
-    // Step 2: Enable RLS on all tables
-    results.push('--- Enabling RLS on all tables ---')
-
-    const fixRes = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${pat}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: RLS_SQL }),
-    })
-
-    const fixData = await fixRes.json()
-    if (!fixRes.ok) {
-      results.push(`Fix failed: ${JSON.stringify(fixData)}`)
-      return NextResponse.json({ results, status: 'fix_failed' })
-    }
-
-    results.push('✅ RLS enabled on all tables')
+    // Step 2: Enable RLS
+    results.push('--- Enabling RLS ---')
+    await pool.query(RLS_SQL)
+    results.push('✅ RLS SQL ran')
 
     // Step 3: Verify
-    results.push('--- Verifying ---')
-    const verifyRes = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${pat}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: CHECK_SQL }),
-    })
-
-    const verifyData = await verifyRes.json()
-    if (verifyRes.ok) {
-      const stillOff = verifyData.filter((t: any) => !t.rls_enabled)
-      if (stillOff.length === 0) {
-        results.push('✅ VERIFIED — all tables have RLS enabled')
-      } else {
-        results.push(`⚠️ ${stillOff.length} tables still disabled: ${stillOff.map((t: any) => t.tablename).join(', ')}`)
-      }
+    const verifyRes = await pool.query(CHECK_SQL)
+    const stillOff = verifyRes.rows.filter((r: any) => !r.rls_enabled)
+    if (stillOff.length === 0) {
+      results.push('✅ VERIFIED — all tables RLS enabled')
+    } else {
+      results.push(`⚠️ ${stillOff.length} still off: ${stillOff.map((r: any) => (r as any).tablename).join(', ')}`)
     }
 
   } catch (err: any) {
     results.push(`Error: ${err.message}`)
+  } finally {
+    await pool.end()
   }
 
   return NextResponse.json({ results })
