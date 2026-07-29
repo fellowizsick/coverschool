@@ -21,6 +21,12 @@ export default function CurriculumPage() {
       icon: '📋',
     },
     {
+      name: 'Sophia Learning',
+      url: 'https://www.sophia.org/plans-and-pricing/',
+      description: 'College-level courses for high school students. Earn transferable college credits online with self-paced, affordable memberships starting at $99/month.',
+      icon: '🎓',
+    },
+    {
       name: 'ACT Test Prep',
       url: 'https://www.act.org/content/act/en/products-and-services/the-act/test-preparation.html',
       description: 'Free ACT practice tests, question of the day, prep guides, and tutoring \u2014 official resources from ACT.org.',
