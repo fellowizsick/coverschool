@@ -504,6 +504,58 @@ export default function StudentIdPage() {
             </div>
 
             <div className="flex w-full justify-center overflow-x-auto py-6">
+              {/* Demo preview when no photo uploaded */}
+              {!photo && (
+                <div className="relative h-[340px] w-[540px] overflow-hidden rounded-2xl border border-amber-200/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]" style={{background:'linear-gradient(130deg,#02120b 0%,#05301f 30%,#0b5c38 52%,#6b5410 78%,#c9a227 100%)'}}>
+                  <svg className="absolute inset-0 h-full w-full opacity-[0.13]" viewBox="0 0 540 340" fill="none">
+                    <circle cx="480" cy="50" r="150" stroke="#fbbf24" strokeWidth="0.6" strokeDasharray="3 4" />
+                    <circle cx="480" cy="50" r="115" stroke="#ffffff" strokeWidth="0.5" strokeDasharray="2 5" />
+                    <circle cx="50" cy="310" r="120" stroke="#ffffff" strokeWidth="0.5" strokeDasharray="2 6" />
+                    <circle cx="50" cy="310" r="88" stroke="#fbbf24" strokeWidth="0.5" strokeDasharray="3 5" />
+                    <path d="M0 170 Q 135 120 270 170 T 540 170" stroke="#fde68a" strokeWidth="0.7" strokeDasharray="1 4" />
+                    <path d="M0 192 Q 135 142 270 192 T 540 192" stroke="#ffffff" strokeWidth="0.5" strokeDasharray="1 5" />
+                  </svg>
+                  <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-amber-300/80 to-transparent" />
+                  <div className="relative z-10 flex h-full flex-col p-5">
+                    <div className="flex items-center gap-3">
+                      <div className="relative h-12 w-12 shrink-0 rounded-full bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 p-[2px] shadow-lg">
+                        <div className="flex h-full w-full items-center justify-center rounded-full bg-[#032117]">
+                          <span className="text-sm font-black tracking-widest text-amber-300">LCA</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-[15px] font-bold leading-tight tracking-wide text-amber-50">Larose Christian Academy</p>
+                        <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-emerald-100/70">Official Student Identity</p>
+                      </div>
+                      <div className="ml-auto rounded-md border border-amber-200/30 bg-black/30 px-2.5 py-1 text-right">
+                        <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-amber-200/70">School Year</p>
+                        <p className="text-[11px] font-bold text-amber-100">2026-2027</p>
+                      </div>
+                    </div>
+                    <div className="mt-4 flex flex-1 gap-4">
+                      <div className="relative shrink-0">
+                        <div className="flex h-[150px] w-[120px] items-center justify-center overflow-hidden rounded-xl border-2 border-amber-300/70 bg-gradient-to-br from-emerald-900 to-emerald-950 shadow-lg">
+                          <Camera className="h-8 w-8 text-amber-300/60" />
+                        </div>
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-amber-200/40 bg-[#032117] px-2.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] text-amber-200">Sample</div>
+                      </div>
+                      <div className="flex min-w-0 flex-1 flex-col justify-center">
+                        <p className="text-[8px] font-semibold uppercase tracking-[0.25em] text-emerald-100/60">Student Name</p>
+                        <p className="text-[22px] font-bold leading-tight tracking-tight text-amber-50">John Doe</p>
+                        <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5">
+                          <div><p className="text-[7px] font-semibold uppercase tracking-[0.22em] text-emerald-100/50">Grade</p><p className="text-[13px] font-bold text-emerald-100">Kindergarten</p></div>
+                          <div><p className="text-[7px] font-semibold uppercase tracking-[0.22em] text-emerald-100/50">Student ID</p><p className="text-[13px] font-bold font-mono text-emerald-100">LCA-2026-0001</p></div>
+                          <div><p className="text-[7px] font-semibold uppercase tracking-[0.22em] text-emerald-100/50">Enrolled</p><p className="text-[11px] font-bold text-emerald-100">August 2026</p></div>
+                          <div><p className="text-[7px] font-semibold uppercase tracking-[0.22em] text-emerald-100/50">Status</p><p className="text-[11px] font-bold text-emerald-100">Active</p></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-2 right-4">
+                    <p className="text-[6px] font-medium tracking-[0.15em] text-amber-200/40">SAMPLE ID &mdash; Upload your photo to create yours</p>
+                  </div>
+                </div>
+              )}
               {photo ? (
                 <div
                   ref={tiltRef}
