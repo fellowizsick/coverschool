@@ -20,6 +20,12 @@ export default function CurriculumPage() {
       description: 'Free digital homeschool planner — track lessons, schedules, progress, and multi-child management all in one place.',
       icon: '📋',
     },
+    {
+      name: 'ACT Test Prep',
+      url: 'https://www.act.org/content/act/en/products-and-services/the-act/test-preparation.html',
+      description: 'Free ACT practice tests, question of the day, prep guides, and tutoring \u2014 official resources from ACT.org.',
+      icon: '🎯',
+    },
   ]
 
   return (
