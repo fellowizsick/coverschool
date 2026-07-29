@@ -323,10 +323,28 @@ export default function StudentIdPage() {
     <div className="min-h-screen bg-[#060a08] text-zinc-100">
       <style>{HOLO_CSS}</style>
 
+      {/* Light header band so the site navbar text is readable */}
+      <div className="bg-emerald-50 pb-4">
+        <div className="mx-auto max-w-6xl px-6 pt-20 md:pt-24">
+          <div className="mb-2">
+            <h2 className="text-xl font-black tracking-tight text-emerald-900 sm:text-2xl">
+              Your Digital Student ID
+            </h2>
+            <p className="mt-0.5 text-sm text-emerald-700">
+              Upload a photo to generate your official Larose Christian Academy ID card.
+            </p>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-white/60 px-3 py-1 text-xs font-semibold text-emerald-700">
+            <Sparkles className="h-3 w-3" />
+            {SCHOOL_YEAR} Academic Year
+          </div>
+        </div>
+      </div>
+
+      {/* Floating blurs background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
         <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
-        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-900/10 blur-3xl" />
       </div>
 
       <header className="sticky top-0 z-40 border-b border-white/5 bg-[#060a08]/80 backdrop-blur-xl">
@@ -345,18 +363,6 @@ export default function StudentIdPage() {
       </header>
 
       <main className="relative mx-auto max-w-6xl px-6 py-6">
-        <div className="mb-4">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
-            <Sparkles className="h-3.5 w-3.5" />
-            {SCHOOL_YEAR} Academic Year
-          </div>
-          <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
-            Your Digital Student ID
-          </h2>
-          <p className="mt-1 max-w-xl text-sm text-zinc-400">
-            Upload a photo to generate your official Larose Christian Academy ID card.
-          </p>
-        </div>
 
         <div className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-2">
           {steps.map((step, i) => (
@@ -387,8 +393,8 @@ export default function StudentIdPage() {
           </div>
         )}
 
-        <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
-          <section className="h-fit rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+        <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+          <section className="h-fit rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur sm:p-6">
             <div className="mb-4 flex items-center gap-2">
               <Camera className="h-4 w-4 text-amber-300" />
               <h3 className="text-sm font-bold text-white">Portrait Photo</h3>
@@ -499,10 +505,10 @@ export default function StudentIdPage() {
               )}
             </div>
 
-            <div className="flex w-full justify-center overflow-x-auto py-6">
+            <div className="flex w-full justify-center py-4 sm:py-6">
               {/* Demo preview when no photo uploaded */}
               {!photo && (
-                <div className="relative h-[340px] w-[540px] overflow-hidden rounded-2xl border border-amber-200/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]" style={{background:'linear-gradient(130deg,#02120b 0%,#05301f 30%,#0b5c38 52%,#6b5410 78%,#c9a227 100%)'}}>
+                <div className="relative w-full max-w-[540px] overflow-hidden rounded-2xl border border-amber-200/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]" style={{background:'linear-gradient(130deg,#02120b 0%,#05301f 30%,#0b5c38 52%,#6b5410 78%,#c9a227 100%)'}}>
                   <svg className="absolute inset-0 h-full w-full opacity-[0.13]" viewBox="0 0 540 340" fill="none">
                     <circle cx="480" cy="50" r="150" stroke="#fbbf24" strokeWidth="0.6" strokeDasharray="3 4" />
                     <circle cx="480" cy="50" r="115" stroke="#ffffff" strokeWidth="0.5" strokeDasharray="2 5" />
@@ -561,7 +567,7 @@ export default function StudentIdPage() {
                 >
                   <div
                     ref={cardRef}
-                    className="relative h-[340px] w-[540px] overflow-hidden rounded-2xl border border-amber-200/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]"
+                    className="relative w-full max-w-[540px] overflow-hidden rounded-2xl border border-amber-200/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]"
                     style={{
                       background:
                         'linear-gradient(130deg, #02120b 0%, #05301f 30%, #0b5c38 52%, #6b5410 78%, #c9a227 100%)',
@@ -692,7 +698,7 @@ export default function StudentIdPage() {
                   </div>
                 </div>
               ) : (
-                <div className="flex h-[340px] w-[540px] shrink-0 flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-white/15 bg-white/[0.02]">
+                <div className="flex h-[240px] w-full max-w-[540px] flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-white/15 bg-white/[0.02] sm:h-[340px]">
                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5">
                     <Camera className="h-7 w-7 text-zinc-600" />
                   </div>
