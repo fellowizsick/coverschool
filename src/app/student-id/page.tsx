@@ -171,13 +171,13 @@ export default function StudentIdPage() {
       try {
         const res = await fetch('/api/auth/user', { credentials: 'include' });
         if (!res.ok) {
-          router.replace('/login');
+          router.replace('/login?redirect=/student-id');
           return;
         }
         const data = await res.json();
         const authedUser: AuthUser | null = data?.user ?? data ?? null;
         if (!authedUser?.email) {
-          router.replace('/login');
+          router.replace('/login?redirect=/student-id');
           return;
         }
         if (cancelled) return;
@@ -201,7 +201,7 @@ export default function StudentIdPage() {
           // Enrollment lookup failure is non-fatal; fall back to account data.
         }
       } catch {
-        router.replace('/login');
+        router.replace('/login?redirect=/student-id');
       } finally {
         if (!cancelled) setAuthLoading(false);
       }
