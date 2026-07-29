@@ -206,6 +206,11 @@ export default function EnrollPage() {
           </CardContent>
         </Card>
 
+        {/* No Refund Policy */}
+        <p className="text-xs text-gray-400 text-center mt-4">
+          No refunds. You can cancel your subscription at any time.
+        </p>
+
         {defaultGrade && (
           <div className="mt-4 rounded-xl bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 p-4 animate-slide-up">
             <p className="text-sm text-amber-800 flex items-center gap-2">
