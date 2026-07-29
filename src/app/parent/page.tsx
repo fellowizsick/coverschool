@@ -3,8 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import { createServerClient } from '@supabase/ssr'
-import { redirect } from 'next/navigation'
 import StopMembershipButton from '@/components/StopMembershipButton'
 
 export default async function ParentPortalPage() {
@@ -24,24 +22,6 @@ export default async function ParentPortalPage() {
     .select('*')
     .eq('email', user.email)
     .order('created_at', { ascending: false })
-
-  // Fetch progress for each enrollment
-  const progressMap: Record<string, { completed_steps: number[] }> = {}
-  if (enrollments && enrollments.length > 0) {
-    const ids = enrollments.map((e) => e.id)
-    const { data: progressRows } = await supabase
-      .from('curriculum_progress')
-      .select('enrollment_id, completed_steps')
-      .in('enrollment_id', ids)
-
-    if (progressRows) {
-      progressRows.forEach((row) => {
-        progressMap[row.enrollment_id] = {
-          completed_steps: row.completed_steps || [],
-        }
-      })
-    }
-  }
 
   return (
     <div>
