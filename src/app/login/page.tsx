@@ -14,7 +14,9 @@ function LoginForm() {
   const [error, setError] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/dashboard'
+  const redirect = searchParams.get('redirect') || '/parent'
+
+  const isStudentFlow = redirect === '/student-id'
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -43,7 +45,9 @@ function LoginForm() {
       <CardHeader className="text-center">
         <CardTitle>Sign In</CardTitle>
         <CardDescription>
-          Access the parent portal or admin dashboard
+          {isStudentFlow
+            ? 'Sign in to view your student ID card'
+            : 'Access the parent portal'}
         </CardDescription>
       </CardHeader>
       <CardContent>
