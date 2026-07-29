@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
     const lineItems = []
     if (isYearly) {
-      // Annual: one payment of $450 for the full school year
+      // Annual: one payment of $450 covers one school year
       lineItems.push({
         price_data: {
           currency: 'usd',
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
             name: 'Larose Christian Academy — Full Year Tuition',
             description: `Student: ${studentName} | Parent: ${parentName} | School Year 2026-2027`,
           },
-          unit_amount: 45000, // $450 = 10 months x $45
+          unit_amount: 45000, // $450
         },
         quantity: 1,
       })
