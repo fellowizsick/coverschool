@@ -1,0 +1,15 @@
+export const SUBJECTS_BY_GRADE: Record<string, string[]> = {
+  'Kindergarten': ['Reading & Phonics', 'Mathematics', 'Science', 'Social Studies', 'Art', 'Music & Movement', 'Physical Education'],
+  '1st Grade': ['Reading', 'Writing', 'Mathematics', 'Science', 'Social Studies', 'Art', 'Music', 'Physical Education'],
+  '2nd Grade': ['Reading', 'Writing', 'Mathematics', 'Science', 'Social Studies', 'Art', 'Music', 'Physical Education'],
+  '3rd Grade': ['Reading', 'Writing', 'Mathematics', 'Science', 'Social Studies', 'Art', 'Music', 'Physical Education'],
+  '4th Grade': ['Reading', 'Writing', 'Mathematics', 'Science', 'Social Studies', 'Art', 'Music', 'Physical Education'],
+  '5th Grade': ['Reading', 'Writing', 'Mathematics', 'Science', 'Social Studies', 'Art', 'Music', 'Physical Education'],
+  '6th Grade': ['English Language Arts', 'Mathematics', 'Science', 'History', 'Art', 'Music', 'Physical Education'],
+  '7th Grade': ['English Language Arts', 'Mathematics', 'Science', 'History', 'Art', 'Music', 'Physical Education'],
+  '8th Grade': ['English Language Arts', 'Mathematics', 'Science', 'History', 'Foreign Language', 'Elective', 'Physical Education'],
+  '9th Grade': ['English I', 'Algebra I', 'Biology', 'World History', 'Foreign Language', 'Elective', 'Physical Education'],
+  '10th Grade': ['English II', 'Geometry', 'Chemistry', 'US History', 'Foreign Language', 'Elective', 'Physical Education'],
+  '11th Grade': ['English III', 'Algebra II', 'Physics', 'Government/Econ', 'Foreign Language', 'Elective', 'Physical Education'],
+  '12th Grade': ['English IV', 'Pre-Calculus', 'Science Elective', 'Elective', 'Foreign Language', 'Elective', 'Physical Education'],
+}
