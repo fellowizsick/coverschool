@@ -1,144 +1,74 @@
-import { createClient } from '@/lib/supabase/server'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { GraduationCap, Lock, CheckCircle, Shield } from 'lucide-react'
-import { getGradeCurriculum } from '@/lib/curriculum_index'
-import { gradeToNum } from '@/lib/gradeMap'
-import { isAuthorizedAdmin } from '@/lib/adminAccess'
 
-export default async function CurriculumPage() {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/login?redirect=/curriculum')
-  }
-
-  const isAdmin = isAuthorizedAdmin(user.email)
-
-  // Enrolled children for this parent (matching logged-in email)
-  // Admins see all grades for preview
-  let enrollments: any[] = []
-  if (!isAdmin) {
-    const { data: e } = await supabase
-      .from('enrollments')
-      .select('*')
-      .eq('email', user.email)
-      .order('created_at', { ascending: false })
-    enrollments = e || []
-  }
+export default function CurriculumPage() {
+  const resources = [
+    {
+      name: 'Khan Academy',
+      url: 'https://www.khanacademy.org',
+      description: 'Free world-class education for anyone anywhere. Math, science, history, and more — grade K through early college.',
+      icon: '📚',
+    },
+    {
+      name: 'Discovery K12',
+      url: 'https://discoveryk12.com',
+      description: 'Free, online secular homeschool curriculum for Pre-K to 12th grade. Complete with reading, writing, math, science, and social studies.',
+      icon: '🔬',
+    },
+    {
+      name: 'HomeTrail Planner',
+      url: 'https://hometrail.net/free-homeschool-planner',
+      description: 'Free digital homeschool planner — track lessons, schedules, progress, and multi-child management all in one place.',
+      icon: '📋',
+    },
+  ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white">
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-center text-sky-900 mb-2">
-          📚 My Curriculum
-        </h1>
-        <p className="text-center text-slate-600 mb-8">
-          Pick a student to open their grade. Each grade is a full year,
-          unlocked by your monthly membership. Lessons unlock in order —
-          one step at a time. 🌟
-        </p>
-
-        {!enrollments || enrollments.length === 0 ? (
-          isAdmin ? (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <Shield className="mx-auto h-12 w-12 text-emerald-500" />
-                <h3 className="mt-4 text-lg font-semibold text-gray-900">
-                  Admin Preview — All Grades
-                </h3>
-                <p className="mt-2 text-sm text-gray-500 mb-6">
-                  You are logged in as an administrator. All grades are unlocked for preview.
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-xl mx-auto">
-                  {['Kindergarten','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th'].map(g => (
-                    <Link key={g} href={`/curriculum/preview/${g.toLowerCase()}`}>
-                      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 hover:shadow-md hover:border-emerald-400 transition-all cursor-pointer">
-                        <div className="text-sm font-medium text-emerald-900">{g}</div>
-                        <div className="text-xs text-emerald-600 mt-1">Click to view</div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <GraduationCap className="mx-auto h-12 w-12 text-gray-300" />
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">
-                No students enrolled yet
-              </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Enroll a student and your curriculum unlocks with the monthly
-                membership.
-              </p>
-              <Link href="/enroll">
-                <Button className="mt-4">Enroll Now</Button>
-              </Link>
-            </CardContent>
-          </Card>
-          )
-        ) : (
-          <div className="grid gap-5">
-            {enrollments.map((e: any) => {
-              const approved = e.status === 'approved'
-              const gradeNum = gradeToNum(e.student_grade)
-              const grade = getGradeCurriculum(gradeNum)
-              const locked = !approved || !grade
-              return (
-                <Card key={e.id} className={locked ? 'opacity-70' : ''}>
-                  <CardContent className="p-6 flex items-center justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <GraduationCap className="h-5 w-5 text-sky-600" />
-                        <span className="text-lg font-semibold text-slate-900">
-                          {e.student_first_name} {e.student_last_name}
-                        </span>
-                      </div>
-                      <div className="text-sm text-slate-500 mt-1">
-                        {e.student_grade}
-                        {grade && ` · ${grade.subjects.length} subjects`}
-                      </div>
-                      <div
-                        className={`mt-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
-                          approved
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-amber-100 text-amber-700'
-                        }`}
-                      >
-                        {approved ? '✓ Membership active' : '⏳ Pending approval'}
-                      </div>
-                    </div>
-
-                    <div>
-                      {locked ? (
-                        <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-500">
-                          <Lock className="h-4 w-4" /> Locked
-                        </span>
-                      ) : (
-                        <Link href={`/curriculum/${e.id}`}>
-                          <Button variant="gold">▶ Start Learning</Button>
-                        </Link>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950 text-white py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm text-white/80 mb-4">
+            <span>📖</span> Free Curriculum Resources
           </div>
-        )}
+          <h1 className="text-3xl sm:text-4xl font-bold font-heading mb-4">
+            Quality Learning Resources for Your Homeschool
+          </h1>
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+            We provide access to proven, trusted educational platforms — all free to use alongside your LCA membership.
+          </p>
+        </div>
+      </section>
 
-        <p className="text-center text-xs text-slate-400 mt-10">
-          Curriculum authored for Larose Christian Academy. Original content.
-        </p>
-      </div>
+      {/* Resource Cards */}
+      <section className="max-w-4xl mx-auto px-4 py-16">
+        <div className="grid gap-6">
+          {resources.map((r, i) => (
+            <a
+              key={i}
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 flex items-start gap-4"
+            >
+              <span className="text-4xl shrink-0">{r.icon}</span>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">
+                  {r.name}
+                  <span className="inline-block ml-2 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </h3>
+                <p className="text-gray-500 mt-1">{r.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-xl bg-emerald-50 border border-emerald-200 p-6 text-center">
+          <h3 className="font-semibold text-emerald-800 mb-2">How it works</h3>
+          <p className="text-emerald-700 text-sm max-w-lg mx-auto">
+            These resources are free and open to everyone. Use them alongside your LCA enrollment to build a complete education plan. Need help getting started? <Link href="/contact" className="underline font-medium">Contact us</Link>.
+          </p>
+        </div>
+      </section>
     </div>
   )
 }

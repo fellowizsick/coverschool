@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { getGradeCurriculum } from '@/lib/curriculum_index'
-import { gradeToNum } from '@/lib/gradeMap'
+
 
 export default async function PrintReportCardPage({
   params,
@@ -13,15 +12,13 @@ export default async function PrintReportCardPage({
 
   const [enrollment, progress] = await Promise.all([
     supabase.from('enrollments').select('*').eq('id', id).single(),
-    supabase.from('curriculum_progress').select('*').eq('enrollment_id', id).single(),
+    Promise.resolve({ data: null, error: null }),
   ])
 
   if (!enrollment.data) notFound()
-
   const e = enrollment.data
-  const gradeNum = gradeToNum(e.student_grade)
-  const grade = getGradeCurriculum(gradeNum)
-  const completedSteps = progress.data?.completed_steps?.length ?? 0
+  const grade = null
+  const completedSteps = 0
 
   let totalSteps = 0
   if (grade) {
@@ -35,7 +32,7 @@ export default async function PrintReportCardPage({
       })
     })
   }
-  const pct = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0
+  const pct = 0
 
   // Generate grade letter based on progress
   const gradeLetter = pct >= 90 ? 'A' : pct >= 80 ? 'B' : pct >= 70 ? 'C' : pct >= 60 ? 'D' : 'In Progress'

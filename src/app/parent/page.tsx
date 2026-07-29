@@ -6,8 +6,6 @@ import Link from 'next/link'
 import { createServerClient } from '@supabase/ssr'
 import { redirect } from 'next/navigation'
 import StopMembershipButton from '@/components/StopMembershipButton'
-import { getGradeCurriculum } from '@/lib/curriculum_index'
-import { gradeToNum } from '@/lib/gradeMap'
 
 export default async function ParentPortalPage() {
   const supabase = await createClient()
