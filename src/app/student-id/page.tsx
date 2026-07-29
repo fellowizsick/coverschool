@@ -161,6 +161,9 @@ export default function StudentIdPage() {
 
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [downloadCount, setDownloadCount] = useState(0);
+  const lastDownloadRef = useRef(0);
+  const MAX_DOWNLOADS = 10;
 
   const cardRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
@@ -286,6 +289,22 @@ export default function StudentIdPage() {
 
   const handleDownload = async () => {
     if (!cardRef.current || !photo) return;
+
+    // Rate limit: max 1 download per 3 seconds
+    const now = Date.now();
+    if (now - lastDownloadRef.current < 3000) {
+      setDownloadError('Please wait a moment before downloading again.');
+      setTimeout(() => setDownloadError(null), 2000);
+      return;
+    }
+
+    // Max downloads per session
+    if (downloadCount >= MAX_DOWNLOADS) {
+      setDownloadError('Download limit reached for this session. Reload to reset.');
+      return;
+    }
+
+    lastDownloadRef.current = now;
     setDownloading(true);
     setDownloadError(null);
     try {
@@ -294,6 +313,7 @@ export default function StudentIdPage() {
       link.download = `LCA-Student-ID-${String(studentId).replace(/[^a-z0-9-]/gi, '_')}.png`;
       link.href = dataUrl;
       link.click();
+      setDownloadCount((c) => c + 1);
     } catch {
       setDownloadError('Could not generate the PNG. Please try again.');
     } finally {
@@ -734,7 +754,7 @@ export default function StudentIdPage() {
             <div className="mt-6 flex flex-col items-center gap-3">
               <button
                 onClick={handleDownload}
-                disabled={!photo || downloading}
+                disabled={!photo || downloading || downloadCount >= MAX_DOWNLOADS}
                 className="group inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-500 px-8 py-3.5 text-sm font-black text-emerald-950 shadow-[0_10px_40px_-10px_rgba(251,191,36,0.5)] transition-all hover:shadow-[0_15px_50px_-10px_rgba(251,191,36,0.7)] hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
               >
                 {downloading ? (
