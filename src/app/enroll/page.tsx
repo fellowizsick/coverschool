@@ -131,7 +131,7 @@ export default function EnrollPage() {
         </div>
 
         <p className="mt-6 text-sm text-gray-400">
-          A confirmation email will be sent within 1-2 business days.
+          A confirmation email will be sent after payment is processed.
         </p>
       </div>
     )

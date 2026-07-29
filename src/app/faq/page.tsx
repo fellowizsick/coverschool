@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     q: 'How do I submit attendance?',
-    a: 'After enrollment, you will receive access to our parent portal where you can submit monthly attendance records.',
+    a: 'After enrollment, you will receive access to our parent portal. Attendance reporting features will be available there soon.',
   },
   {
     q: 'Do you issue official report cards and transcripts?',

@@ -37,7 +37,7 @@ const faqs = [
   },
   {
     q: 'How does attendance tracking work?',
-    a: 'You submit monthly attendance records through our parent portal. We maintain the official records for your student.',
+    a: 'We maintain official attendance records for your student. Attendance reporting details will be available through the parent portal soon.',
   },
   {
     q: 'Will you provide report cards and transcripts?',
