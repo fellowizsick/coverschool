@@ -7,7 +7,8 @@ import { redirect } from 'next/navigation'
 // everything server-side. So the human allowlist is exactly these two.
 export const AUTHORIZED_ADMIN_EMAILS = [
   '1990jonathanbbrown@gmail.com', // Batman
-  'anneb7669@gmail.com', // Mom (Anne)
+  'anneb7669@gmail.com', // Mom (Anne) — Vercel/Google SSO
+  'larosechristianacademy@gmail.com', // Mom (Anne) — school email/password
 ]
 
 export function isAuthorizedAdmin(email?: string | null): boolean {
@@ -23,7 +24,7 @@ export async function requireAdmin() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login?redirect=/dashboard')
+    redirect('/login?redirect=/dashboard/students')
   }
   if (!isAuthorizedAdmin(user.email)) {
     // Not Batman or Mom — bounce to the public home.

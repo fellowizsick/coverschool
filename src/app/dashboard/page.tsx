@@ -8,6 +8,7 @@ import {
   Clock,
   Inbox,
 } from 'lucide-react'
+import { isAuthorizedAdmin } from '@/lib/adminAccess'
 
 type Enrollment = {
   id: string
@@ -85,7 +86,7 @@ export default async function DashboardPage() {
     .eq('id', user!.id)
     .single()
 
-  const isAdmin = profile?.role === 'admin'
+  const isAdmin = (profile?.role === 'admin') || isAuthorizedAdmin(user?.email)
 
   if (!isAdmin) {
     return (
