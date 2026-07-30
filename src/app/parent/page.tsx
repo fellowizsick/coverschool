@@ -32,6 +32,7 @@ export default async function ParentPortalPage() {
 
   return (
     <div className="space-y-10">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
           My Child&apos;s Dashboard
@@ -178,7 +179,7 @@ export default async function ParentPortalPage() {
         </div>
       )}
 
-    {/* Church Enrollment Forms Section */}
+    {/* Church Enrollment Forms — only this parent's forms */}
     <div className="mt-10">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
