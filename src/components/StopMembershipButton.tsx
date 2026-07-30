@@ -9,7 +9,7 @@ export default function StopMembershipButton({ enrollmentId, cancelled }: { enro
   const [error, setError] = useState('')
 
   async function handleStop() {
-    if (!confirm('Stop membership? Your card will no longer be charged. This cannot be undone from here.')) return
+    if (!confirm('Cancel membership? Your card will no longer be charged. This cannot be undone from here.')) return
     setBusy(true)
     setError('')
     try {
@@ -29,13 +29,13 @@ export default function StopMembershipButton({ enrollmentId, cancelled }: { enro
   }
 
   if (done) {
-    return <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500">Membership stopped — no further charges</span>
+    return <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500">Membership cancelled — no further charges</span>
   }
 
   return (
     <div className="pt-2">
       <Button variant="outline" size="sm" onClick={handleStop} disabled={busy} className="border-red-200 text-red-600 hover:bg-red-50">
-        {busy ? 'Stopping…' : 'Stop Membership'}
+        {busy ? 'Cancelling…' : 'Cancel Membership'}
       </Button>
       {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
     </div>
