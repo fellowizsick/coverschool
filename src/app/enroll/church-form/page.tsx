@@ -21,6 +21,7 @@ function ChurchFormContent() {
 
   const [form, setForm] = useState({
     enrollment_id: enrollmentId || '',
+    parent_email: '',
     school_year: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
     public_school_district: '',
     student_name: studentName,
@@ -128,12 +129,6 @@ function ChurchFormContent() {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
-        {!enrollmentId && (
-          <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-            ⚠️ You need an enrollment ID to fill this form. Please enroll your student first.
-          </div>
-        )}
-
         {error && (
           <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
             ⚠️ {error}
@@ -188,6 +183,12 @@ function ChurchFormContent() {
                   value={form.parent_name}
                   onChange={e => update('parent_name', e.target.value)}
                   placeholder="Jane Smith" />
+                <div className="mt-2">
+                  <Input id="parent_email" label="Parent Email 📧" type="email" required
+                    value={form.parent_email}
+                    onChange={e => update('parent_email', e.target.value)}
+                    placeholder="parent@email.com" />
+                </div>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <Input id="home_phone" label="Home Phone 📞" type="tel" required
                     value={form.home_phone}
@@ -292,7 +293,7 @@ function ChurchFormContent() {
           </div>
 
           <Button type="submit" variant="gold" size="lg" className="w-full text-base shadow-xl"
-            disabled={loading || !enrollmentId}>
+            disabled={loading}>
             {loading ? '⏳ Submitting...' : '📋 Submit Church Enrollment Form'}
           </Button>
         </form>

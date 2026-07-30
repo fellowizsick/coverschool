@@ -7,8 +7,13 @@ import {
   AlertCircle,
   Clock,
   Inbox,
+  FileText,
+  Printer,
+  Search,
+  ArrowRight,
 } from 'lucide-react'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
+import Link from 'next/link'
 
 type Enrollment = {
   id: string
@@ -116,6 +121,12 @@ export default async function DashboardPage() {
 
   const enrollments: Enrollment[] = (enrollmentsRaw as Enrollment[]) ?? []
 
+  // Fetch ALL church enrollment forms (admin sees everything)
+  const { data: churchForms } = await supabase
+    .from('church_enrollment_forms')
+    .select('*')
+    .order('created_at', { ascending: false })
+
   const total = enrollments.length
   const active = enrollments.filter((e) => e.status === 'approved').length
   const paid = enrollments.filter((e) => e.payment_status === 'paid').length
@@ -177,7 +188,30 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      {/* ALL ENROLLMENTS */}
+      {/* SEARCH + ALL ENROLLMENTS */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Search className="h-5 w-5 text-gray-600" />
+            Find a Student
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form action="/dashboard/student" method="GET" className="flex gap-2">
+            <input
+              name="q"
+              type="text"
+              placeholder="Search by student name..."
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              required
+            />
+            <Button type="submit">Search</Button>
+          </form>
+          <p className="mt-2 text-xs text-gray-400">Search for a student to view their full profile — grades, church forms, enrollment, and more.</p>
+        </CardContent>
+      </Card>
+
+      {/* ALL ENROLLMENTS TABLE */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -204,9 +238,12 @@ export default async function DashboardPage() {
                 </thead>
                 <tbody>
                   {enrollments.map((e) => (
-                    <tr key={e.id} className="border-b last:border-0">
-                      <td className="py-2 pr-4 font-medium text-gray-900">
-                        {e.student_first_name} {e.student_last_name}
+                    <tr key={e.id} className="border-b last:border-0 hover:bg-gray-50">
+                      <td className="py-2 pr-4 font-medium">
+                        <Link href={`/dashboard/student/${e.id}`} className="text-emerald-700 hover:text-emerald-600 hover:underline flex items-center gap-1">
+                          {e.student_first_name} {e.student_last_name}
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
                       </td>
                       <td className="py-2 pr-4 text-gray-600">
                         {e.parent_first_name} {e.parent_last_name}
@@ -234,6 +271,55 @@ export default async function DashboardPage() {
       </Card>
 
       {/* TWO-COLUMN: NEEDS APPROVAL + UNPAID */}
+      {/* Church Forms Section — Admin Only */}
+      {churchForms && churchForms.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-emerald-600" />
+              Church Enrollment Forms ({churchForms.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left text-gray-500">
+                    <th className="pb-2 pr-4 font-medium">Student</th>
+                    <th className="pb-2 pr-4 font-medium">Parent</th>
+                    <th className="pb-2 pr-4 font-medium">Grade</th>
+                    <th className="pb-2 pr-4 font-medium">Email</th>
+                    <th className="pb-2 font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {churchForms.map((f) => (
+                    <tr key={f.id} className="border-b last:border-0">
+                      <td className="py-2 pr-4 font-medium text-gray-900">{f.student_name}</td>
+                      <td className="py-2 pr-4 text-gray-600">{f.parent_name}</td>
+                      <td className="py-2 pr-4 text-gray-600">{f.grade}</td>
+                      <td className="py-2 pr-4 text-gray-600">{f.parent_email || '—'}</td>
+                      <td className="py-2">
+                        <div className="flex gap-1">
+                          <Link href={`/enroll/church-form/${f.id}`}>
+                            <Button size="xs" variant="outline">
+                              <Printer className="mr-1 h-3 w-3" /> View
+                            </Button>
+                          </Link>
+                          <a href={`/api/church-form-pdf/${f.id}`} target="_blank">
+                            <Button size="xs" variant="outline">PDF</Button>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>

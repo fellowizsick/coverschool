@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight } from 'lucide-react'
+import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, FileText, Printer } from 'lucide-react'
 import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
 
@@ -23,8 +23,15 @@ export default async function ParentPortalPage() {
     .eq('email', user.email)
     .order('created_at', { ascending: false })
 
+  // Get church enrollment forms linked to this user's email
+  const { data: churchForms } = await supabase
+    .from('church_enrollment_forms')
+    .select('*')
+    .eq('parent_email', user.email)
+    .order('created_at', { ascending: false })
+
   return (
-    <div>
+    <div className="space-y-10">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
           My Child&apos;s Dashboard
@@ -170,6 +177,65 @@ export default async function ParentPortalPage() {
           })}
         </div>
       )}
+
+    {/* Church Enrollment Forms Section */}
+    <div className="mt-10">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900">
+          Church Enrollment Forms 📋
+        </h2>
+        <Link href="/enroll/church-form">
+          <Button size="sm" variant="sky">Fill Out New Form</Button>
+        </Link>
+      </div>
+
+      {!churchForms || churchForms.length === 0 ? (
+        <Card className="mt-4">
+          <CardContent className="p-8 text-center">
+            <FileText className="mx-auto h-10 w-10 text-gray-300" />
+            <h3 className="mt-3 text-base font-semibold text-gray-900">No Forms Yet</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Fill out a Church/Home School Enrollment Form to get started.
+            </p>
+            <Link href="/enroll/church-form">
+              <Button className="mt-3">Fill Out Form</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {churchForms.map((f) => (
+            <Card key={f.id} className="border-emerald-200">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between text-base">
+                  <span className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-emerald-600" />
+                    {f.student_name}
+                  </span>
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                    {f.church_form_status || 'submitted'}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-gray-600">
+                <p>Grade: {f.grade} · {f.school_year}</p>
+                <p>Submitted: {new Date(f.created_at).toLocaleDateString()}</p>
+                <div className="pt-2 flex gap-2">
+                  <Link href={`/enroll/church-form/${f.id}`}>
+                    <Button size="sm" variant="outline">
+                      <Printer className="mr-1 h-3.5 w-3.5" /> View / Print
+                    </Button>
+                  </Link>
+                  <a href={`/api/church-form-pdf/${f.id}`} target="_blank">
+                    <Button size="sm" variant="outline">Download PDF</Button>
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
     </div>
   )
 }
