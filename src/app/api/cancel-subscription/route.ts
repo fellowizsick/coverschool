@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { sendCancellationEmail } from '@/lib/email'
 
 /**
  * POST /api/cancel-subscription
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
     const admin = createAdminClient()
     const { data: enrollment, error: fetchErr } = await admin
       .from('enrollments')
-      .select('stripe_subscription_id, email, status')
+      .select('stripe_subscription_id, email, status, parent_first_name, parent_last_name, student_first_name, student_last_name')
       .eq('id', enrollmentId)
       .single()
 
@@ -48,6 +49,13 @@ export async function POST(request: Request) {
       .from('enrollments')
       .update({ status: 'cancelled', stripe_subscription_id: null, payment_status: 'cancelled' })
       .eq('id', enrollmentId)
+
+    // Send cancellation thank-you email
+    await sendCancellationEmail({
+      to: enrollment.email,
+      parentName: enrollment.parent_first_name + ' ' + enrollment.parent_last_name,
+      studentName: enrollment.student_first_name + ' ' + enrollment.student_last_name,
+    })
 
     console.log(`🛑 Cancelled Stripe subscription ${subId} for enrollment ${enrollmentId}`)
     return NextResponse.json({ cancelled: true, subscription: cancelled.id })
