@@ -115,5 +115,6 @@ export const NAV_LINKS = [
   { label: 'Assessment', href: '/assessment' },
   { label: 'Contact', href: '/contact' },
   { label: 'Parent Portal', href: '/parent' },
+  { label: 'Cancel Membership', href: '/cancel-membership' },
   { label: 'Enroll', href: '/enroll', highlight: true },
 ]
