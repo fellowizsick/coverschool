@@ -245,7 +245,7 @@ export default function AssessmentPage() {
                     <span className="emoji-badge">🧮</span> Covers Math and Reading at their age
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="emoji-badge">⏱️</span> Takes about 10&ndash;15 minutes
+                    <span className="emoji-badge">⏱️</span> Takes about 10–15 minutes
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="emoji-badge">🏆</span> Results will recommend a grade placement
