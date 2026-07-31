@@ -230,16 +230,14 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Rainbow divider at bottom of hero */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <div className="divider-rainbow" />
-        </div>
+        {/* Rainbow divider moved into stats card (between numbers and labels) — 2026-07-31 */}
       </section>
 
       {/* ===== TRUSTED BY / STATS ===== */}
       <section className="relative -mt-16 z-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="glass rounded-2xl p-8 shadow-2xl shadow-emerald-900/10">
+            {/* Numbers row */}
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               {stats.map((stat, i) => {
                 const valueColors = ['text-pink-600', 'text-purple-600', 'text-sky-600', 'text-amber-600']
@@ -249,12 +247,21 @@ export default function HomePage() {
                     <div className={`text-3xl font-bold font-heading md:text-4xl ${valueColors[i]}`}>
                       {stat.value}<span className={suffixColors[i]}>{stat.suffix}</span>
                     </div>
-                    <div className="mt-1 text-sm font-medium text-gray-500 uppercase tracking-wide">
-                      {stat.label}
-                    </div>
                   </div>
                 )
               })}
+            </div>
+
+            {/* Rainbow divider — sits underneath the numbers, above the letters */}
+            <div className="divider-rainbow my-5 md:my-6" />
+
+            {/* Labels row */}
+            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+              {stats.map((stat, i) => (
+                <div key={stat.label} className="text-center text-sm font-medium text-gray-500 uppercase tracking-wide">
+                  {stat.label}
+                </div>
+              ))}
             </div>
           </div>
         </div>
