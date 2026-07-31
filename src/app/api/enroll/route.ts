@@ -38,7 +38,6 @@ export async function POST(request: Request) {
       !student_last_name ||
       !student_grade ||
       !student_dob ||
-      !previous_school ||
       !ssn_last_four
     ) {
       return NextResponse.json(
