@@ -8,17 +8,24 @@ export default function ScrollAnimation() {
       document.querySelectorAll<HTMLElement>('.animate-on-scroll')
     )
 
-    // Safety net: if anything is still hidden shortly after load, show it.
-    // Prevents "blank sections" when JS is slow, cached, or the observer misses.
-    const revealAll = () => {
-      elements.forEach((el) => el.classList.add('visible'))
+    // Reveal elements that are already inside the viewport (handles refresh
+    // with restored scroll position, where the observer can miss elements).
+    // This is invisible to the user — those sections would be visible anyway —
+    // it only prevents them staying blank after a refresh.
+    const revealInViewport = () => {
+      const viewportBottom = window.innerHeight
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect()
+        if (rect.top < viewportBottom && rect.bottom > 0) {
+          el.classList.add('visible')
+        }
+      })
     }
-    const failSafe = window.setTimeout(revealAll, 2000)
 
     // If IntersectionObserver is unavailable, just show everything now.
     if (typeof IntersectionObserver === 'undefined') {
-      revealAll()
-      return () => window.clearTimeout(failSafe)
+      elements.forEach((el) => el.classList.add('visible'))
+      return
     }
 
     const observer = new IntersectionObserver(
@@ -34,19 +41,14 @@ export default function ScrollAnimation() {
 
     elements.forEach((el) => observer.observe(el))
 
-    // Immediately reveal anything already in the viewport (handles refresh
-    // with restored scroll position, where the observer can miss elements).
-    const viewportBottom = window.innerHeight
-    elements.forEach((el) => {
-      const rect = el.getBoundingClientRect()
-      if (rect.top < viewportBottom && rect.bottom > 0) {
-        el.classList.add('visible')
-      }
-    })
+    // Run the viewport check now AND again after a beat, so content is shown
+    // even if the browser restores scroll position slightly after JS loads.
+    revealInViewport()
+    const retry = window.setTimeout(revealInViewport, 600)
 
     return () => {
       observer.disconnect()
-      window.clearTimeout(failSafe)
+      window.clearTimeout(retry)
     }
   }, [])
 
