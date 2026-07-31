@@ -130,14 +130,15 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`
-                    relative rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200
-                    ${isActive
-                      ? 'text-emerald-700 bg-emerald-50 shadow-sm'
-                      : 'text-gray-600 hover:text-emerald-700 hover:bg-emerald-50/50 hover:shadow-sm'
-                    }
-                    group
-                  `}
+                  className={`relative rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
+                    isActive
+                      ? scrolled
+                        ? 'text-emerald-700 bg-emerald-50 shadow-sm'
+                        : 'text-white bg-white/15 shadow-sm'
+                      : scrolled
+                        ? 'text-gray-600 hover:text-emerald-700 hover:bg-emerald-50/50 hover:shadow-sm'
+                        : 'text-white/90 hover:text-white hover:bg-white/10 hover:shadow-sm'
+                  }`}
                 >
                   {link.label}
                   {isActive && (
@@ -157,7 +158,9 @@ export default function Navbar() {
             className={`relative z-50 rounded-xl p-2.5 transition-all duration-200 ${
               isOpen
                 ? 'bg-emerald-100 text-emerald-700'
-                : 'text-gray-600 hover:bg-emerald-50/50 hover:text-emerald-700'
+                : scrolled
+                  ? 'text-gray-600 hover:bg-emerald-50/50 hover:text-emerald-700'
+                  : 'text-white/90 hover:bg-white/10 hover:text-white'
             } md:hidden`}
             aria-label="Toggle menu"
           >
