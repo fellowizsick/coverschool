@@ -77,7 +77,7 @@ export default function Navbar() {
           {/* Logo with secret admin long-press (hold 3s) */}
           <div className="group flex items-center gap-3">
             <div
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-700 via-emerald-500 to-amber-400 text-white shadow-lg shadow-emerald-900/20 transition-all duration-300 group-hover:shadow-emerald-900/30 group-hover:scale-110 group-hover:rotate-3 cursor-pointer select-none overflow-hidden"
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-700 via-emerald-500 to-amber-400 text-white shadow-lg shadow-emerald-900/20 transition-all duration-300 group-hover:shadow-emerald-900/30 group-hover:scale-110 group-hover:rotate-3 cursor-pointer select-none overflow-hidden md:h-14 md:w-14"
               onMouseDown={() => startHold()}
               onMouseUp={() => cancelHold()}
               onMouseLeave={() => cancelHold()}
@@ -86,7 +86,7 @@ export default function Navbar() {
               onTouchCancel={() => cancelHold()}
               onClick={() => router.push('/')}
             >
-              <GraduationCap className="h-5 w-5 relative z-10" />
+              <GraduationCap className="h-5 w-5 relative z-10 md:h-7 md:w-7" />
               {/* Progress ring */}
               {holdProgress > 0 && (
                 <div
@@ -96,10 +96,10 @@ export default function Navbar() {
               )}
             </div>
             <Link href="/" className="flex flex-col">
-              <span className="text-base font-bold leading-tight text-gray-900 font-heading">
+              <span className="text-base font-bold leading-tight text-gray-900 font-heading md:text-2xl">
                 {SCHOOL_CONFIG.name}
               </span>
-              <span className="text-[10px] font-medium tracking-wide bg-gradient-to-r from-emerald-600 to-amber-500 bg-clip-text text-transparent uppercase">
+              <span className="text-[10px] font-medium tracking-wide bg-gradient-to-r from-emerald-600 to-amber-500 bg-clip-text text-transparent uppercase md:text-sm md:tracking-wider">
                 ✦ Alabama Church School
               </span>
             </Link>
