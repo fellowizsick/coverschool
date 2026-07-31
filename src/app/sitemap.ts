@@ -9,7 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/states',
     '/how-it-works',
     '/faq',
-    '/assessment',
     '/contact',
     '/enroll',
     '/privacy',

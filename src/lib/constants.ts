@@ -112,7 +112,6 @@ export const NAV_LINKS = [
   { label: 'FAQ', href: '/faq' },
   { label: 'Curriculum', href: '/curriculum' },
   { label: 'Student ID', href: '/student-id' },
-  { label: 'Assessment', href: '/assessment' },
   { label: 'Contact', href: '/contact' },
   { label: 'Parent Portal', href: '/parent' },
   { label: 'Cancel Membership', href: '/cancel-membership' },

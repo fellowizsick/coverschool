@@ -22,7 +22,7 @@ export default function EnrollPage() {
   const [billingMode, setBillingMode] = useState('monthly')
   const [prevSchoolChoice, setPrevSchoolChoice] = useState('')
 
-  // Read URL params for pre-filled values from assessment (client-side to avoid Suspense boundary)
+  // Read URL params for pre-filled grade (client-side to avoid Suspense boundary)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const grade = params.get('grade')
@@ -243,17 +243,6 @@ export default function EnrollPage() {
         <p className="text-xs text-gray-400 text-center mt-4">
           No refunds. You can cancel your subscription at any time.
         </p>
-
-        {defaultGrade && (
-          <div className="mt-4 rounded-xl bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 p-4 animate-slide-up">
-            <p className="text-sm text-amber-800 flex items-center gap-2">
-              <span className="text-lg">📋</span>
-              <span><span className="font-semibold">Assessment Result:</span> Your student was
-              assessed at <strong>{defaultGrade}</strong>. The grade is pre-selected below —
-              you can change it if needed.</span>
-            </p>
-          </div>
-        )}
 
         {error && (
           <div className="mt-6 rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700 flex items-center gap-2">
