@@ -165,8 +165,8 @@ export default function HomePage() {
             <div className="hidden lg:flex lg:justify-center lg:items-center">
               <div className="relative">
                 {/* Decorative card */}
-                <div className="relative h-[400px] w-[380px] rounded-3xl border border-emerald-500/10 bg-gradient-to-br from-emerald-800/30 to-emerald-900/30 p-8 backdrop-blur-sm shadow-2xl shadow-emerald-950/50 animate-scale-in">
-                  <div className="flex h-full flex-col justify-between">
+                <div className="relative min-h-[400px] w-[380px] rounded-3xl border border-emerald-500/10 bg-gradient-to-br from-emerald-800/30 to-emerald-900/30 p-8 backdrop-blur-sm shadow-2xl shadow-emerald-950/50 animate-scale-in">
+                  <div className="flex min-h-full flex-col justify-between">
                     <div className="space-y-4">
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-500 shadow-lg animate-bounce-soft">
                         <GraduationCap className="h-7 w-7 text-white" />
