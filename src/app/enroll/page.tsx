@@ -161,7 +161,7 @@ export default function EnrollPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 relative z-10">
         <p className="mt-4 text-lg text-gray-600">
           Complete the form below to enroll. Your $45/month tuition covers administrative
           services, record-keeping, and legal oversight. Free curriculum resources are included.
