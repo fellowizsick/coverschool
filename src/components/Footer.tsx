@@ -11,7 +11,7 @@ export default function Footer() {
       {/* Background sparkles */}
       <div className="absolute inset-0 opacity-[0.03] bg-sparkles pointer-events-none" />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-4">
           {/* Brand */}
           <div className="md:col-span-1">

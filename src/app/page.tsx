@@ -101,7 +101,7 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-20 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-[90rem] px-4 pt-24 pb-20 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
             {/* Left Column */}
             <div className="space-y-8">
@@ -262,7 +262,7 @@ export default function HomePage() {
 
       {/* ===== FEATURES ===== */}
       <section className="py-24 md:py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center animate-on-scroll">
             <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-50 via-purple-50 to-sky-50 px-4 py-1.5 text-sm font-medium text-purple-700 mb-4 emoji-badge">
               🌟 Why Choose Us
@@ -318,7 +318,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-purple-50/30 via-pink-50/20 to-white" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-200 to-transparent" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center animate-on-scroll">
             <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-1.5 text-sm font-medium text-purple-700 mb-4 emoji-badge">
               🚀 Simple Process
@@ -370,7 +370,7 @@ export default function HomePage() {
 
       {/* ===== TESTIMONIALS ===== */}
       <section className="py-24 md:py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center animate-on-scroll">
             <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-50 to-yellow-50 px-4 py-1.5 text-sm font-medium text-amber-700 mb-4 emoji-badge">
               💬 Testimonials

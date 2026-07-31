@@ -5,6 +5,26 @@
     scroll-behavior: smooth;
   }
 
+  /* Scale the entire site up on larger desktop screens so it fills the
+     viewport better. All Tailwind sizes are rem-based, so bumping the root
+     font-size grows everything proportionally — same design, just bigger.
+     Below 1440px nothing changes. */
+  @media (min-width: 1440px) {
+    html {
+      font-size: 17px;
+    }
+  }
+  @media (min-width: 1920px) {
+    html {
+      font-size: 18px;
+    }
+  }
+  @media (min-width: 2560px) {
+    html {
+      font-size: 21px;
+    }
+  }
+
   body {
     @apply antialiased;
   }
