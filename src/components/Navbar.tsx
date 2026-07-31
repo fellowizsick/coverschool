@@ -96,10 +96,10 @@ export default function Navbar() {
               )}
             </div>
             <Link href="/" className="flex flex-col">
-              <span className="text-base font-bold leading-tight text-gray-900 font-heading md:text-2xl">
+              <span className={`font-heading text-base font-bold leading-tight transition-colors duration-300 md:text-2xl ${scrolled ? 'text-gray-900' : 'text-white'}`}>
                 {SCHOOL_CONFIG.name}
               </span>
-              <span className="text-[10px] font-medium tracking-wide bg-gradient-to-r from-emerald-600 to-amber-500 bg-clip-text text-transparent uppercase md:text-sm md:tracking-wider">
+              <span className="bg-gradient-to-r from-emerald-600 to-amber-500 bg-clip-text text-[10px] font-medium uppercase tracking-wide text-transparent transition-colors duration-300 md:text-sm md:tracking-wider">
                 ✦ Alabama Church School
               </span>
             </Link>
