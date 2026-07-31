@@ -20,6 +20,7 @@ export default function EnrollPage() {
   const [error, setError] = useState('')
   const [defaultGrade, setDefaultGrade] = useState('')
   const [billingMode, setBillingMode] = useState('monthly')
+  const [prevSchoolChoice, setPrevSchoolChoice] = useState('')
 
   // Read URL params for pre-filled values from assessment (client-side to avoid Suspense boundary)
   useEffect(() => {
@@ -50,7 +51,10 @@ export default function EnrollPage() {
       student_last_name: data.get('student_last_name') as string,
       student_grade: data.get('student_grade') as string,
       student_dob: data.get('student_dob') as string,
-      previous_school: data.get('previous_school') as string,
+      previous_school:
+        data.get('previous_school') === 'attended'
+          ? (data.get('previous_school_name') as string) || ''
+          : '',
       ssn_last_four: data.get('ssn_last_four') as string,
       notes: (data.get('notes') as string) || '',
     }
@@ -384,13 +388,32 @@ export default function EnrollPage() {
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input
-                  id="previous_school"
-                  name="previous_school"
-                  label="Previous School 🏫"
-                  required
-                  placeholder="Name of previous school"
-                />
+                <div className="space-y-1">
+                  <label htmlFor="previous_school" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    Previous School 🏫 <span className="text-gray-400 font-normal">(optional)</span>
+                  </label>
+                  <Select
+                    id="previous_school"
+                    name="previous_school"
+                    placeholder="Select an option"
+                    options={[
+                      { value: 'none', label: 'No previous school (first-time homeschooler)' },
+                      { value: 'attended', label: 'Attended another school' },
+                    ]}
+                    value={prevSchoolChoice}
+                    onChange={(e) => setPrevSchoolChoice(e.target.value)}
+                  />
+                  {prevSchoolChoice === 'attended' && (
+                    <Input
+                      id="previous_school_name"
+                      name="previous_school_name"
+                      label="Name of previous school 🏫"
+                      required
+                      placeholder="Name of previous school"
+                      className="mt-2"
+                    />
+                  )}
+                </div>
                 <Input
                   id="ssn_last_four"
                   name="ssn_last_four"
