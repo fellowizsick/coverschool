@@ -234,7 +234,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== TRUSTED BY / STATS ===== */}
-      <section className="relative -mt-16 z-10">
+      <section className="relative">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="glass rounded-2xl p-8 shadow-2xl shadow-emerald-900/10">
             {/* Numbers row */}
