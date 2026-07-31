@@ -139,6 +139,14 @@
     transform: translateY(0);
   }
 
+  /* Respect users who prefer reduced motion — always show content */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .animate-fade-in {
     animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
