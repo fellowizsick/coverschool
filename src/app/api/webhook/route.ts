@@ -188,38 +188,80 @@ async function awardReferralCredit(supabase, stripe, referredEnrollment) {
 
     // If the referrer pays monthly (has a subscription), attach the credit
     // to their subscription so the next invoice is $0 — one month free.
-    // Count ALL awarded credits so multiple referrals stack (N credits = N free months).
+    // TIGHTENED: count how many free months were ALREADY consumed (open/paid
+    // invoices carrying the LCA referral coupon) so a late-arriving referral
+    // never re-grants months that were already billed. N unused credits = N
+    // free months; the counter stays accurate.
     if (referrer.stripe_subscription_id) {
+      // 1) Query the subscription's real invoice history for consumed months
+      let consumedMonths = 0
+      try {
+        const invoices = await stripe.invoices.list({
+          subscription: referrer.stripe_subscription_id,
+          limit: 24,
+        })
+        consumedMonths = invoices.data.filter(
+          (inv) =>
+            (inv.status === 'open' || inv.status === 'paid') &&
+            inv.discounts?.some(
+              (d) => d.coupon?.name === 'LCA Referral Reward'
+            )
+        ).length
+      } catch (invErr) {
+        console.error('Referral: failed to list invoices', invErr)
+      }
+
+      // 2) Total credits ever awarded to this referrer (includes the new one)
       const { data: allCredits } = await supabase
         .from('referral_credits')
-        .select('id')
+        .select('id, created_at, applied_at')
         .eq('referrer_enrollment_id', referrer.id)
-        .eq('status', 'awarded')
 
-      const creditCount = Math.max(1, allCredits?.length ?? 1)
+      const totalCredits = allCredits?.length ?? 1
+      const remaining = Math.max(0, totalCredits - consumedMonths)
 
-      const coupon = await stripe.coupons.create({
-        name: 'LCA Referral Reward',
-        amount_off: REFERRAL_CREDIT_AMOUNT,
-        currency: 'usd',
-        duration: 'repeating',
-        duration_in_months: creditCount,
-        max_redemptions: creditCount,
-        metadata: { referral_credit_id: creditRow.id },
-      })
+      // 3) Mark the already-consumed credits as applied (oldest first, never
+      //    the brand-new credit — it hasn't been billed yet)
+      if (consumedMonths > 0) {
+        const consumedCredits = (allCredits || [])
+          .filter((c) => !c.applied_at && c.id !== creditRow.id)
+          .sort((a, b) => (a.created_at > b.created_at ? 1 : -1))
+          .slice(0, consumedMonths)
+        for (const c of consumedCredits) {
+          await supabase
+            .from('referral_credits')
+            .update({ status: 'applied', applied_at: new Date().toISOString() })
+            .eq('id', c.id)
+        }
+      }
 
-      await supabase
-        .from('referral_credits')
-        .update({ stripe_coupon_id: coupon.id })
-        .eq('id', creditRow.id)
-
-      try {
-        await stripe.subscriptions.update(referrer.stripe_subscription_id, {
-          coupon: coupon.id,
+      // 4) Attach a repeating coupon only for the months still actually owed
+      if (remaining > 0) {
+        const coupon = await stripe.coupons.create({
+          name: 'LCA Referral Reward',
+          amount_off: REFERRAL_CREDIT_AMOUNT,
+          currency: 'usd',
+          duration: 'repeating',
+          duration_in_months: remaining,
+          max_redemptions: remaining,
+          metadata: { referral_credit_id: creditRow.id },
         })
-        console.log(`🎁 Coupon (${creditCount} free month${creditCount > 1 ? 's' : ''}) attached to subscription ${referrer.stripe_subscription_id}`)
-      } catch (subErr) {
-        console.error('Referral: failed to attach coupon to subscription', subErr)
+
+        await supabase
+          .from('referral_credits')
+          .update({ stripe_coupon_id: coupon.id })
+          .eq('id', creditRow.id)
+
+        try {
+          await stripe.subscriptions.update(referrer.stripe_subscription_id, {
+            coupon: coupon.id,
+          })
+          console.log(`🎁 Coupon (${remaining} free month${remaining > 1 ? 's' : ''}) attached to subscription ${referrer.stripe_subscription_id} (${consumedMonths} already consumed)`)
+        } catch (subErr) {
+          console.error('Referral: failed to attach coupon to subscription', subErr)
+        }
+      } else {
+        console.log(`Referral: all ${totalCredits} credits already consumed — no new coupon`)
       }
     }
 
