@@ -3,6 +3,12 @@ import Link from 'next/link'
 export default function CurriculumPage() {
   const resources = [
     {
+      name: 'Christianbook.com — Homeschool Curriculum',
+      url: 'https://www.christianbook.com/page/homeschool',
+      description: 'Texts and books for PreK-12 homeschool curriculum — textbooks, workbooks, readers, and more, including faith-based options.',
+      icon: '📘',
+    },
+    {
       name: 'Khan Academy',
       url: 'https://www.khanacademy.org',
       description: 'Free world-class education for anyone anywhere. Math, science, history, and more — grade K through early college.',
