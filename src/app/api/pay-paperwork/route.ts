@@ -29,7 +29,8 @@ export async function POST(request: Request) {
 
     const Stripe = require('stripe')
     const stripe = new Stripe(secretKey)
-    const origin = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    // Canonical domain — always laroseca.org, never the vercel.app URL (user rule).
+    const origin = 'https://laroseca.org'
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',

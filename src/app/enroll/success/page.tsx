@@ -139,7 +139,7 @@ export default function EnrollSuccessPage() {
                 creditsApplied={0}
                 siteUrl={
                   (typeof window !== 'undefined' && window.location.origin) ||
-                  'https://coverschool.vercel.app'
+                  'https://laroseca.org'
                 }
               />
             </div>

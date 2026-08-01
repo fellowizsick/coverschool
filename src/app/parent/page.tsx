@@ -46,8 +46,8 @@ export default async function ParentPortalPage() {
   const creditsApplied =
     referralCredits?.filter((c) => c.status === 'applied').length ?? 0
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://coverschool.vercel.app'
+  // Canonical domain — always laroseca.org, never the vercel.app URL (user rule).
+  const siteUrl = 'https://laroseca.org'
 
   return (
     <div className="space-y-10">

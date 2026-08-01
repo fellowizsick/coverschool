@@ -50,7 +50,7 @@ export default function ReferralPage() {
               icon: <Users className="h-6 w-6 text-emerald-700" />,
               step: '1',
               title: 'Get Your Link',
-              desc: 'Log into the Parent Portal and copy your personal referral link (like coverschool.vercel.app/enroll?ref=LCA-XXXXX). Every family gets one automatically.',
+              desc: 'Log into the Parent Portal and copy your personal referral link (like laroseca.org/enroll?ref=LCA-XXXXX). Every family gets one automatically.',
               color: 'from-emerald-200 to-emerald-100',
             },
             {
