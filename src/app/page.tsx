@@ -237,7 +237,8 @@ export default function HomePage() {
       <section className="relative">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="glass rounded-2xl p-8 shadow-2xl shadow-emerald-900/10">
-            {/* Numbers row */}
+            {/* Each stat = number + its own label in ONE cell, so mobile 2x2
+                always shows the pair together (9+ / STATES SERVED, etc.) */}
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               {stats.map((stat, i) => {
                 const valueColors = ['text-pink-600', 'text-purple-600', 'text-sky-600', 'text-amber-600']
@@ -247,22 +248,17 @@ export default function HomePage() {
                     <div className={`text-3xl font-bold font-heading md:text-4xl ${valueColors[i]}`}>
                       {stat.value}<span className={suffixColors[i]}>{stat.suffix}</span>
                     </div>
+                    {/* Label directly under its number — no more split blocks */}
+                    <div className="mt-2 text-xs font-medium text-gray-500 uppercase tracking-wide md:text-sm">
+                      {stat.label}
+                    </div>
                   </div>
                 )
               })}
             </div>
 
-            {/* Rainbow divider — sits underneath the numbers, above the letters */}
-            <div className="divider-rainbow my-5 md:my-6" />
-
-            {/* Labels row */}
-            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-              {stats.map((stat, i) => (
-                <div key={stat.label} className="text-center text-sm font-medium text-gray-500 uppercase tracking-wide">
-                  {stat.label}
-                </div>
-              ))}
-            </div>
+            {/* Rainbow divider sits under the whole stats card as a flourish */}
+            <div className="divider-rainbow mt-8" />
           </div>
         </div>
       </section>
