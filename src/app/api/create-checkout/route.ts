@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
 
+const REFERRAL_CREDIT_AMOUNT = 4500 // $45.00 in cents
+
 export async function POST(request: Request) {
   try {
     const { enrollmentId, email, studentName, parentName, billing } = await request.json()
@@ -24,6 +26,42 @@ export async function POST(request: Request) {
     const Stripe = require('stripe')
     const stripe = new Stripe(secretKey)
     const origin = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+    const { createAdminClient } = await import('@/lib/supabase/server')
+    const supabase = createAdminClient()
+
+    // Look up this enrollment so we know which plan they're on and their email
+    const { data: enrollment } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('id', enrollmentId)
+      .maybeSingle()
+
+    // 🎁 REFERRAL: if this family has awarded referral credits, apply them
+    // (for yearly one-time payments we deduct $45; for monthly the credit is
+    // applied to their next subscription invoice via the webhook instead).
+    let referralDiscount = null
+    if (enrollment && isYearly) {
+      const { data: credits } = await supabase
+        .from('referral_credits')
+        .select('*')
+        .eq('referrer_email', enrollment.email)
+        .eq('status', 'awarded')
+        .is('applied_at', null)
+        .limit(1)
+
+      if (credits && credits.length > 0) {
+        const coupon = await stripe.coupons.create({
+          name: 'LCA Referral Reward',
+          amount_off: REFERRAL_CREDIT_AMOUNT,
+          currency: 'usd',
+          duration: 'once',
+          max_redemptions: 1,
+          metadata: { referral_credit_id: credits[0].id },
+        })
+        referralDiscount = { coupon: coupon.id, creditId: credits[0].id }
+      }
+    }
 
     const lineItems = []
     if (isYearly) {
@@ -64,10 +102,16 @@ export async function POST(request: Request) {
       metadata: {
         enrollment_id: enrollmentId,
         billing: isYearly ? 'yearly' : 'monthly',
+        referral_credit_id: referralDiscount?.creditId || '',
       },
       line_items: lineItems,
       success_url: `${origin}/enroll/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/enroll/cancel`,
+    }
+
+    // Apply the referral discount to yearly one-time payments ($450 → $405)
+    if (referralDiscount) {
+      sessionData.discounts = [{ coupon: referralDiscount.coupon }]
     }
 
     // For monthly, add auto-cancel after 10 months

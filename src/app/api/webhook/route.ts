@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
 
+const REFERRAL_CREDIT_AMOUNT = 4500 // $45.00 in cents
+
 export async function POST(request: Request) {
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
@@ -58,6 +60,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
     }
 
+    // 🎁 If this session used a yearly referral discount, mark that credit applied
+    const usedCreditId = session.metadata?.referral_credit_id
+    if (usedCreditId) {
+      await supabase
+        .from('referral_credits')
+        .update({ status: 'applied', applied_at: new Date().toISOString() })
+        .eq('id', usedCreditId)
+      console.log(`🎁 Yearly referral credit ${usedCreditId} marked applied`)
+    }
+
     // Also create a student record
     const { data: enrollment } = await supabase
       .from('enrollments')
@@ -87,6 +99,11 @@ export async function POST(request: Request) {
         studentName: `${enrollment.student_first_name} ${enrollment.student_last_name}`,
         grade: enrollment.student_grade,
       })
+
+      // 🎁 REFERRAL AWARD: this new family paid, so credit their referrer
+      if (enrollment.referred_by_code) {
+        await awardReferralCredit(supabase, stripe, enrollment)
+      }
     }
 
     console.log(`✅ Enrollment ${enrollmentId} approved via Stripe payment`)
@@ -106,4 +123,88 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ received: true })
+}
+
+/**
+ * Award a $45 referral credit to the family whose code was used.
+ * Monthly referrers get the credit applied to their next Stripe invoice
+ * (one month free). Yearly referrers keep an 'awarded' credit that is
+ * deducted from their next yearly checkout.
+ */
+async function awardReferralCredit(supabase, stripe, referredEnrollment) {
+  try {
+    const code = referredEnrollment.referred_by_code
+
+    // Find the referrer's enrollment by code
+    const { data: referrer, error: refErr } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('referral_code', code)
+      .maybeSingle()
+
+    if (refErr || !referrer) {
+      console.error('Referral: referrer not found for code', code, refErr)
+      return
+    }
+
+    // Idempotency guard: only one credit per referred enrollment
+    const { data: existing } = await supabase
+      .from('referral_credits')
+      .select('id')
+      .eq('referred_enrollment_id', referredEnrollment.id)
+      .maybeSingle()
+    if (existing) {
+      console.log('Referral: credit already awarded for', referredEnrollment.id)
+      return
+    }
+
+    // Insert the credit ledger row (status awarded)
+    const { data: creditRow, error: insertErr } = await supabase
+      .from('referral_credits')
+      .insert({
+        referrer_enrollment_id: referrer.id,
+        referred_enrollment_id: referredEnrollment.id,
+        referrer_email: referrer.email,
+        amount: REFERRAL_CREDIT_AMOUNT / 100,
+        status: 'awarded',
+      })
+      .select()
+      .single()
+
+    if (insertErr || !creditRow) {
+      console.error('Referral: failed to insert credit', insertErr)
+      return
+    }
+
+    // If the referrer pays monthly (has a subscription), attach the credit
+    // to their subscription so the next invoice is $0 — one month free.
+    if (referrer.stripe_subscription_id) {
+      const coupon = await stripe.coupons.create({
+        name: 'LCA Referral Reward',
+        amount_off: REFERRAL_CREDIT_AMOUNT,
+        currency: 'usd',
+        duration: 'once',
+        max_redemptions: 1,
+        metadata: { referral_credit_id: creditRow.id },
+      })
+
+      await supabase
+        .from('referral_credits')
+        .update({ stripe_coupon_id: coupon.id })
+        .eq('id', creditRow.id)
+
+      try {
+        await stripe.subscriptions.update(referrer.stripe_subscription_id, {
+          coupon: coupon.id,
+        })
+        console.log(`🎁 Coupon attached to subscription ${referrer.stripe_subscription_id}`)
+      } catch (subErr) {
+        console.error('Referral: failed to attach coupon to subscription', subErr)
+      }
+    }
+
+    console.log(`🎁 Referral credit $45 awarded to ${referrer.email} (referred by ${code})`)
+  } catch (err) {
+    console.error('Referral award error:', err)
+  }
 }

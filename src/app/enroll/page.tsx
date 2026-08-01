@@ -21,12 +21,15 @@ export default function EnrollPage() {
   const [defaultGrade, setDefaultGrade] = useState('')
   const [billingMode, setBillingMode] = useState('monthly')
   const [prevSchoolChoice, setPrevSchoolChoice] = useState('')
+  const [defaultReferral, setDefaultReferral] = useState('')
 
-  // Read URL params for pre-filled grade (client-side to avoid Suspense boundary)
+  // Read URL params for pre-filled grade + referral code (client-side to avoid Suspense boundary)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const grade = params.get('grade')
     if (grade) setDefaultGrade(grade)
+    const ref = params.get('ref')
+    if (ref) setDefaultReferral(ref.toUpperCase())
   }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -57,6 +60,7 @@ export default function EnrollPage() {
           : '',
       ssn_last_four: data.get('ssn_last_four') as string,
       notes: (data.get('notes') as string) || '',
+      referred_by_code: (data.get('referral_code') as string) || '',
     }
 
     try {
@@ -243,6 +247,31 @@ export default function EnrollPage() {
         <p className="text-xs text-gray-400 text-center mt-4">
           No refunds. You can cancel your subscription at any time.
         </p>
+
+        {/* Referral Code */}
+        <Card fun="amber" className="mt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              🎁 Referral Code <span className="text-sm font-normal text-gray-400">(optional)</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-gray-600 mb-3">
+              Were you referred by a Larose Christian Academy family? Enter their
+              referral code below. When your payment is processed, they&apos;ll earn
+              <strong> one month of tuition free</strong> (or $45 off their yearly payment) —
+              and you&apos;ll be all set to start! 🎉
+            </p>
+            <Input
+              id="referral_code"
+              name="referral_code"
+              placeholder="e.g. LCA-K7X2Q"
+              value={defaultReferral}
+              onChange={(e) => setDefaultReferral(e.target.value.toUpperCase())}
+              className="uppercase"
+            />
+          </CardContent>
+        </Card>
 
         {error && (
           <div className="mt-6 rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700 flex items-center gap-2">

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, FileText, Printer } from 'lucide-react'
 import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
+import ReferralCard from '@/components/ReferralCard'
 
 export default async function ParentPortalPage() {
   const supabase = await createClient()
@@ -30,8 +31,34 @@ export default async function ParentPortalPage() {
     .eq('parent_email', user.email)
     .order('created_at', { ascending: false })
 
+  // 🎁 Referral program: this family's codes + credit ledger
+  const referralCodes =
+    enrollments
+      ?.map((e) => e.referral_code)
+      .filter((c): c is string => Boolean(c)) ?? []
+
+  const { data: referralCredits } = await supabase
+    .from('referral_credits')
+    .select('*')
+    .eq('referrer_email', user.email)
+
+  const creditsEarned = referralCredits?.length ?? 0
+  const creditsApplied =
+    referralCredits?.filter((c) => c.status === 'applied').length ?? 0
+
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://coverschool.vercel.app'
+
   return (
     <div className="space-y-10">
+      {/* 🎁 Referral Program */}
+      <ReferralCard
+        referralCodes={referralCodes}
+        creditsEarned={creditsEarned}
+        creditsApplied={creditsApplied}
+        siteUrl={siteUrl}
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
