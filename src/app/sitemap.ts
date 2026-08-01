@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/faq',
     '/contact',
     '/enroll',
+    '/referral',
     '/privacy',
     '/terms',
   ]
