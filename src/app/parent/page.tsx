@@ -50,7 +50,7 @@ export default async function ParentPortalPage() {
   const siteUrl = 'https://laroseca.org'
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 pt-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
       {/* 🎁 Referral Program */}
       <ReferralCard
         referralCodes={referralCodes}
