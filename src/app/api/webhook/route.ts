@@ -60,14 +60,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
     }
 
-    // 🎁 If this session used a yearly referral discount, mark that credit applied
-    const usedCreditId = session.metadata?.referral_credit_id
-    if (usedCreditId) {
-      await supabase
-        .from('referral_credits')
-        .update({ status: 'applied', applied_at: new Date().toISOString() })
-        .eq('id', usedCreditId)
-      console.log(`🎁 Yearly referral credit ${usedCreditId} marked applied`)
+    // 🎁 If this session used yearly referral discounts, mark those credits applied
+    const usedCreditIds = session.metadata?.referral_credit_ids
+    if (usedCreditIds) {
+      const ids = usedCreditIds.split(',').filter(Boolean)
+      for (const id of ids) {
+        await supabase
+          .from('referral_credits')
+          .update({ status: 'applied', applied_at: new Date().toISOString() })
+          .eq('id', id)
+      }
+      console.log(`🎁 Yearly referral credits [${ids.join(', ')}] marked applied`)
     }
 
     // Also create a student record
@@ -147,6 +150,13 @@ async function awardReferralCredit(supabase, stripe, referredEnrollment) {
       return
     }
 
+    // 🛡️ ANTI-EXPLOIT: only award credit if the referrer is a REAL paying customer.
+    // Prevents farming credits with fake/pending enrollments.
+    if (referrer.status !== 'approved' || referrer.payment_status !== 'paid') {
+      console.log(`Referral: referrer ${referrer.email} not approved/paid — skipping credit`)
+      return
+    }
+
     // Idempotency guard: only one credit per referred enrollment
     const { data: existing } = await supabase
       .from('referral_credits')
@@ -178,13 +188,23 @@ async function awardReferralCredit(supabase, stripe, referredEnrollment) {
 
     // If the referrer pays monthly (has a subscription), attach the credit
     // to their subscription so the next invoice is $0 — one month free.
+    // Count ALL awarded credits so multiple referrals stack (N credits = N free months).
     if (referrer.stripe_subscription_id) {
+      const { data: allCredits } = await supabase
+        .from('referral_credits')
+        .select('id')
+        .eq('referrer_enrollment_id', referrer.id)
+        .eq('status', 'awarded')
+
+      const creditCount = Math.max(1, allCredits?.length ?? 1)
+
       const coupon = await stripe.coupons.create({
         name: 'LCA Referral Reward',
         amount_off: REFERRAL_CREDIT_AMOUNT,
         currency: 'usd',
-        duration: 'once',
-        max_redemptions: 1,
+        duration: 'repeating',
+        duration_in_months: creditCount,
+        max_redemptions: creditCount,
         metadata: { referral_credit_id: creditRow.id },
       })
 
@@ -197,7 +217,7 @@ async function awardReferralCredit(supabase, stripe, referredEnrollment) {
         await stripe.subscriptions.update(referrer.stripe_subscription_id, {
           coupon: coupon.id,
         })
-        console.log(`🎁 Coupon attached to subscription ${referrer.stripe_subscription_id}`)
+        console.log(`🎁 Coupon (${creditCount} free month${creditCount > 1 ? 's' : ''}) attached to subscription ${referrer.stripe_subscription_id}`)
       } catch (subErr) {
         console.error('Referral: failed to attach coupon to subscription', subErr)
       }

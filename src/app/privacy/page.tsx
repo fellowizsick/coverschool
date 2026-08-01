@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
           <p className="mt-4 text-lg text-emerald-100/80">
             How we collect, use, and protect your information
           </p>
-          <p className="mt-2 text-sm text-emerald-300/60">Last updated: June 28, 2026</p>
+          <p className="mt-2 text-sm text-emerald-300/60">Last updated: August 1, 2026</p>
         </div>
       </section>
 
@@ -38,8 +38,23 @@ export default function PrivacyPolicyPage() {
           <ul>
             <li>Parent/guardian name, email address, phone number, and mailing address</li>
             <li>Student name, grade level, date of birth, and previous school information</li>
+            <li>Last four digits of the student&apos;s Social Security number (required by Alabama law for church school enrollment records)</li>
             <li>Payment information (processed securely through Stripe &mdash; we do not store credit card numbers)</li>
+            <li>Referral code information (who referred you, if you used a referral code)</li>
           </ul>
+
+          <h3>Children&apos;s Information (COPPA Notice)</h3>
+          <p>
+            Our services are for homeschool families, and the enrollment forms are completed by
+            parents or legal guardians. When you enroll a student under the age of 13, we collect
+            only the information you provide about your child (name, date of birth, grade level, and
+            the last four digits of the student&apos;s Social Security number as required by Alabama
+            law). We do not collect personal information directly from children, and we do not
+            require children to provide any personal information to use our site. As a parent or
+            guardian, you may review, correct, or request deletion of your child&apos;s information
+            at any time by contacting us using the details below. We comply with the Children&apos;s
+            Online Privacy Protection Act (COPPA) and never sell children&apos;s information.
+          </p>
 
           <h3>Automatically Collected Information</h3>
           <p>When you visit our website, we may automatically collect:</p>
@@ -47,6 +62,7 @@ export default function PrivacyPolicyPage() {
             <li>IP address and browser type</li>
             <li>Pages visited and time spent on our site</li>
             <li>Referring website or search terms</li>
+            <li>Anonymous visit counts via GoatCounter (a privacy-friendly analytics service that does not use tracking cookies)</li>
           </ul>
 
           <h2>How We Use Your Information</h2>
@@ -95,8 +111,10 @@ export default function PrivacyPolicyPage() {
 
           <h2>Cookies</h2>
           <p>
-            Our website uses essential cookies for authentication and basic functionality. We do not
-            use tracking cookies or third-party analytics that collect personal information.
+            Our website uses essential cookies for authentication and basic functionality
+            (such as keeping you logged in to the Parent Portal). We do not use advertising
+            or tracking cookies. Our analytics service, GoatCounter, does not set cookies and
+            does not track you across websites.
           </p>
 
           <h2>Third-Party Links</h2>

@@ -61,6 +61,7 @@ export default function EnrollPage() {
       ssn_last_four: data.get('ssn_last_four') as string,
       notes: (data.get('notes') as string) || '',
       referred_by_code: (data.get('referral_code') as string) || '',
+      agree_to_terms: data.get('agree_to_terms') === 'on',
     }
 
     try {

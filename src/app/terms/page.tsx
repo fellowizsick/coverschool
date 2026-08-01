@@ -18,7 +18,7 @@ export default function TermsPage() {
           <p className="mt-4 text-lg text-emerald-100/80">
             Terms governing enrollment and use of our services
           </p>
-          <p className="mt-2 text-sm text-emerald-300/60">Last updated: June 28, 2026</p>
+          <p className="mt-2 text-sm text-emerald-300/60">Last updated: August 1, 2026</p>
         </div>
       </section>
 
@@ -57,13 +57,24 @@ export default function TermsPage() {
           </ul>
 
           <h2>Tuition and Payment</h2>
-          <p>Enrollment is $45/month per student, billed monthly via subscription. This covers administrative services, record-keeping, and legal oversight. Curriculum books are not included and are purchased separately.</p>
+          <p>Tuition is $45/month per student, billed monthly via subscription, or $450/year per student paid annually (a savings of two months). This covers administrative services, record-keeping, and legal oversight. Curriculum books are not included and are purchased separately.</p>
           <ul>
             <li>Payments are processed securely through Stripe</li>
             <li>You may cancel your subscription at any time</li>
             <li>No refunds for partial months after cancellation</li>
             <li>Failure to pay may result in suspension of services</li>
           </ul>
+
+          <h2>Referral Program</h2>
+          <p>
+            We may offer a referral program that rewards enrolled families with a $45 credit
+            (equivalent to one month of tuition) when a new family they referred enrolls and
+            pays. Credits are applied to the referring family&apos;s next monthly invoice or
+            deducted from their yearly payment. Referral credits have no cash value, are not
+            transferable, and may not be combined with other discounts. We reserve the right to
+            withhold or reverse credits that appear fraudulent or abusive (including
+            self-referrals or duplicate household enrollments).
+          </p>
 
           <h2>Parent Responsibilities</h2>
           <p>As an enrolled family, you agree to:</p>
@@ -121,7 +132,7 @@ export default function TermsPage() {
           <h2>Governing Law</h2>
           <p>
             These terms are governed by the laws of the State of Alabama. Any disputes shall be
-            resolved in the courts of Jefferson County, Alabama.
+            resolved in the courts of Mobile County, Alabama.
           </p>
 
           <h2>Contact</h2>

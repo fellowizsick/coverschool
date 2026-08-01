@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { CURRICULUM_BOOKS_URL, PAPERWORK_FEE_NOTE } from '@/lib/constants'
+import ReferralCard from '@/components/ReferralCard'
 
 export default function EnrollSuccessPage() {
   const [registrationStatus, setRegistrationStatus] = useState<'pending' | 'loading' | 'paid'>(
@@ -15,6 +16,23 @@ export default function EnrollSuccessPage() {
       : 'pending'
   )
   const [registrationError, setRegistrationError] = useState('')
+  const [referralCode, setReferralCode] = useState<string | null>(null)
+  const [referralLoading, setReferralLoading] = useState(true)
+
+  // Load the family's referral code so they can start referring friends right away
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const enrollmentId = params.get('enrollment_id')
+    if (enrollmentId) {
+      fetch(`/api/referral-code?enrollmentId=${enrollmentId}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => setReferralCode(d?.referralCode || null))
+        .catch(() => setReferralCode(null))
+        .finally(() => setReferralLoading(false))
+    } else {
+      setReferralLoading(false)
+    }
+  }, [])
 
   // Check if paperwork was paid on page load (from URL redirect back)
   useEffect(() => {
@@ -106,6 +124,27 @@ export default function EnrollSuccessPage() {
             ))}
           </div>
         </div>
+
+        {/* 🎁 Referral Program — show their code right after enrolling */}
+        {referralLoading ? (
+          <div className="mt-8 flex items-center justify-center gap-2 text-sm text-gray-400">
+            <Loader2 className="h-4 w-4 animate-spin" /> Loading your referral code...
+          </div>
+        ) : (
+          referralCode && (
+            <div className="mt-8 animate-on-scroll">
+              <ReferralCard
+                referralCodes={[referralCode]}
+                creditsEarned={0}
+                creditsApplied={0}
+                siteUrl={
+                  (typeof window !== 'undefined' && window.location.origin) ||
+                  'https://coverschool.vercel.app'
+                }
+              />
+            </div>
+          )
+        )}
 
         {/* ===== REGISTRATION FEE CARD ===== */}
         <Card

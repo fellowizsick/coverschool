@@ -38,8 +38,8 @@ export async function POST(request: Request) {
       .maybeSingle()
 
     // 🎁 REFERRAL: if this family has awarded referral credits, apply them
-    // (for yearly one-time payments we deduct $45; for monthly the credit is
-    // applied to their next subscription invoice via the webhook instead).
+    // (for yearly one-time payments we deduct $45 × count; for monthly the credit
+    // is applied to their next subscription invoice via the webhook instead).
     let referralDiscount = null
     if (enrollment && isYearly) {
       const { data: credits } = await supabase
@@ -48,18 +48,18 @@ export async function POST(request: Request) {
         .eq('referrer_email', enrollment.email)
         .eq('status', 'awarded')
         .is('applied_at', null)
-        .limit(1)
 
       if (credits && credits.length > 0) {
+        const totalOff = REFERRAL_CREDIT_AMOUNT * credits.length
         const coupon = await stripe.coupons.create({
           name: 'LCA Referral Reward',
-          amount_off: REFERRAL_CREDIT_AMOUNT,
+          amount_off: totalOff,
           currency: 'usd',
           duration: 'once',
           max_redemptions: 1,
-          metadata: { referral_credit_id: credits[0].id },
+          metadata: { referral_credit_ids: credits.map((c) => c.id).join(',') },
         })
-        referralDiscount = { coupon: coupon.id, creditId: credits[0].id }
+        referralDiscount = { coupon: coupon.id, creditIds: credits.map((c) => c.id) }
       }
     }
 
@@ -102,10 +102,10 @@ export async function POST(request: Request) {
       metadata: {
         enrollment_id: enrollmentId,
         billing: isYearly ? 'yearly' : 'monthly',
-        referral_credit_id: referralDiscount?.creditId || '',
+        referral_credit_ids: referralDiscount?.creditIds?.join(',') || '',
       },
       line_items: lineItems,
-      success_url: `${origin}/enroll/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/enroll/success?session_id={CHECKOUT_SESSION_ID}&enrollment_id=${enrollmentId}`,
       cancel_url: `${origin}/enroll/cancel`,
     }
 

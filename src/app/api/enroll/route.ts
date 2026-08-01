@@ -11,9 +11,39 @@ function generateReferralCode() {
   return `LCA-${code}`
 }
 
+// 🛡️ Simple in-memory rate limit: max 10 enrollment submissions per IP per hour.
+// (Vercel serverless is per-instance, so this is a soft limiter — enough to stop
+// casual spam; a hard global limit would need a DB-backed counter.)
+const rateBuckets = new Map<string, number[]>()
+const RATE_LIMIT = 10
+const RATE_WINDOW_MS = 60 * 60 * 1000
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now()
+  const hits = (rateBuckets.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS)
+  if (hits.length >= RATE_LIMIT) {
+    rateBuckets.set(ip, hits)
+    return true
+  }
+  hits.push(now)
+  rateBuckets.set(ip, hits)
+  return false
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
+
+    // 🛡️ Rate limit by IP
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      'unknown'
+    if (rateLimited(ip)) {
+      return NextResponse.json(
+        { error: 'Too many enrollment attempts. Please try again later.' },
+        { status: 429 }
+      )
+    }
 
     const {
       parent_first_name,
@@ -33,6 +63,7 @@ export async function POST(request: Request) {
       ssn_last_four,
       notes,
       referred_by_code,
+      agree_to_terms,
     } = body
 
     // Basic validation
@@ -65,6 +96,14 @@ export async function POST(request: Request) {
       )
     }
 
+    // 🛡️ Terms agreement must be accepted server-side (legal consent record)
+    if (!agree_to_terms) {
+      return NextResponse.json(
+        { error: 'You must agree to the Terms of Service to enroll.' },
+        { status: 400 }
+      )
+    }
+
     const supabase = createAdminClient()
 
     // Validate referral code if provided (must be an existing, non-self code)
@@ -73,7 +112,7 @@ export async function POST(request: Request) {
       const code = referred_by_code.trim().toUpperCase()
       const { data: referrer, error: refErr } = await supabase
         .from('enrollments')
-        .select('id, email')
+        .select('id, email, phone, address_line1, city, state, zip')
         .eq('referral_code', code)
         .single()
 
@@ -83,9 +122,24 @@ export async function POST(request: Request) {
           { status: 400 }
         )
       }
-      if (referrer.email.toLowerCase() === email.toLowerCase()) {
+      // 🛡️ ANTI-EXPLOIT: block self-referral by email, phone, or address match.
+      // Prevents one person enrolling multiple fake students with different emails
+      // to farm referral credits.
+      const sameEmail =
+        referrer.email.toLowerCase() === (email || '').toLowerCase()
+      const samePhone =
+        referrer.phone &&
+        (phone || '').replace(/\D/g, '') === referrer.phone.replace(/\D/g, '') &&
+        (phone || '').replace(/\D/g, '').length >= 10
+      const sameAddress =
+        referrer.address_line1 &&
+        referrer.address_line1.trim().toLowerCase() ===
+          (address_line1 || '').trim().toLowerCase() &&
+        referrer.city?.trim().toLowerCase() === (city || '').trim().toLowerCase()
+
+      if (sameEmail || samePhone || sameAddress) {
         return NextResponse.json(
-          { error: 'You cannot use your own referral code.' },
+          { error: 'You cannot use a referral code from your own household.' },
           { status: 400 }
         )
       }
@@ -131,6 +185,8 @@ export async function POST(request: Request) {
         payment_status: 'pending',
         referral_code: referralCode,
         referred_by_code: normalizedReferral,
+        terms_accepted_at: new Date().toISOString(),
+        terms_ip: ip,
       })
       .select()
       .single()
