@@ -35,7 +35,7 @@ export default function AboutPage() {
             </div>
             <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 p-8 shadow-sm ring-1 ring-indigo-100">
               <p className="leading-relaxed text-gray-700">
-                {SCHOOL_CONFIG.name} exists to provide homeschooling families with the legal
+                {SCHOOL_CONFIG.name}{' '}exists to provide homeschooling families with the legal
                 oversight, administrative support, and spiritual encouragement they need
                 to successfully educate their children at home. We believe parents are
                 their children&apos;s first and most important teachers, and we are here to
