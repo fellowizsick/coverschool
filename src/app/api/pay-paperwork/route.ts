@@ -41,7 +41,7 @@ export async function POST(request: Request) {
             currency: 'usd',
             product_data: {
               name: 'Larose Christian Academy — Annual Registration Fee',
-              description: `Annual registration fee for: ${studentName} | Parent: ${parentName}. Covers enrollment file setup, transcript initiation, and record-keeping system configuration for the school year.`,
+              description: `Annual registration fee for: ${studentName} | Parent: ${parentName}. Covers enrollment file setup, transcript initiation, and record keeping system configuration for the school year.`,
             },
             unit_amount: PAPERWORK_FEE_AMOUNT,
           },

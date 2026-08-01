@@ -154,7 +154,7 @@ export default function EnrollSuccessPage() {
                   <ul className="space-y-1 text-gray-600 ml-2">
                     <li>📁 • Creating &amp; maintaining your student&apos;s permanent file</li>
                     <li>📄 • Initializing official transcript records</li>
-                    <li>⚙️ • Configuring the record-keeping system for your family</li>
+                    <li>⚙️ • Configuring the record keeping system for your family</li>
                     <li>🔍 • Administrative processing &amp; file verification</li>
                     <li>📬 • Mailing of enrollment confirmation packet</li>
                   </ul>

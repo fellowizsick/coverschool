@@ -231,7 +231,7 @@ export default function EnrollPage() {
               <p className="mt-2 text-sm text-gray-600 leading-relaxed">
                 A one-time <strong>$75 registration fee</strong> covers the setup
                 of your student&apos;s permanent file, official transcript initiation,
-                record-keeping system configuration, and initial administrative processing.
+                record keeping system configuration, and initial administrative processing.
                 This is a <strong>separate one-time payment</strong> from the $45/month tuition.
                 You&apos;ll be able to pay it after your tuition is processed. 💜
               </p>
