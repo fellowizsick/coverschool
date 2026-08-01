@@ -5,6 +5,7 @@ import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, 
 import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
 import ReferralCard from '@/components/ReferralCard'
+import { isAuthorizedAdmin } from '@/lib/adminAccess'
 
 export default async function ParentPortalPage() {
   const supabase = await createClient()
@@ -17,19 +18,27 @@ export default async function ParentPortalPage() {
     redirect('/login?redirect=/parent')
   }
 
-  // Get enrollments linked to this user's email
-  const { data: enrollments } = await supabase
+  const isAdmin = isAuthorizedAdmin(user.email)
+
+  // Admin (Anne/Jonathan) sees ALL children; a parent sees only their own.
+  let enrollmentsQuery = supabase
     .from('enrollments')
     .select('*')
-    .eq('email', user.email)
     .order('created_at', { ascending: false })
+  if (!isAdmin) {
+    enrollmentsQuery = enrollmentsQuery.eq('email', user.email)
+  }
+  const { data: enrollments } = await enrollmentsQuery
 
-  // Get church enrollment forms linked to this user's email
-  const { data: churchForms } = await supabase
+  // Same for church enrollment forms
+  let churchQuery = supabase
     .from('church_enrollment_forms')
     .select('*')
-    .eq('parent_email', user.email)
     .order('created_at', { ascending: false })
+  if (!isAdmin) {
+    churchQuery = churchQuery.eq('parent_email', user.email)
+  }
+  const { data: churchForms } = await churchQuery
 
   // 🎁 Referral program: this family's codes + credit ledger
   const referralCodes =
@@ -62,7 +71,7 @@ export default async function ParentPortalPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
-          My Child&apos;s Dashboard
+          {isAdmin ? 'All Students' : 'My Child&apos;s Dashboard'}
         </h2>
         <Link href="/enroll">
           <Button size="sm">Enroll New Student</Button>

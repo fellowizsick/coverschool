@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
 import {
   Users,
   CheckCircle2,
@@ -302,12 +303,12 @@ export default async function DashboardPage() {
                       <td className="py-2">
                         <div className="flex gap-1">
                           <Link href={`/enroll/church-form/${f.id}`}>
-                            <Button size="xs" variant="outline">
+                            <Button size="sm" variant="outline">
                               <Printer className="mr-1 h-3 w-3" /> View
                             </Button>
                           </Link>
                           <a href={`/api/church-form-pdf/${f.id}`} target="_blank">
-                            <Button size="xs" variant="outline">PDF</Button>
+                            <Button size="sm" variant="outline">PDF</Button>
                           </a>
                         </div>
                       </td>
