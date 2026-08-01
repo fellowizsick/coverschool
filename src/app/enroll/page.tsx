@@ -190,7 +190,7 @@ export default function EnrollPage() {
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            $450/year <span className="text-xs opacity-80">(save 2 months)</span>
+            $450/year
           </button>
         </div>
 
