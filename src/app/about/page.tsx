@@ -137,7 +137,7 @@ export default function AboutPage() {
                   ▶️
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold text-white">Watch Our Story</h2>
+                  <h2 className="text-lg font-bold text-white">View Our Facebook</h2>
                   <p className="mt-1 text-sm text-indigo-100">
                     See Larose Christian Academy on Facebook
                   </p>
