@@ -123,6 +123,48 @@ export default function AboutPage() {
               </div>
             </div>
           </section>
+
+          {/* Watch Our Story 🎬 */}
+          <section className="animate-slide-up [animation-delay:600ms]">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="emoji-badge">🎬</span>
+              <h2 className="text-2xl font-bold text-gray-900">Watch Our Story</h2>
+            </div>
+            <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 shadow-lg ring-1 ring-indigo-100">
+              <div className="flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:text-left">
+                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-white/20 text-3xl text-white backdrop-blur-sm">
+                  ▶️
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-white">
+                    See Larose Christian Academy in Action
+                  </h3>
+                  <p className="mt-1 text-sm text-indigo-100">
+                    Watch our video on Facebook to see our school community and what we&apos;re about.
+                  </p>
+                </div>
+                <a
+                  href="https://www.facebook.com/share/1ETpQ7V9hP/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-md transition hover:bg-indigo-50"
+                >
+                  ▶️ Watch on Facebook
+                </a>
+              </div>
+              {/* Video embed slot — direct URL swaps in here when available */}
+              <div className="bg-black/20 px-4 pb-6 sm:px-8">
+                <div className="mx-auto aspect-video w-full max-w-2xl overflow-hidden rounded-xl bg-black/30 ring-1 ring-white/20">
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-center">
+                    <span className="text-4xl">🎥</span>
+                    <p className="max-w-sm px-4 text-sm text-indigo-100">
+                      Video player loads here. Tap the button above to watch it on Facebook.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
