@@ -77,24 +77,30 @@ export async function POST(request: Request) {
 
     // 4. Multi-child family on a shared subscription: remove just this child's line item
     if (child.stripe_subscription_id) {
-      const sub = await stripe.subscriptions.retrieve(child.stripe_subscription_id, {
-        expand: ['items.data.price.product'],
-      })
+      try {
+        const sub = await stripe.subscriptions.retrieve(child.stripe_subscription_id, {
+          expand: ['items.data.price.product'],
+        })
 
-      const childName = `${child.student_first_name} ${child.student_last_name}`.trim()
-      // Find the subscription item whose product description names this student
-      const targetItem = (sub.items?.data || []).find((item) => {
-        const prod = item.price?.product
-        const desc = typeof prod === 'object' && prod ? prod.description || '' : ''
-        return desc.includes(childName)
-      })
+        const childName = `${child.student_first_name} ${child.student_last_name}`.trim()
+        // Find the subscription item whose product description names this student
+        const targetItem = (sub.items?.data || []).find((item) => {
+          const prod = item.price?.product
+          const desc = typeof prod === 'object' && prod ? prod.description || '' : ''
+          return desc.includes(childName)
+        })
 
-      if (targetItem) {
-        // Delete ONLY this child's item from the shared subscription
-        await stripe.subscriptionItems.del(targetItem.id, { prorate: false })
-        console.log(`🧒 Removed child ${childName} line item ${targetItem.id} from subscription ${child.stripe_subscription_id}`)
-      } else {
-        console.warn(`⚠️ Could not find subscription item for ${childName} — no Stripe change made (marked cancelled in DB only)`)
+        if (targetItem) {
+          // Delete ONLY this child's item from the shared subscription
+          await stripe.subscriptionItems.del(targetItem.id, { prorate: false })
+          console.log(`🧒 Removed child ${childName} line item ${targetItem.id} from subscription ${child.stripe_subscription_id}`)
+        } else {
+          console.warn(`⚠️ Could not find subscription item for ${childName} — no Stripe change made (marked cancelled in DB only)`)
+        }
+      } catch (stripeErr) {
+        // Fail-safe: never block a parent from removing a child. If Stripe is
+        // unreachable or the sub is missing, still cancel in the DB.
+        console.error('Remove-child Stripe step failed (DB cancel still applied):', stripeErr.message || stripeErr)
       }
     }
 
