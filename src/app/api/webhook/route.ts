@@ -60,6 +60,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
     }
 
+    // ⏰ Monthly auto-cancel after 10 months (2026-08-03 fix)
+    // Stripe v22+ removed `cancel_at` from Checkout Session subscription_data,
+    // so we store the target timestamp in metadata and apply it here via
+    // subscriptions.update (which still supports cancel_at).
+    const autoCancelAt = Number(session.metadata?.auto_cancel_at)
+    if (session.subscription && autoCancelAt > 0) {
+      try {
+        const updatedSub = await stripe.subscriptions.update(session.subscription, {
+          cancel_at: autoCancelAt,
+          metadata: {
+            enrollment_id: enrollmentId,
+            type: 'school_year_tuition',
+          },
+        })
+        console.log(`⏰ Auto-cancel set for subscription ${session.subscription} at ${autoCancelAt}`)
+      } catch (err) {
+        console.error('Failed to set auto-cancel on subscription:', err)
+        // Non-fatal: payment already succeeded, enrollment approved.
+      }
+    }
+
     // 🎁 If this session used yearly referral discounts, mark those credits applied
     const usedCreditIds = session.metadata?.referral_credit_ids
     if (usedCreditIds) {

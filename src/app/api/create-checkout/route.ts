@@ -115,13 +115,16 @@ export async function POST(request: Request) {
       sessionData.discounts = [{ coupon: referralDiscount.coupon }]
     }
 
-    // For monthly, add auto-cancel after 10 months
+    // For monthly, add auto-cancel after 10 months.
+    // NOTE (2026-08-03): Stripe v22+ removed `cancel_at` from Checkout Session
+    // subscription_data (parameter_unknown error). Auto-cancel is now applied in
+    // the webhook after subscription creation via subscriptions.update(cancel_at).
     if (!isYearly) {
       sessionData.subscription_data = {
-        cancel_at: Math.floor(new Date('2027-06-01T00:00:00Z').getTime() / 1000),
         metadata: {
           enrollment_id: enrollmentId,
           type: 'school_year_tuition',
+          auto_cancel_at: Math.floor(new Date('2027-06-01T00:00:00Z').getTime() / 1000),
         },
       }
     }
