@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { getTransferGrades, groupByYear, computeGpa, formatGpa, letterToPoints } from '@/lib/transfer-grades'
 
 export default async function PrintTranscriptPage({
   params,
@@ -17,6 +18,12 @@ export default async function PrintTranscriptPage({
 
   if (!enrollment) notFound()
 
+  // 👨‍🎓 Previous school records (transferred grades) — per student
+  const transferGrades = await getTransferGrades(id)
+  const yearGroups = groupByYear(transferGrades)
+  const gpa = computeGpa(transferGrades)
+  const hasTransfer = transferGrades.length > 0
+
   return (
     <html>
       <head>
@@ -30,11 +37,15 @@ export default async function PrintTranscriptPage({
           .student-info { margin-bottom: 20px; }
           .info-row { display: grid; grid-template-columns: 1fr 2fr; margin: 3px 0; }
           .info-label { font-weight: bold; }
-          table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+          .section-title { font-size: 13pt; font-weight: bold; margin: 20px 0 8px; border-bottom: 1px solid #999; padding-bottom: 4px; }
+          .school-heading { font-weight: bold; margin: 14px 0 4px; font-size: 11.5pt; }
+          .school-year { color: #444; font-size: 10pt; }
+          table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; }
           th { background: #e5e7eb; padding: 8px; text-align: left; font-size: 11pt; border: 1px solid #999; }
           td { padding: 6px 8px; border: 1px solid #999; font-size: 11pt; }
           .gpa-box { text-align: center; margin: 16px 0; }
           .gpa-box span { display: inline-block; border: 2px solid #000; padding: 8px 24px; font-size: 14pt; font-weight: bold; }
+          .empty-note { font-style: italic; color: #555; margin: 10px 0 16px; font-size: 11pt; }
           .footer { margin-top: 40px; font-size: 9pt; text-align: center; color: #666; border-top: 1px solid #ccc; padding-top: 10px; }
           .seal { text-align: center; font-size: 36px; margin: 12px 0; }
           .signature-line { margin-top: 30px; display: flex; justify-content: space-between; }
@@ -42,6 +53,8 @@ export default async function PrintTranscriptPage({
           button { display: block; margin: 20px auto; padding: 10px 30px; font-size: 14px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; }
           @media print { button { display: none; } }
           @media screen { body { background: #f5f5f5; } .page { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 0.5in; max-width: 7.5in; margin: 0 auto; } }
+          tr { break-inside: avoid; }
+          .school-block { break-inside: avoid; }
         `}</style>
       </head>
       <body>
@@ -62,33 +75,70 @@ export default async function PrintTranscriptPage({
             <div class="info-row"><span class="info-label">Student ID:</span> <span>{enrollment.id.substring(0, 8).toUpperCase()}</span></div>
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Subject</th>
-                <th>Status</th>
-                <th>Credits</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Mathematics</td><td>In Progress</td><td>1.0</td></tr>
-              <tr><td>Language Arts</td><td>In Progress</td><td>1.0</td></tr>
-              <tr><td>Spelling & Word Origins</td><td>In Progress</td><td>0.5</td></tr>
-              <tr><td>Science</td><td>In Progress</td><td>1.0</td></tr>
-              <tr><td>History & Geography</td><td>In Progress</td><td>1.0</td></tr>
-              <tr><td>Bible & Character</td><td>In Progress</td><td>0.5</td></tr>
-              <tr style={{ fontWeight: 'bold' }}>
-                <td>Total</td>
-                <td></td>
-                <td>5.0 Credits</td>
-              </tr>
-            </tbody>
-          </table>
+          {hasTransfer ? (
+            <>
+              {/* 📚 Transfer Credits — grouped by academic year (newest first) */}
+              <div class="section-title">Transfer Credits — Previous Schools</div>
+              {yearGroups.map((group) => (
+                <div key={group.year} class="school-block">
+                  <div class="school-heading">
+                    {group.year}{group.school && group.school !== 'Previous School' ? ` — ${group.school}` : ''}
+                  </div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Subject</th>
+                        <th>Grade Earned</th>
+                        <th>Grade Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {group.rows.map((g, i) => {
+                        const points = letterToPoints(g.grade_earned)
+                        return (
+                          <tr key={g.id || i}>
+                            <td>{g.subject_name}</td>
+                            <td>{g.grade_earned}</td>
+                            <td>{points !== null ? points.toFixed(1) : '—'}</td>
+                          </tr>
+                        )
+                      })}
+                      {group.gpa !== null && (
+                        <tr style={{ fontWeight: 'bold' }}>
+                          <td>Year GPA</td>
+                          <td></td>
+                          <td>{formatGpa(group.gpa)}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+
+              {gpa !== null && (
+                <div class="gpa-box">
+                  <span>Cumulative GPA: {formatGpa(gpa)}</span>
+                </div>
+              )}
+              <div style={{ fontSize: '9pt', color: '#555', textAlign: 'center', marginTop: '6px' }}>
+                GPA Scale: A=4.0, B=3.0, C=2.0, D=1.0, F=0.0
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Current enrollment section (no transferred grades yet) */}
+              <div class="section-title">Current Enrollment</div>
+              <p class="empty-note">
+                No previous school records have been added yet. Courses are currently in progress.
+              </p>
+            </>
+          )}
 
           <div style={{ fontStyle: 'italic', fontSize: '10pt', marginTop: '12px' }}>
             This transcript is issued by Larose Christian Academy, an Alabama church school
             operating under Alabama Code §16-28-1. Students are homeschooled under the
-            oversight of the academy.
+            oversight of the academy. Previous school records are self-reported by the
+            parent/guardian and verified by the academy upon request.
           </div>
 
           <div class="signature-line">
