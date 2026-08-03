@@ -213,7 +213,9 @@ export async function POST(request: Request) {
     const familyGroupId = randomUUID()
 
     const nowIso = new Date().toISOString()
-    const rows = studentList.map((s) => ({
+    // ⚠️ referral_code has a UNIQUE constraint — only the PRIMARY row carries it.
+    // Siblings get null (one referral code per family; no duplicate-key collision).
+    const rows = studentList.map((s, idx) => ({
       parent_first_name,
       parent_last_name,
       email,
@@ -234,8 +236,8 @@ export async function POST(request: Request) {
       payment_status: 'pending',
       // One referral code + one referred_by_code live on the PRIMARY row only,
       // so a single family pays = exactly one referral credit (no farming).
-      referral_code: referralCode,
-      referred_by_code: normalizedReferral,
+      referral_code: idx === 0 ? referralCode : null,
+      referred_by_code: idx === 0 ? normalizedReferral : null,
       family_group_id: familyGroupId,
       terms_accepted_at: nowIso,
       terms_ip: ip,
