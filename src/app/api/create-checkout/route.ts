@@ -38,6 +38,30 @@ export async function POST(request: Request) {
       .eq('id', enrollmentId)
       .maybeSingle()
 
+    if (!enrollment) {
+      return NextResponse.json(
+        { error: 'Enrollment not found' },
+        { status: 404 }
+      )
+    }
+
+    // 👨‍👩‍👧‍👦 MULTI-CHILD: fetch ALL siblings in this family group so the
+    // checkout charges per student, not per family. If this enrollment has no
+    // family_group_id (legacy row), it's just the one student.
+    let groupEnrollments = [enrollment]
+    if (enrollment.family_group_id) {
+      const { data: siblings } = await supabase
+        .from('enrollments')
+        .select('*')
+        .eq('family_group_id', enrollment.family_group_id)
+        .order('created_at', { ascending: true })
+      if (siblings && siblings.length > 0) {
+        groupEnrollments = siblings
+      }
+    }
+    const groupIds = groupEnrollments.map((e) => e.id)
+    const studentCount = groupEnrollments.length
+
     // 🎁 REFERRAL: if this family has awarded referral credits, apply them
     // (for yearly one-time payments we deduct $45 × count; for monthly the credit
     // is applied to their next subscription invoice via the webhook instead).
@@ -64,28 +88,31 @@ export async function POST(request: Request) {
       }
     }
 
-    const lineItems = []
-    if (isYearly) {
-      // Annual: one payment of $450 covers one school year
-      lineItems.push({
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'Larose Christian Academy — Full Year Tuition',
-            description: `Student: ${studentName} | Parent: ${parentName} | School Year 2026-2027`,
+    // One line item PER STUDENT so the Stripe page shows each child's charge
+    // clearly (per-student billing, never per-family).
+    const lineItems = groupEnrollments.map((e) => {
+      const childName = `${e.student_first_name} ${e.student_last_name}`
+      if (isYearly) {
+        // Annual: $450 per student, one payment covers one school year
+        return {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Larose Christian Academy — Full Year Tuition',
+              description: `Student: ${childName} | Parent: ${parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name} | School Year 2026-2027`,
+            },
+            unit_amount: 45000, // $450 per student
           },
-          unit_amount: 45000, // $450
-        },
-        quantity: 1,
-      })
-    } else {
-      // Monthly: $45/mo for 10-month school year
-      lineItems.push({
+          quantity: 1,
+        }
+      }
+      // Monthly: $45/mo per student for 10-month school year
+      return {
         price_data: {
           currency: 'usd',
           product_data: {
             name: 'Larose Christian Academy — Monthly Tuition (10-month school year)',
-            description: `Student: ${studentName} | Parent: ${parentName}`,
+            description: `Student: ${childName} | Parent: ${parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name}`,
           },
           unit_amount: 4500,
           recurring: {
@@ -93,8 +120,8 @@ export async function POST(request: Request) {
           },
         },
         quantity: 1,
-      })
-    }
+      }
+    })
 
     const sessionData = {
       mode: isYearly ? 'payment' : 'subscription',
@@ -102,6 +129,8 @@ export async function POST(request: Request) {
       customer_email: email,
       metadata: {
         enrollment_id: enrollmentId,
+        // 👨‍👩‍👧‍👦 All sibling enrollment ids so the webhook approves every child
+        enrollment_ids: groupIds.join(','),
         billing: isYearly ? 'yearly' : 'monthly',
         referral_credit_ids: referralDiscount?.creditIds?.join(',') || '',
       },
@@ -123,6 +152,7 @@ export async function POST(request: Request) {
       sessionData.subscription_data = {
         metadata: {
           enrollment_id: enrollmentId,
+          enrollment_ids: groupIds.join(','),
           type: 'school_year_tuition',
           auto_cancel_at: Math.floor(new Date('2027-06-01T00:00:00Z').getTime() / 1000),
         },

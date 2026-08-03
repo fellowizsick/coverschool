@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { ALL_STATES, GRADE_OPTIONS } from '@/lib/constants'
-import { CreditCard, CheckCircle, Sparkles, GraduationCap, FileText } from 'lucide-react'
+import { CreditCard, CheckCircle, Sparkles, GraduationCap, FileText, Plus, Trash2, UserPlus } from 'lucide-react'
 
 const stateOptions = ALL_STATES.filter((s) => s.status === 'available').map(
   (s) => ({ value: s.code, label: `${s.name} (${s.code})` })
@@ -14,14 +14,35 @@ const stateOptions = ALL_STATES.filter((s) => s.status === 'available').map(
 
 const gradeOptions = GRADE_OPTIONS.map((g) => ({ value: g, label: g }))
 
+type StudentForm = {
+  first: string
+  last: string
+  grade: string
+  dob: string
+  prevSchoolChoice: string
+  prevSchoolName: string
+  ssn: string
+}
+
+const emptyStudent = (): StudentForm => ({
+  first: '',
+  last: '',
+  grade: '',
+  dob: '',
+  prevSchoolChoice: '',
+  prevSchoolName: '',
+  ssn: '',
+})
+
 export default function EnrollPage() {
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState<string | null>(null)
+  const [submittedStudents, setSubmittedStudents] = useState<{ id: string; name: string }[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [defaultGrade, setDefaultGrade] = useState('')
   const [billingMode, setBillingMode] = useState('monthly')
-  const [prevSchoolChoice, setPrevSchoolChoice] = useState('')
   const [defaultReferral, setDefaultReferral] = useState('')
+  const [students, setStudents] = useState<StudentForm[]>([emptyStudent()])
 
   // Read URL params for pre-filled grade + referral code (client-side to avoid Suspense boundary)
   useEffect(() => {
@@ -32,6 +53,33 @@ export default function EnrollPage() {
     if (ref) setDefaultReferral(ref.toUpperCase())
   }, [])
 
+  // Apply the URL grade to the first student block once
+  useEffect(() => {
+    if (defaultGrade) {
+      setStudents((prev) =>
+        prev.map((s, i) => (i === 0 && !s.grade ? { ...s, grade: defaultGrade } : s))
+      )
+    }
+  }, [defaultGrade])
+
+  function updateStudent(index: number, field: keyof StudentForm, value: string) {
+    setStudents((prev) => prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)))
+  }
+
+  function addStudent() {
+    setStudents((prev) => [...prev, emptyStudent()])
+  }
+
+  function removeStudent(index: number) {
+    setStudents((prev) => (prev.length <= 1 ? prev : prev.filter((_, i) => i !== index)))
+  }
+
+  const studentCount = students.length
+  const perStudentPrice = billingMode === 'yearly' ? 450 : 45
+  const totalDisplay = studentCount === 1
+    ? `$${perStudentPrice}`
+    : `$${perStudentPrice * studentCount} (${studentCount} children × $${perStudentPrice})`
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
@@ -39,6 +87,21 @@ export default function EnrollPage() {
 
     const form = e.currentTarget
     const data = new FormData(form)
+
+    // Validate: every student block needs full info
+    for (let i = 0; i < students.length; i++) {
+      const s = students[i]
+      if (!s.first || !s.last || !s.grade || !s.dob || !s.ssn) {
+        setError(`Please fill in every field for child #${i + 1}.`)
+        setLoading(false)
+        return
+      }
+      if (!/^\d{4}$/.test(s.ssn)) {
+        setError(`Child #${i + 1}: SSN last 4 must be exactly 4 digits.`)
+        setLoading(false)
+        return
+      }
+    }
 
     const payload = {
       parent_first_name: data.get('parent_first_name') as string,
@@ -50,15 +113,15 @@ export default function EnrollPage() {
       city: data.get('city') as string,
       state: data.get('state') as string,
       zip: data.get('zip') as string,
-      student_first_name: data.get('student_first_name') as string,
-      student_last_name: data.get('student_last_name') as string,
-      student_grade: data.get('student_grade') as string,
-      student_dob: data.get('student_dob') as string,
-      previous_school:
-        data.get('previous_school') === 'attended'
-          ? (data.get('previous_school_name') as string) || ''
-          : '',
-      ssn_last_four: data.get('ssn_last_four') as string,
+      students: students.map((s) => ({
+        student_first_name: s.first,
+        student_last_name: s.last,
+        student_grade: s.grade,
+        student_dob: s.dob,
+        previous_school:
+          s.prevSchoolChoice === 'attended' ? s.prevSchoolName || '' : '',
+        ssn_last_four: s.ssn,
+      })),
       notes: (data.get('notes') as string) || '',
       referred_by_code: (data.get('referral_code') as string) || '',
       agree_to_terms: data.get('agree_to_terms') === 'on',
@@ -76,7 +139,7 @@ export default function EnrollPage() {
         throw new Error(err.error || 'Something went wrong')
       }
 
-      const { id: enrollmentId } = await res.json()
+      const { id: enrollmentId, ids } = await res.json()
 
       const checkoutRes = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -84,7 +147,7 @@ export default function EnrollPage() {
         body: JSON.stringify({
           enrollmentId,
           email: payload.email,
-          studentName: `${payload.student_first_name} ${payload.student_last_name}`,
+          studentName: `${payload.students[0].student_first_name} ${payload.students[0].student_last_name}`,
           parentName: `${payload.parent_first_name} ${payload.parent_last_name}`,
           billing: billingMode,
         }),
@@ -95,6 +158,17 @@ export default function EnrollPage() {
       }
 
       const { url } = await checkoutRes.json()
+
+      // Remember who we enrolled so the success page can show per-child forms
+      const enrolled = students.map((s, i) => ({
+        id: ids?.[i] || enrollmentId,
+        name: `${s.first} ${s.last}`,
+      }))
+      try {
+        localStorage.setItem('lca_enrolled_children', JSON.stringify(enrolled))
+      } catch (e) {}
+      setSubmittedStudents(enrolled)
+
       window.location.href = url
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission failed')
@@ -123,18 +197,21 @@ export default function EnrollPage() {
               <h3 className="font-bold text-amber-900">One More Step Required!</h3>
               <p className="mt-2 text-sm text-amber-800">
                 You must also complete the <strong>Church / Home School Enrollment Form</strong>
-                before your student can begin. This is a state-required form that gives us
-                permission to oversee your homeschool records.
+                for <strong>each student</strong> before they can begin. This is a state-required
+                form that gives us permission to oversee your homeschool records.
               </p>
               <p className="mt-1 text-sm text-amber-700">
                 ⏰ Please fill it out within <strong>10 days</strong>.
               </p>
-              <a
-                href={`/enroll/church-form?enrollment_id=${submitted}&student=${encodeURIComponent(submitted)}`}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all"
-              >
-                📝 Fill Out Church Enrollment Form
-              </a>
+              {submittedStudents.map((s) => (
+                <a
+                  key={s.id}
+                  href={`/enroll/church-form?enrollment_id=${s.id}&student=${encodeURIComponent(s.name)}`}
+                  className="mt-3 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all"
+                >
+                  📝 Church Form for {s.name}
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -158,7 +235,7 @@ export default function EnrollPage() {
             Start Your Journey
           </div>
           <h1 className="text-4xl font-bold text-white font-heading sm:text-5xl">
-            Enroll Your Student 🎓
+            Enroll Your Student(s) 🎓
           </h1>
           <p className="mt-4 text-lg text-emerald-100/80 max-w-xl mx-auto">
             Join hundreds of families who homeschool with confidence through Larose Christian Academy.
@@ -168,7 +245,7 @@ export default function EnrollPage() {
 
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 relative z-10">
         <p className="mt-4 text-lg text-gray-600">
-          Complete the form below to enroll. Your $45/month tuition covers administrative
+          Complete the form below to enroll. Your $45/month tuition per student covers administrative
           services, record-keeping, and legal oversight. Free curriculum resources are included.
         </p>
 
@@ -216,6 +293,9 @@ export default function EnrollPage() {
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
                 </strong>
               </p>
+              <p className="mt-1 text-sm font-semibold text-emerald-700">
+                Your total today: {totalDisplay} {studentCount > 1 ? '— one charge per child' : ''}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -230,12 +310,12 @@ export default function EnrollPage() {
               <p className="font-semibold text-gray-900 flex items-center gap-1 flex-wrap">
                 📋 One-Time Registration Fee — $75
                 <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700">
-                  Due at enrollment
+                  Per student
                 </span>
               </p>
               <p className="mt-2 text-sm text-gray-600 leading-relaxed">
-                A one-time <strong>$75 registration fee</strong> covers the setup
-                of your student&apos;s permanent file, official transcript initiation,
+                A one-time <strong>$75 registration fee per student</strong> covers the setup
+                of each student&apos;s permanent file, official transcript initiation,
                 record keeping system configuration, and initial administrative processing.
                 This is a <strong>separate one-time payment</strong> from the $45/month tuition.
                 You&apos;ll be able to pay it after your tuition is processed. 💜
@@ -363,89 +443,138 @@ export default function EnrollPage() {
             </CardContent>
           </Card>
 
-          {/* Student Information */}
-          <Card fun="green">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+          {/* Student(s) Information — one block per child */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 📚 Student Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Input
-                  id="student_first_name"
-                  name="student_first_name"
-                  label="Student First Name ✏️"
-                  required
-                  placeholder="John"
-                />
-                <Input
-                  id="student_last_name"
-                  name="student_last_name"
-                  label="Student Last Name ✏️"
-                  required
-                  placeholder="Smith"
-                />
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Select
-                  id="student_grade"
-                  name="student_grade"
-                  label="Grade Level 🎯"
-                  required
-                  options={gradeOptions}
-                  placeholder="Select grade"
-                  value={defaultGrade || ''}
-                  onChange={(e) => setDefaultGrade(e.target.value)}
-                />
-                <Input
-                  id="student_dob"
-                  name="student_dob"
-                  type="date"
-                  label="Date of Birth 🎂"
-                  required
-                />
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <label htmlFor="previous_school" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
-                    Previous School 🏫 <span className="text-gray-400 font-normal">(optional)</span>
-                  </label>
-                  <Select
-                    id="previous_school"
-                    name="previous_school"
-                    placeholder="Select an option"
-                    options={[
-                      { value: 'none', label: 'No previous school (first-time homeschooler)' },
-                      { value: 'attended', label: 'Attended another school' },
-                    ]}
-                    value={prevSchoolChoice}
-                    onChange={(e) => setPrevSchoolChoice(e.target.value)}
-                  />
-                  {prevSchoolChoice === 'attended' && (
+                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                  {studentCount} {studentCount === 1 ? 'student' : 'students'}
+                </span>
+              </h2>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={addStudent}
+                disabled={studentCount >= 6}
+                className="flex items-center gap-1"
+              >
+                <Plus className="h-4 w-4" /> Add Child
+              </Button>
+            </div>
+
+            {students.map((s, i) => (
+              <Card key={i} fun="green" className="relative">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <UserPlus className="h-5 w-5 text-emerald-600" />
+                      Child #{i + 1}
+                    </span>
+                    {studentCount > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeStudent(i)}
+                        className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Remove Child
+                      </button>
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <Input
-                      id="previous_school_name"
-                      name="previous_school_name"
-                      label="Name of previous school 🏫"
+                      id={`student_first_name_${i}`}
+                      label="Student First Name ✏️"
                       required
-                      placeholder="Name of previous school"
-                      className="mt-2"
+                      placeholder="John"
+                      value={s.first}
+                      onChange={(e) => updateStudent(i, 'first', e.target.value)}
                     />
-                  )}
-                </div>
-                <Input
-                  id="ssn_last_four"
-                  name="ssn_last_four"
-                  label="Last 4 of Student's SSN 🔒"
-                  type="password"
-                  required
-                  maxLength={4}
-                  pattern="[0-9]{4}"
-                  placeholder="1234"
-                />
-              </div>
-            </CardContent>
-          </Card>
+                    <Input
+                      id={`student_last_name_${i}`}
+                      label="Student Last Name ✏️"
+                      required
+                      placeholder="Smith"
+                      value={s.last}
+                      onChange={(e) => updateStudent(i, 'last', e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Select
+                      id={`student_grade_${i}`}
+                      label="Grade Level 🎯"
+                      required
+                      options={gradeOptions}
+                      placeholder="Select grade"
+                      value={s.grade}
+                      onChange={(e) => updateStudent(i, 'grade', e.target.value)}
+                    />
+                    <Input
+                      id={`student_dob_${i}`}
+                      type="date"
+                      label="Date of Birth 🎂"
+                      required
+                      value={s.dob}
+                      onChange={(e) => updateStudent(i, 'dob', e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1">
+                      <label htmlFor={`previous_school_${i}`} className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        Previous School 🏫 <span className="text-gray-400 font-normal">(optional)</span>
+                      </label>
+                      <Select
+                        id={`previous_school_${i}`}
+                        placeholder="Select an option"
+                        options={[
+                          { value: 'none', label: 'No previous school (first-time homeschooler)' },
+                          { value: 'attended', label: 'Attended another school' },
+                        ]}
+                        value={s.prevSchoolChoice}
+                        onChange={(e) => updateStudent(i, 'prevSchoolChoice', e.target.value)}
+                      />
+                      {s.prevSchoolChoice === 'attended' && (
+                        <Input
+                          id={`previous_school_name_${i}`}
+                          label="Name of previous school 🏫"
+                          required
+                          placeholder="Name of previous school"
+                          className="mt-2"
+                          value={s.prevSchoolName}
+                          onChange={(e) => updateStudent(i, 'prevSchoolName', e.target.value)}
+                        />
+                      )}
+                    </div>
+                    <Input
+                      id={`ssn_last_four_${i}`}
+                      label={`Last 4 of ${s.first ? s.first + "'s" : "Student's"} SSN 🔒`}
+                      type="password"
+                      required
+                      maxLength={4}
+                      pattern="[0-9]{4}"
+                      placeholder="1234"
+                      value={s.ssn}
+                      onChange={(e) => updateStudent(i, 'ssn', e.target.value.replace(/\D/g, ''))}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+
+            {studentCount < 6 && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addStudent}
+                className="w-full py-6 border-dashed text-emerald-700 hover:bg-emerald-50 flex items-center justify-center gap-2"
+              >
+                <Plus className="h-5 w-5" /> Add Child
+              </Button>
+            )}
+          </div>
 
           {/* Additional Notes */}
           <Card fun="purple">
@@ -485,7 +614,7 @@ export default function EnrollPage() {
                   ✅ I confirm that the information provided is accurate. I understand
                   that this enrollment is subject to review and approval by Larose
                   Christian Academy after payment is processed. By enrolling, I agree
-                  to the $45/month tuition fee. Free curriculum resources are included
+                  to the $45/month tuition fee per student. Free curriculum resources are included
                   with your membership.
                 </span>
               </label>
@@ -504,7 +633,7 @@ export default function EnrollPage() {
             ) : (
               <span className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                Enroll & Pay Tuition — $45/month
+                Enroll & Pay — {billingMode === 'yearly' ? '$450' : '$45/month'} per student ({totalDisplay})
               </span>
             )}
           </Button>

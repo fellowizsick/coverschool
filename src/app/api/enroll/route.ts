@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { randomUUID } from 'crypto'
 
 // Generate a short, unique, human-friendly referral code like LCA-K7X2Q
 function generateReferralCode() {
@@ -30,6 +31,15 @@ function rateLimited(ip: string): boolean {
   return false
 }
 
+type StudentInput = {
+  student_first_name: string
+  student_last_name: string
+  student_grade: string
+  student_dob: string
+  ssn_last_four: string
+  previous_school?: string
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -55,6 +65,8 @@ export async function POST(request: Request) {
       city,
       state,
       zip,
+      students,
+      // Legacy single-student fields (backward compatible)
       student_first_name,
       student_last_name,
       student_grade,
@@ -66,7 +78,32 @@ export async function POST(request: Request) {
       agree_to_terms,
     } = body
 
-    // Basic validation
+    // Build the student list: new multi-child `students` array, or fall back to
+    // the legacy single-student shape so old clients keep working.
+    let studentList: StudentInput[] = []
+    if (Array.isArray(students) && students.length > 0) {
+      studentList = students.map((s: Record<string, unknown>) => ({
+        student_first_name: String(s.student_first_name || ''),
+        student_last_name: String(s.student_last_name || ''),
+        student_grade: String(s.student_grade || ''),
+        student_dob: String(s.student_dob || ''),
+        ssn_last_four: String(s.ssn_last_four || ''),
+        previous_school: s.previous_school ? String(s.previous_school) : '',
+      }))
+    } else {
+      studentList = [
+        {
+          student_first_name: student_first_name || '',
+          student_last_name: student_last_name || '',
+          student_grade: student_grade || '',
+          student_dob: student_dob || '',
+          ssn_last_four: ssn_last_four || '',
+          previous_school: previous_school || '',
+        },
+      ]
+    }
+
+    // Basic validation — parent info + EVERY student
     if (
       !parent_first_name ||
       !parent_last_name ||
@@ -75,12 +112,7 @@ export async function POST(request: Request) {
       !address_line1 ||
       !city ||
       !state ||
-      !zip ||
-      !student_first_name ||
-      !student_last_name ||
-      !student_grade ||
-      !student_dob ||
-      !ssn_last_four
+      !zip
     ) {
       return NextResponse.json(
         { error: 'All required fields must be filled' },
@@ -88,12 +120,26 @@ export async function POST(request: Request) {
       )
     }
 
-    // Validate SSN last 4 format
-    if (!/^\d{4}$/.test(ssn_last_four)) {
-      return NextResponse.json(
-        { error: 'SSN last 4 must be exactly 4 digits' },
-        { status: 400 }
-      )
+    for (const s of studentList) {
+      if (
+        !s.student_first_name ||
+        !s.student_last_name ||
+        !s.student_grade ||
+        !s.student_dob ||
+        !s.ssn_last_four
+      ) {
+        return NextResponse.json(
+          { error: 'Please fill in every student’s required fields' },
+          { status: 400 }
+        )
+      }
+      // Validate SSN last 4 format for each student
+      if (!/^\d{4}$/.test(s.ssn_last_four)) {
+        return NextResponse.json(
+          { error: 'Each student’s SSN last 4 must be exactly 4 digits' },
+          { status: 400 }
+        )
+      }
     }
 
     // 🛡️ Terms agreement must be accepted server-side (legal consent record)
@@ -146,7 +192,8 @@ export async function POST(request: Request) {
       normalizedReferral = code
     }
 
-    // Generate a unique referral code for this new enrollment (retry on collision)
+    // Generate a unique referral code for this family (one per submission —
+    // siblings share the family link). Retry on collision.
     let referralCode = generateReferralCode()
     let collision = true
     while (collision) {
@@ -162,34 +209,42 @@ export async function POST(request: Request) {
       }
     }
 
+    // One family_group_id links every child in this submission together.
+    const familyGroupId = randomUUID()
+
+    const nowIso = new Date().toISOString()
+    const rows = studentList.map((s) => ({
+      parent_first_name,
+      parent_last_name,
+      email,
+      phone,
+      address_line1,
+      address_line2: address_line2 || '',
+      city,
+      state,
+      zip,
+      student_first_name: s.student_first_name,
+      student_last_name: s.student_last_name,
+      student_grade: s.student_grade,
+      student_dob: s.student_dob,
+      previous_school: s.previous_school || '',
+      ssn_last_four: s.ssn_last_four,
+      notes: notes || '',
+      status: 'pending',
+      payment_status: 'pending',
+      // One referral code + one referred_by_code live on the PRIMARY row only,
+      // so a single family pays = exactly one referral credit (no farming).
+      referral_code: referralCode,
+      referred_by_code: normalizedReferral,
+      family_group_id: familyGroupId,
+      terms_accepted_at: nowIso,
+      terms_ip: ip,
+    }))
+
     const { data, error } = await supabase
       .from('enrollments')
-      .insert({
-        parent_first_name,
-        parent_last_name,
-        email,
-        phone,
-        address_line1,
-        address_line2: address_line2 || '',
-        city,
-        state,
-        zip,
-        student_first_name,
-        student_last_name,
-        student_grade,
-        student_dob,
-        previous_school,
-        ssn_last_four,
-        notes: notes || '',
-        status: 'pending',
-        payment_status: 'pending',
-        referral_code: referralCode,
-        referred_by_code: normalizedReferral,
-        terms_accepted_at: new Date().toISOString(),
-        terms_ip: ip,
-      })
-      .select()
-      .single()
+      .insert(rows)
+      .select('id')
 
     if (error) {
       console.error('Database error:', error)
@@ -199,8 +254,14 @@ export async function POST(request: Request) {
       )
     }
 
+    const ids = (data || []).map((r) => r.id)
     return NextResponse.json(
-      { message: 'Enrollment submitted successfully', id: data.id },
+      {
+        message: 'Enrollment submitted successfully',
+        id: ids[0], // primary row = first child
+        ids,
+        family_group_id: familyGroupId,
+      },
       { status: 201 }
     )
   } catch (err) {

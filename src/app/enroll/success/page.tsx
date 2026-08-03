@@ -18,8 +18,11 @@ export default function EnrollSuccessPage() {
   const [registrationError, setRegistrationError] = useState('')
   const [referralCode, setReferralCode] = useState<string | null>(null)
   const [referralLoading, setReferralLoading] = useState(true)
+  const [children, setChildren] = useState<{ id: string; name: string; grade: string }[]>([])
+  const [childrenLoading, setChildrenLoading] = useState(true)
 
-  // Load the family's referral code so they can start referring friends right away
+  // Load the family's referral code + all children in the family group so we
+  // can show one church-form link per child (multi-child enrollment).
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const enrollmentId = params.get('enrollment_id')
@@ -29,8 +32,15 @@ export default function EnrollSuccessPage() {
         .then((d) => setReferralCode(d?.referralCode || null))
         .catch(() => setReferralCode(null))
         .finally(() => setReferralLoading(false))
+
+      fetch(`/api/family-children?enrollmentId=${enrollmentId}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => setChildren(d?.children || []))
+        .catch(() => setChildren([]))
+        .finally(() => setChildrenLoading(false))
     } else {
       setReferralLoading(false)
+      setChildrenLoading(false)
     }
   }, [])
 
@@ -253,20 +263,42 @@ export default function EnrollSuccessPage() {
                 </div>
                 <p className="mt-2 text-sm text-amber-800 leading-relaxed">
                   <strong>This is a state-required form</strong> that must be completed before
-                  your student can begin. It gives us permission to oversee your homeschool
+                  your student(s) can begin. It gives us permission to oversee your homeschool
                   records and notify the public school district if needed.
                 </p>
                 <div className="mt-3 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
                   <p>⏱️ <strong>Due within 10 days</strong> of enrollment. Your student cannot
                   start until this form is submitted.</p>
                 </div>
-                <a
-                  href="/enroll/church-form"
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/30 transition-all hover:shadow-xl hover:shadow-amber-500/40 hover:-translate-y-0.5"
-                >
-                  📝 Fill Out Church Enrollment Form
-                  <ArrowRight className="h-4 w-4" />
-                </a>
+                {childrenLoading ? (
+                  <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                    <Loader2 className="h-4 w-4 animate-spin" /> Loading student(s)...
+                  </div>
+                ) : children.length > 1 ? (
+                  <div className="mt-4 space-y-2">
+                    <p className="text-sm font-medium text-amber-900">
+                      Please fill out one form <strong>per student</strong>:
+                    </p>
+                    {children.map((c) => (
+                      <a
+                        key={c.id}
+                        href={`/enroll/church-form?enrollment_id=${c.id}&student=${encodeURIComponent(c.name)}`}
+                        className="inline-flex w-full sm:w-auto items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/30 transition-all hover:shadow-xl hover:shadow-amber-500/40 hover:-translate-y-0.5"
+                      >
+                        📝 Church Form for {c.name}
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <a
+                    href={children[0] ? `/enroll/church-form?enrollment_id=${children[0].id}&student=${encodeURIComponent(children[0].name)}` : '/enroll/church-form'}
+                    className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/30 transition-all hover:shadow-xl hover:shadow-amber-500/40 hover:-translate-y-0.5"
+                  >
+                    📝 Fill Out Church Enrollment Form
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                )}
               </div>
             </div>
           </CardContent>

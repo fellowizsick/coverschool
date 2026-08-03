@@ -44,7 +44,14 @@ export async function POST(request: Request) {
     const { createAdminClient } = await import('@/lib/supabase/server')
     const supabase = createAdminClient()
 
-    // Auto-approve the enrollment and mark payment as paid
+    // 👨‍👩‍👧‍👦 MULTI-CHILD: the session metadata carries ALL sibling enrollment ids
+    // (comma-separated). Approve every child in the family — never just one.
+    const enrollmentIds = (session.metadata?.enrollment_ids || enrollmentId)
+      .split(',')
+      .map((s: string) => s.trim())
+      .filter(Boolean)
+
+    // Auto-approve ALL enrollments in this family and mark payment as paid
     const { error: updateError } = await supabase
       .from('enrollments')
       .update({
@@ -53,10 +60,10 @@ export async function POST(request: Request) {
         stripe_customer_id: session.customer,
         stripe_subscription_id: session.subscription,
       })
-      .eq('id', enrollmentId)
+      .in('id', enrollmentIds)
 
     if (updateError) {
-      console.error('Failed to update enrollment:', updateError)
+      console.error('Failed to update enrollments:', updateError)
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
     }
 
@@ -71,6 +78,7 @@ export async function POST(request: Request) {
           cancel_at: autoCancelAt,
           metadata: {
             enrollment_id: enrollmentId,
+            enrollment_ids: enrollmentIds.join(','),
             type: 'school_year_tuition',
           },
         })
@@ -94,56 +102,74 @@ export async function POST(request: Request) {
       console.log(`🎁 Yearly referral credits [${ids.join(', ')}] marked applied`)
     }
 
-    // Also create a student record
-    const { data: enrollment } = await supabase
+    // Fetch ALL approved enrollments in this family
+    const { data: enrollments } = await supabase
       .from('enrollments')
       .select('*')
-      .eq('id', enrollmentId)
-      .single()
+      .in('id', enrollmentIds)
+      .order('created_at', { ascending: true })
 
-    if (enrollment) {
-      const { error: studentError } = await supabase.from('students').insert({
-        first_name: enrollment.student_first_name,
-        last_name: enrollment.student_last_name,
-        grade: enrollment.student_grade,
-        dob: enrollment.student_dob,
-        enrollment_id: enrollmentId,
-        status: 'active',
-      })
+    if (enrollments && enrollments.length > 0) {
+      // Create ONE student record per child
+      for (const enrollment of enrollments) {
+        const { error: studentError } = await supabase.from('students').insert({
+          first_name: enrollment.student_first_name,
+          last_name: enrollment.student_last_name,
+          grade: enrollment.student_grade,
+          dob: enrollment.student_dob,
+          enrollment_id: enrollment.id,
+          status: 'active',
+        })
 
-      if (studentError) {
-        console.error('Failed to create student record:', studentError)
+        if (studentError) {
+          console.error(`Failed to create student record for ${enrollment.id}:`, studentError)
+        }
       }
 
-      // Send enrollment confirmation email with curriculum book info
+      // Send ONE enrollment confirmation email listing ALL children
+      const parent = enrollments[0]
+      const allChildren = enrollments
+        .map((e) => `${e.student_first_name} ${e.student_last_name}`)
+        .join(', ')
       const { sendEnrollmentEmail } = await import('@/lib/email')
       await sendEnrollmentEmail({
-        to: enrollment.email,
-        parentName: `${enrollment.parent_first_name} ${enrollment.parent_last_name}`,
-        studentName: `${enrollment.student_first_name} ${enrollment.student_last_name}`,
-        grade: enrollment.student_grade,
+        to: parent.email,
+        parentName: `${parent.parent_first_name} ${parent.parent_last_name}`,
+        studentName: allChildren,
+        grade: enrollments.map((e) => e.student_grade).join(', '),
       })
 
-      // 🎁 REFERRAL AWARD: this new family paid, so credit their referrer
-      if (enrollment.referred_by_code) {
-        await awardReferralCredit(supabase, stripe, enrollment)
+      // 🎁 REFERRAL AWARD: this new family paid, so credit their referrer.
+      // Only the PRIMARY row carries referred_by_code → exactly one credit.
+      const primary = enrollments.find((e) => e.id === enrollmentId) || enrollments[0]
+      if (primary.referred_by_code) {
+        await awardReferralCredit(supabase, stripe, primary)
       }
     }
 
-    console.log(`✅ Enrollment ${enrollmentId} approved via Stripe payment`)
+    console.log(`✅ ${enrollments?.length || 1} enrollment(s) approved via Stripe payment [${enrollmentIds.join(', ')}]`)
   }
 
   // Handle subscription cancelled
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object
     console.log(`❌ Subscription ${subscription.id} cancelled`)
-    // Mark the matching enrollment cancelled in DB
+    // Mark ALL matching enrollments cancelled in DB
     const { createAdminClient } = await import('@/lib/supabase/server')
     const admin = createAdminClient()
-    await admin
-      .from('enrollments')
-      .update({ status: 'cancelled', stripe_subscription_id: null, payment_status: 'cancelled' })
-      .eq('stripe_subscription_id', subscription.id)
+    const subMeta = subscription.metadata || {}
+    if (subMeta.enrollment_ids) {
+      const ids = subMeta.enrollment_ids.split(',').filter(Boolean)
+      await admin
+        .from('enrollments')
+        .update({ status: 'cancelled', stripe_subscription_id: null, payment_status: 'cancelled' })
+        .in('id', ids)
+    } else {
+      await admin
+        .from('enrollments')
+        .update({ status: 'cancelled', stripe_subscription_id: null, payment_status: 'cancelled' })
+        .eq('stripe_subscription_id', subscription.id)
+    }
   }
 
   return NextResponse.json({ received: true })
@@ -178,14 +204,35 @@ async function awardReferralCredit(supabase, stripe, referredEnrollment) {
       return
     }
 
-    // Idempotency guard: only one credit per referred enrollment
-    const { data: existing } = await supabase
-      .from('referral_credits')
-      .select('id')
-      .eq('referred_enrollment_id', referredEnrollment.id)
-      .maybeSingle()
-    if (existing) {
-      console.log('Referral: credit already awarded for', referredEnrollment.id)
+    // Idempotency guard: only one credit per referred family. Check ALL rows of
+    // the referred family's group so a multi-child family earns exactly one.
+    const familyGroup = referredEnrollment.family_group_id
+    let alreadyCredited = false
+    if (familyGroup) {
+      const { data: siblings } = await supabase
+        .from('enrollments')
+        .select('id')
+        .eq('family_group_id', familyGroup)
+      const siblingIds = (siblings || []).map((s) => s.id)
+      if (siblingIds.length > 0) {
+        const { data: existingCredits } = await supabase
+          .from('referral_credits')
+          .select('id')
+          .in('referred_enrollment_id', siblingIds)
+          .limit(1)
+        alreadyCredited = (existingCredits || []).length > 0
+      }
+    }
+    if (!alreadyCredited) {
+      const { data: existing } = await supabase
+        .from('referral_credits')
+        .select('id')
+        .eq('referred_enrollment_id', referredEnrollment.id)
+        .maybeSingle()
+      alreadyCredited = Boolean(existing)
+    }
+    if (alreadyCredited) {
+      console.log('Referral: credit already awarded for family group', familyGroup || referredEnrollment.id)
       return
     }
 

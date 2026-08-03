@@ -71,7 +71,7 @@ export default async function ParentPortalPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
-          {isAdmin ? 'All Students' : 'My Child&apos;s Dashboard'}
+          {isAdmin ? 'All Students' : 'My Children\'s Dashboard'}
         </h2>
         <Link href="/enroll">
           <Button size="sm">Enroll New Student</Button>
@@ -208,6 +208,20 @@ export default async function ParentPortalPage() {
                       → Add previous school records
                     </Link>
                   </div>
+                  {approved && (
+                    <div className="pt-3 flex flex-wrap gap-2 border-t border-gray-100">
+                      <Link href={`/print/report-card/${e.id}`} target="_blank">
+                        <Button size="sm" variant="outline" className="flex items-center gap-1">
+                          <Printer className="h-3.5 w-3.5" /> Print Report Card
+                        </Button>
+                      </Link>
+                      <Link href={`/print/transcript/${e.id}`} target="_blank">
+                        <Button size="sm" variant="outline" className="flex items-center gap-1">
+                          <Printer className="h-3.5 w-3.5" /> Print Transcript
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )
