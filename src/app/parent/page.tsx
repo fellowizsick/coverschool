@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, FileText, Printer, Star } from 'lucide-react'
 import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
+import RemoveChildButton from '@/components/RemoveChildButton'
 import ReferralCard from '@/components/ReferralCard'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { getTransferGrades, computeGpa, formatGpa } from '@/lib/transfer-grades'
@@ -202,7 +203,15 @@ export default async function ParentPortalPage() {
                     Enrolled: {new Date(e.created_at).toLocaleDateString()}
                   </div>
                   {(e.status === 'approved' || e.status === 'pending') && (
-                    <StopMembershipButton enrollmentId={e.id} cancelled={e.status === 'cancelled'} />
+                    <div className="pt-2 flex flex-wrap items-center gap-2">
+                      <StopMembershipButton enrollmentId={e.id} cancelled={e.status === 'cancelled'} />
+                      {approved && (
+                        <RemoveChildButton
+                          enrollmentId={e.id}
+                          childName={`${e.student_first_name} ${e.student_last_name}`}
+                        />
+                      )}
+                    </div>
                   )}
                   <div className="pt-2">
                     <Link
