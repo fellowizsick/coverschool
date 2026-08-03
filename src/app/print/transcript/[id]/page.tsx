@@ -8,15 +8,15 @@ export default async function PrintTranscriptPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = createClient()
+  const supabase = await createClient()
 
-  const { data: enrollment } = await supabase
+  const { data: enrollment, error: enrollError } = await supabase
     .from('enrollments')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
-  if (!enrollment) notFound()
+  if (enrollError || !enrollment) notFound()
 
   // 👨‍🎓 Previous school records (transferred grades) — per student
   const transferGrades = await getTransferGrades(id)
