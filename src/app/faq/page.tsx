@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: 'Can I enroll multiple students from the same family?',
-    a: 'Yes! Enroll all your children together. Each student will have their own records, report cards, and transcripts.',
+    a: 'Yes! Each child is enrolled separately — complete one form per student. Billing is per student too ($45/month or $450/year per child), so a family with two children pays for two. Each student gets their own records, report cards, and transcripts.',
   },
   {
     q: 'How do I submit attendance?',
