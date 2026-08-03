@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, FileText, Printer } from 'lucide-react'
+import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, FileText, Printer, Star } from 'lucide-react'
 import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
 import ReferralCard from '@/components/ReferralCard'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
+import { getTransferGrades, computeGpa, formatGpa } from '@/lib/transfer-grades'
 
 export default async function ParentPortalPage() {
   const supabase = await createClient()
@@ -45,6 +46,17 @@ export default async function ParentPortalPage() {
     enrollments
       ?.map((e) => e.referral_code)
       .filter((c): c is string => Boolean(c)) ?? []
+
+  // 👨‍🎓 Per-child previous school grades (for the grade summary on each card)
+  const transferByEnrollment = new Map<string, Awaited<ReturnType<typeof getTransferGrades>>>()
+  if (enrollments) {
+    await Promise.all(
+      enrollments.map(async (e) => {
+        const grades = await getTransferGrades(e.id)
+        transferByEnrollment.set(e.id, grades)
+      })
+    )
+  }
 
   const { data: referralCredits } = await supabase
     .from('referral_credits')
@@ -97,26 +109,8 @@ export default async function ParentPortalPage() {
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {enrollments.map((e) => {
             const approved = e.status === 'approved'
-            const gradeNum = gradeToNum(e.student_grade)
-            const grade = getGradeCurriculum(gradeNum)
-            const progress = progressMap[e.id]
-            const completed = progress?.completed_steps?.length ?? 0
-
-            // Calculate total steps in this grade's curriculum
-            let totalSteps = 0
-            if (grade) {
-              grade.subjects.forEach((subj) => {
-                subj.units.forEach((unit) => {
-                  unit.lessons.forEach((les) => {
-                    totalSteps++ // lesson content
-                    if (les.weekTest) totalSteps++ // week test
-                  })
-                  if (unit.unitTest) totalSteps++ // unit test
-                })
-              })
-            }
-
-            const progressPercent = totalSteps > 0 ? Math.round((completed / totalSteps) * 100) : 0
+            const transferGrades = transferByEnrollment.get(e.id) || []
+            const gpa = computeGpa(transferGrades)
 
             return (
               <Card key={e.id} className={approved ? 'border-emerald-200' : ''}>
@@ -153,35 +147,45 @@ export default async function ParentPortalPage() {
                     {e.city}, {e.state}
                   </div>
 
-                  {/* Progress Section */}
-                  {approved && grade && (
+                  {/* Grades Section — previous school records summary */}
+                  {approved && (
                     <div className="mt-4 pt-4 border-t border-gray-100">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-semibold text-gray-700 flex items-center gap-1">
-                          <CheckCircle className="h-3.5 w-3.5 text-emerald-500" />
-                          Curriculum Progress
+                          <Star className="h-3.5 w-3.5 text-amber-500" />
+                          Previous School Grades
                         </span>
-                        <span className="text-xs text-gray-500">
-                          {completed} / {totalSteps} steps
-                        </span>
+                        {gpa !== null && (
+                          <span className="text-xs text-gray-500">
+                            GPA: <strong>{formatGpa(gpa)}</strong>
+                          </span>
+                        )}
                       </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2">
-                        <div
-                          className="bg-gradient-to-r from-emerald-500 to-emerald-400 h-2 rounded-full transition-all"
-                          style={{ width: `${progressPercent}%` }}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-gray-400">
-                          {progressPercent}% complete
-                        </span>
-                        <Link
-                          href={`/curriculum/${e.id}`}
-                          className="text-xs text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1"
-                        >
-                          Continue Learning <ArrowRight className="h-3 w-3" />
-                        </Link>
-                      </div>
+                      {transferGrades.length > 0 ? (
+                        <ul className="space-y-1">
+                          {transferGrades.slice(0, 6).map((g, i) => (
+                            <li key={g.id || i} className="flex items-center justify-between text-xs text-gray-600">
+                              <span>{g.subject_name}</span>
+                              <span className="font-medium">{g.grade_earned}</span>
+                            </li>
+                          ))}
+                          {transferGrades.length > 6 && (
+                            <li className="text-xs text-gray-400">
+                              + {transferGrades.length - 6} more subjects
+                            </li>
+                          )}
+                        </ul>
+                      ) : (
+                        <p className="text-xs text-gray-400">
+                          No previous school grades added yet.
+                        </p>
+                      )}
+                      <Link
+                        href={`/parent/transfer-records/${e.id}`}
+                        className="mt-2 inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                      >
+                        {transferGrades.length > 0 ? 'Edit grades' : 'Add previous school grades'} <ArrowRight className="h-3 w-3" />
+                      </Link>
                     </div>
                   )}
 
@@ -189,7 +193,7 @@ export default async function ParentPortalPage() {
                     <div className="mt-4 pt-4 border-t border-gray-100">
                       <div className="flex items-center gap-2 text-xs text-amber-600">
                         <Clock className="h-3.5 w-3.5" />
-                        Curriculum unlocks once enrollment is approved
+                        Grades and records unlock once enrollment is approved
                       </div>
                     </div>
                   )}
