@@ -88,6 +88,27 @@ export default function EnrollPage() {
     const form = e.currentTarget
     const data = new FormData(form)
 
+    // ✅ Friendly validation — tell the user EXACTLY what's missing instead of
+    // relying on silent native browser tooltips (which look like "it didn't let
+    // me through").
+    const parentFields: [string, string][] = [
+      ['parent_first_name', 'your first name'],
+      ['parent_last_name', 'your last name'],
+      ['email', 'your email'],
+      ['phone', 'your phone number'],
+      ['address_line1', 'your street address'],
+      ['city', 'your city'],
+      ['state', 'your state'],
+      ['zip', 'your ZIP code'],
+    ]
+    for (const [name, label] of parentFields) {
+      if (!data.get(name)) {
+        setError(`Please fill in ${label} (Parent / Guardian section).`)
+        setLoading(false)
+        return
+      }
+    }
+
     // Validate: every student block needs full info
     for (let i = 0; i < students.length; i++) {
       const s = students[i]
@@ -101,6 +122,18 @@ export default function EnrollPage() {
         setLoading(false)
         return
       }
+      if (s.prevSchoolChoice === 'attended' && !s.prevSchoolName) {
+        setError(`Child #${i + 1}: please enter the name of the previous school.`)
+        setLoading(false)
+        return
+      }
+    }
+
+    // ✅ Terms — explicit check with a clear message
+    if (data.get('agree_to_terms') !== 'on') {
+      setError('Please check the box to accept the Terms of Service before enrolling.')
+      setLoading(false)
+      return
     }
 
     const payload = {
@@ -364,7 +397,11 @@ export default function EnrollPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-8">
+        {/* noValidate: native browser tooltips block submission SILENTLY and are
+            easy to miss (user reported "accepted terms but it didn't let me
+            through"). We disable native validation and show clear inline errors
+            in handleSubmit instead. */}
+        <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-8">
           {/* Parent/Guardian Information */}
           <Card fun="blue">
             <CardHeader>
@@ -625,6 +662,14 @@ export default function EnrollPage() {
               </label>
             </CardContent>
           </Card>
+
+          {/* Error near the submit button — visible even if the user is at the
+              bottom of the form (the terms section) when validation fails */}
+          {error && (
+            <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700 flex items-center gap-2">
+              <span>⚠️</span> {error}
+            </div>
+          )}
 
           <Button
             type="submit"
