@@ -6,6 +6,7 @@ type SendEnrollmentEmailParams = {
   parentName: string
   studentName: string
   grade: string
+  referralCode?: string | null
 }
 
 type SendCancellationEmailParams = {
@@ -19,14 +20,42 @@ export async function sendEnrollmentEmail({
   parentName,
   studentName,
   grade,
+  referralCode,
 }: SendEnrollmentEmailParams) {
   const smtpHost = process.env.SMTP_HOST
   const smtpPort = process.env.SMTP_PORT
   const smtpUser = process.env.SMTP_USER
   const smtpPass = process.env.SMTP_PASS
   const fromEmail = process.env.SMTP_FROM || SCHOOL_CONFIG.email
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laroseca.org'
 
   const subject = `Welcome to ${SCHOOL_CONFIG.name}, ${parentName}! 🎉`
+
+  // 🎁 Referral block — included when the family has a code
+  const referralBlock = referralCode
+    ? `
+        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 20px; margin: 24px 0;">
+          <h2 style="color: #065f46; font-size: 18px; margin: 0 0 8px;">🎁 Share &amp; Earn — Free Tuition</h2>
+          <p style="color: #065f46; font-size: 14px; margin: 0 0 12px;">
+            You now have your very own referral code! When a new family enrolls using your link
+            and pays, you get <strong>$45 off your tuition</strong> (one month free on monthly plans).
+            Share it with friends, family, and fellow homeschoolers:
+          </p>
+          <div style="background: #ffffff; border: 1px dashed #34d399; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; text-align: center;">
+            <span style="font-family: monospace; font-size: 20px; font-weight: bold; color: #047857; letter-spacing: 2px;">${referralCode}</span>
+          </div>
+          <a href="${siteUrl}/enroll?ref=${encodeURIComponent(referralCode)}"
+             style="display: inline-block; background: #059669; color: #fff; text-decoration: none;
+                    padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 14px;">
+            Share Your Referral Link →
+          </a>
+          <p style="color: #6b7280; font-size: 12px; margin: 12px 0 0;">
+            You can also find this code anytime in your Parent Portal. Multiple referrals stack —
+            refer 3 families, get 3 months free!
+          </p>
+        </div>`
+    : ''
+
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -69,6 +98,8 @@ export async function sendEnrollmentEmail({
             Shop Curriculum Books →
           </a>
         </div>
+
+        ${referralBlock}
 
         <h3 style="color: #065f46; font-size: 16px;">Next Steps</h3>
         <ol style="color: #374151; font-size: 14px; line-height: 1.8;">

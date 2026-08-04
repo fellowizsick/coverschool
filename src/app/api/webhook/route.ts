@@ -159,6 +159,7 @@ export async function POST(request: Request) {
         parentName: `${parent.parent_first_name} ${parent.parent_last_name}`,
         studentName: allChildren,
         grade: enrollments.map((e) => e.student_grade).join(', '),
+        referralCode: parent.referral_code,
       })
 
       // 🎁 REFERRAL AWARD: this new family paid, so credit their referrer.
