@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Gift, Copy, Check } from 'lucide-react'
+import Link from 'next/link'
+import { Gift, Copy, Check, Info } from 'lucide-react'
 
 export default function ReferralCard({
   referralCodes,
@@ -47,6 +48,12 @@ export default function ReferralCard({
             When someone enrolls using your link and pays, you get <strong>one month free</strong>{' '}
             (or <strong>$45 off your yearly payment</strong>).
           </p>
+          <Link
+            href="/referral"
+            className="mt-1 inline-flex items-center gap-1 text-sm font-semibold text-amber-700 underline decoration-amber-300 underline-offset-2 hover:text-amber-800"
+          >
+            <Info className="h-3.5 w-3.5" /> How it works — full details
+          </Link>
         </div>
       </div>
 
@@ -93,7 +100,10 @@ export default function ReferralCard({
             </div>
           ))}
           <p className="text-xs text-gray-500">
-            Share your link with friends &amp; family. When they enroll and pay, you earn the reward automatically.
+            Share your link with friends &amp; family. When they enroll and pay, you earn the reward automatically.{' '}
+            <Link href="/referral" className="font-semibold text-amber-700 underline decoration-amber-300 underline-offset-2 hover:text-amber-800">
+              See how it works
+            </Link>
           </p>
         </div>
       )}

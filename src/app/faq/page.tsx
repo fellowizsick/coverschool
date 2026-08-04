@@ -45,6 +45,10 @@ const faqs = [
     a: 'We currently serve families in Alabama, Florida, Georgia, Indiana, Mississippi, Missouri, Oklahoma, South Carolina, and Texas. If you live in a state not on our list, please contact us to discuss your situation.',
   },
   {
+    q: 'How does the referral program work?',
+    a: 'Every enrolled family gets their own personal referral code (like LCA-XXXXX). When you share your link and a new family enrolls using it AND pays, you earn a reward automatically — one month free ($45 credit) on monthly plans, or $45 off your yearly payment. There is no limit: every paying referral stacks, so refer 3 families and get 3 months free. Your code lives in your Parent Portal, and it is also emailed to you in your welcome email.',
+  },
+  {
     q: 'What if I move to a different state?',
     a: "Contact us to discuss your situation. Students who move may be able to continue their enrollment depending on their new state's laws.",
   },

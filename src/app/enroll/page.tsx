@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -436,7 +437,10 @@ export default function EnrollPage() {
               Were you referred by a Larose Christian Academy family? Enter their
               referral code below. When your payment is processed, they&apos;ll earn
               <strong> one month of tuition free</strong> (or $45 off their yearly payment) —
-              and you&apos;ll be all set to start! 🎉
+              and you&apos;ll be all set to start! 🎉{' '}
+              <Link href="/referral" className="font-semibold text-emerald-600 underline underline-offset-2 hover:text-emerald-700">
+                How the referral program works
+              </Link>
             </p>
             <Input
               id="referral_code"
