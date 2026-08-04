@@ -113,6 +113,7 @@ export const NAV_LINKS = [
   { label: 'Curriculum', href: '/curriculum' },
   { label: 'Refer a Friend', href: '/referral' },
   { label: 'Donate', href: '/donate' },
+  { label: 'Calendar', href: '/calendar' },
   { label: 'Student ID', href: '/student-id' },
   { label: 'Contact', href: '/contact' },
   { label: 'Parent Portal', href: '/parent' },

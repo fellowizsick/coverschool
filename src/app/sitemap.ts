@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/referral',
     '/privacy',
     '/terms',
+    '/calendar',
     '/homeschool-law',
   ]
 

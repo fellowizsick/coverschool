@@ -8,6 +8,8 @@ import RemoveChildButton from '@/components/RemoveChildButton'
 import ReferralCard from '@/components/ReferralCard'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { getTransferGrades, computeGpa, formatGpa } from '@/lib/transfer-grades'
+import ReportCardUploader from '@/components/ReportCardUploader'
+import { CalendarDays } from 'lucide-react'
 
 export default async function ParentPortalPage() {
   const supabase = await createClient()
@@ -86,9 +88,30 @@ export default async function ParentPortalPage() {
         <h2 className="text-lg font-semibold text-gray-900">
           {isAdmin ? 'All Students' : 'My Children\'s Dashboard'}
         </h2>
-        <Link href="/enroll">
-          <Button size="sm">Enroll New Student</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/calendar">
+            <Button size="sm" variant="sky">
+              <CalendarDays className="mr-1 h-4 w-4" /> School Calendar
+            </Button>
+          </Link>
+          <Link href="/enroll">
+            <Button size="sm">Enroll New Student</Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* 🏫 Report Card Snapshots — auto-targets the single student, or picker when multiple */}
+      <div className="mt-6">
+        <ReportCardUploader
+          children={(enrollments || [])
+            .filter((e) => e.status === 'approved')
+            .map((e) => ({
+              id: e.id,
+              name: `${e.student_first_name} ${e.student_last_name}`.trim(),
+              grade: e.student_grade || '',
+            }))}
+          isAdmin={isAdmin}
+        />
       </div>
 
       {!enrollments || enrollments.length === 0 ? (
