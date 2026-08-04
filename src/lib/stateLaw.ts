@@ -46,16 +46,16 @@ export const STATE_LAWS: StateLaw[] = [
     name: 'Florida',
     flag: '🌞',
     compulsoryAges: 'Ages 6 to 16',
-    notification: 'Parents must file a Notice of Intent to establish a home education program with the county school superintendent within 30 days of starting.',
+    notification: 'If homeschooling independently (home education option), parents file a Notice of Intent with the county school superintendent within 30 days of starting. Families enrolled in a private cover school do not file their own notice.',
     coverSchoolRole:
       'Florida recognizes umbrella/cover schools as a separate legal route (private school option). Families may enroll in a private/parochial school that covers them instead of filing their own Notice of Intent.',
     curriculum: 'No state-prescribed curriculum; instruction must be regular.',
     attendance: '180 days of instruction per year.',
     records: 'Parents keep a portfolio of educational activities, samples, and assessments.',
-    testing: 'Annual evaluation: portfolio review by a certified teacher or standardized test results.',
+    testing: 'Independent home education: annual evaluation (portfolio review by a certified teacher or standardized test). Cover-school families are not subject to this requirement.',
     teacherQuals: 'No teacher certification required for home education.',
     summary:
-      'Florida offers two paths: file your own Notice of Intent with the district, or enroll in a private cover school. LCA families use the cover-school route — the school handles the legal standing.',
+      'Florida offers two paths: file your own Notice of Intent with the district (independent home education), or enroll in a private cover school and let the school handle the legal standing. LCA families use the cover-school route.',
     sources: [
       { label: 'Florida Statute §1002.41 (home education)', url: 'http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=1000-1099/1002/Sections/1002.41.html' },
       { label: 'Florida DOE — Home Education', url: 'https://www.fldoe.org/schools/family-community/home-edu.stml' },
@@ -112,13 +112,13 @@ export const STATE_LAWS: StateLaw[] = [
     notification: 'Parents must file a certificate of enrollment with the local school attendance officer within 15 days of establishing the homeschool program.',
     coverSchoolRole:
       'Mississippi recognizes legitimate home instruction programs. Cover schools provide the legal standing and record-keeping; the attendance filing is the parent\u2019s step.',
-    curriculum: 'Instruction must be in the required subjects (reading, language arts, math, social studies, science).',
+    curriculum: 'No state-mandated curriculum for home instruction programs.',
     attendance: '180 days of instruction per year.',
     records: 'Parents submit attendance and scholastic records to the attendance officer annually (or quarterly for 17-year-olds seeking exemption).',
     testing: 'No state testing requirement for homeschool students.',
     teacherQuals: 'No teacher certification required.',
     summary:
-      'Mississippi is simple: file the certificate of enrollment, teach the required subjects, keep records. LCA covers the school-of-record side and issues official documents.',
+      'Mississippi is simple: file the certificate of enrollment, keep records, and teach. LCA covers the school-of-record side and issues official documents.',
     sources: [
       { label: 'Mississippi Code §37-13-91 (home instruction)', url: 'https://law.justia.com/codes/mississippi/2022/title-37/chapter-13/section-37-13-91/' },
       { label: 'Mississippi DOE — Home Schooling', url: 'https://www.mdek12.org/OSA/homeschooling' },
@@ -134,12 +134,12 @@ export const STATE_LAWS: StateLaw[] = [
     coverSchoolRole:
       'Missouri treats homeschools as private schools with light regulation. Cover schools provide official records and transcripts without state filing.',
     curriculum: 'Instruction must include reading, language arts, math, social studies, and science.',
-    attendance: '1,000 hours of instruction per year; 600 hours in the required subjects (400 of those in the home).',
+    attendance: 'Children must attend for the entire school term of the school they attend (no fixed hour-count requirement in current law).',
     records: 'No state-required records, but attendance logs are recommended.',
-    testing: 'State assessment requirements apply to home schools (see Missouri law for details).',
+    testing: 'No state testing/assessment requirement for home schools in current law.',
     teacherQuals: 'No teacher certification required.',
     summary:
-      'Missouri keeps it light: no registration. Families provide 1,000 hours of instruction a year (600 in core subjects). LCA provides the school-of-record role so families have official report cards and transcripts when needed.',
+      'Missouri keeps it light: no registration, no notification. Children must attend for the school term, and instruction covers core subjects. LCA provides the school-of-record role so families have official report cards and transcripts when needed.',
     sources: [
       { label: 'Missouri Revised Statutes §167.031 (compulsory attendance)', url: 'https://revisor.mo.gov/main/OneSection.aspx?section=167.031' },
       { label: 'Missouri DOE — Home Schooling', url: 'https://dese.mo.gov/quality-schools/home-schooling' },
@@ -178,7 +178,7 @@ export const STATE_LAWS: StateLaw[] = [
     curriculum: 'Instruction must include reading, writing, math, science, and social studies (church school option sets its own standards).',
     attendance: '180 days of instruction per year, at least 4.5 hours per day.',
     records: 'Church school keeps attendance and scholastic records; parents keep a portfolio of student work.',
-    testing: 'Church school option: no state testing requirement (association option requires a standardized test annually).',
+    testing: 'Church school option: no state testing required (the independent option with the district requires assessment).',
     teacherQuals: 'Church school option: the person providing instruction must have a high school diploma or GED.',
     summary:
       'South Carolina\u2019s church school option is the cleanest: no district filing, no state testing. LCA is the church school of record — parents teach, we handle the legal side.',
