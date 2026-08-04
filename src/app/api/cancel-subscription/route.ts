@@ -43,7 +43,8 @@ export async function POST(request: Request) {
     const stripe = new Stripe(secretKey)
 
     // Cancel immediately at period end (no further charges).
-    const cancelled = await stripe.subscriptions.del(subId, { prorate: false })
+    // NOTE: Stripe v22+ uses proration_behavior, NOT prorate (removed param).
+    const cancelled = await stripe.subscriptions.del(subId, { proration_behavior: 'none' })
 
     await admin
       .from('enrollments')

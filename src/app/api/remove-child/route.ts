@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     // 3. If this is the ONLY active member (or the last one) -> cancel whole sub
     if (activeSiblings.length === 0) {
       if (child.stripe_subscription_id) {
-        await stripe.subscriptions.del(child.stripe_subscription_id, { prorate: false })
+        await stripe.subscriptions.del(child.stripe_subscription_id, { proration_behavior: 'none' })
       }
       // Mark every enrollment in the group cancelled
       for (const s of siblings) {
@@ -76,13 +76,13 @@ export async function POST(request: Request) {
     }
 
     // 4. Multi-child family on a shared subscription: remove just this child's line item
+    const childName = `${child.student_first_name} ${child.student_last_name}`.trim()
     if (child.stripe_subscription_id) {
       try {
         const sub = await stripe.subscriptions.retrieve(child.stripe_subscription_id, {
           expand: ['items.data.price.product'],
         })
 
-        const childName = `${child.student_first_name} ${child.student_last_name}`.trim()
         // Find the subscription item whose product description names this student
         const targetItem = (sub.items?.data || []).find((item) => {
           const prod = item.price?.product
@@ -91,8 +91,9 @@ export async function POST(request: Request) {
         })
 
         if (targetItem) {
-          // Delete ONLY this child's item from the shared subscription
-          await stripe.subscriptionItems.del(targetItem.id, { prorate: false })
+          // Delete ONLY this child's item from the shared subscription.
+          // NOTE: Stripe v22+ uses proration_behavior, NOT prorate (removed param).
+          await stripe.subscriptionItems.del(targetItem.id, { proration_behavior: 'none' })
           console.log(`🧒 Removed child ${childName} line item ${targetItem.id} from subscription ${child.stripe_subscription_id}`)
         } else {
           console.warn(`⚠️ Could not find subscription item for ${childName} — no Stripe change made (marked cancelled in DB only)`)
