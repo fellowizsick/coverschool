@@ -65,9 +65,6 @@ function emojiFor(title: string): string {
   return EMOJI_BANK[Math.abs(title.length * 7) % EMOJI_BANK.length]
 }
 
-// 🎨 Fun pastel colors per day (rotates)
-const DAY_COLORS = ['from-pink-400 to-rose-400', 'from-violet-400 to-purple-400', 'from-sky-400 to-blue-400', 'from-emerald-400 to-green-400', 'from-amber-400 to-orange-400']
-
 export default function CalendarPage() {
   const router = useRouter()
   const today = new Date()
@@ -77,9 +74,19 @@ export default function CalendarPage() {
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showAdd, setShowAdd] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // How many event chips fit in a day cell (fewer on phones so the month fits on screen)
+  const [maxShown, setMaxShown] = useState(5)
+  useEffect(() => {
+    const update = () => setMaxShown(window.innerWidth < 640 ? 2 : 5)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   // Form state
   const [fTitle, setFTitle] = useState('')
@@ -93,10 +100,6 @@ export default function CalendarPage() {
   const loadEvents = useCallback(async () => {
     try {
       const res = await fetch('/api/calendar-events', { credentials: 'include' })
-      if (res.status === 401) {
-        router.replace('/login?redirect=/calendar')
-        return
-      }
       if (!res.ok) throw new Error('Failed to load')
       const data = await res.json()
       setEvents(data.events || [])
@@ -105,28 +108,27 @@ export default function CalendarPage() {
     } finally {
       setLoading(false)
     }
-  }, [router])
+  }, [])
 
   useEffect(() => {
     ;(async () => {
       try {
         const a = await fetch('/api/auth/user', { credentials: 'include' })
-        if (!a.ok) {
-          router.replace('/login?redirect=/calendar')
-          return
+        if (a.ok) {
+          const u = await a.json()
+          const email = u?.user?.email || ''
+          setUserEmail(email)
+          setIsLoggedIn(!!email)
+          const admins = ['1990jonathanbbrown@gmail.com', 'anneb7669@gmail.com']
+          setIsAdmin(admins.includes(email.toLowerCase()))
+          if (admins.includes(email.toLowerCase())) setFAudience('school')
         }
-        const u = await a.json()
-        const email = u?.user?.email || ''
-        setUserEmail(email)
-        const admins = ['1990jonathanbbrown@gmail.com', 'anneb7669@gmail.com']
-        setIsAdmin(admins.includes(email.toLowerCase()))
-        if (admins.includes(email.toLowerCase())) setFAudience('school')
-        setLoading(false)
       } catch {
-        router.replace('/login?redirect=/calendar')
+        // anonymous visitor — calendar is still viewable
       }
+      setLoading(false)
     })()
-  }, [router])
+  }, [])
 
   useEffect(() => {
     if (!loading) loadEvents()
@@ -168,7 +170,17 @@ export default function CalendarPage() {
     setViewMonth((m) => (m === 11 ? (setViewYear((y) => y + 1), 0) : m + 1))
   }
 
+  const requireLogin = () => {
+    router.push('/login?redirect=/calendar')
+  }
+
+  const handleAddClick = () => {
+    if (!isLoggedIn) return requireLogin()
+    setShowAdd(true)
+  }
+
   const addEvent = async () => {
+    if (!isLoggedIn) return requireLogin()
     if (!fTitle.trim()) {
       setError('Give your event a name!')
       return
@@ -210,45 +222,54 @@ export default function CalendarPage() {
   }
 
   const deleteEvent = async (id: string) => {
+    if (!isLoggedIn) return requireLogin()
     if (!window.confirm('Delete this event?')) return
     try {
-      await fetch(`/api/calendar-events?id=${id}`, { method: 'DELETE', credentials: 'include' })
+      const res = await fetch(`/api/calendar-events?id=${id}`, { method: 'DELETE', credentials: 'include' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setError(data.error || 'Failed to delete event')
+        return
+      }
       await loadEvents()
     } catch {
       setError('Failed to delete event')
     }
   }
 
-  const canDelete = (e: CalendarEvent) =>
-    isAdmin || e.created_by?.toLowerCase() === (userEmail || '').toLowerCase()
+  // 🔒 Delete rule: only the person who added the event can delete it.
+  // Admins may delete school events (the academy's own calendar) but NOT
+  // other families' private events. Logged-in required (enforced server-side too).
+  const canDelete = (e: CalendarEvent) => {
+    if (!isLoggedIn) return false
+    if (isAdmin && e.audience === 'school') return true
+    return e.created_by?.toLowerCase() === (userEmail || '').toLowerCase()
+  }
 
   return (
-    <div className="min-h-screen">
-      {/* 🎨 Fun Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-600 px-4 py-14 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col">
+      {/* 🎨 Compact hero — keeps the calendar on screen */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-600 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <div className="absolute -left-10 top-8 h-36 w-36 animate-float rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-pink-300/15 blur-3xl [animation-delay:1s]" />
-        <div className="absolute left-1/3 top-4 h-20 w-20 animate-bounce-soft rounded-full bg-yellow-200/10 blur-2xl [animation-delay:2s]" />
-        <div className="mx-auto max-w-4xl text-center">
-          <span className="mb-4 inline-block animate-pop rounded-full bg-white/20 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl text-center">
+          <span className="mb-2 inline-block animate-pop rounded-full bg-white/20 px-4 py-1 text-xs font-medium text-white backdrop-blur-sm sm:text-sm">
             <CalendarDays className="mr-1 inline h-4 w-4" /> Our School Calendar
           </span>
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
             What&apos;s happening at LCA?
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
-            Holidays, events, and family moments — all in one happy place.
+          <p className="mx-auto mt-1 max-w-2xl text-sm text-purple-100 sm:text-base">
+            {isLoggedIn
+              ? 'Holidays, events, and family moments — all in one happy place.'
+              : 'School events are open to everyone. Log in to add your family\u2019s events.'}
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button
-              onClick={() => setShowAdd(true)}
-              variant="gold"
-              size="lg"
-            >
-              <Plus className="mr-2 h-5 w-5" /> Add Event
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
+            <Button onClick={handleAddClick} variant="gold" size="md">
+              <Plus className="mr-2 h-4 w-4" /> Add Event
             </Button>
             <Link href="/parent">
-              <Button size="lg" variant="outline" className="border-white/50 bg-transparent text-white hover:bg-white/10">
+              <Button size="md" variant="outline" className="border-white/50 bg-transparent text-white hover:bg-white/10">
                 Back to Parent Portal
               </Button>
             </Link>
@@ -256,73 +277,84 @@ export default function CalendarPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl min-h-0 flex-1 flex-col px-3 py-4 sm:px-6 lg:px-8">
         {error && (
-          <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-700">
+          <div className="mb-3 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-sm font-medium text-rose-700">
             {error}
           </div>
         )}
 
+        {!isLoggedIn && (
+          <div className="mb-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-800 sm:text-sm">
+            👀 You&apos;re viewing school events.{' '}
+            <Link href="/login?redirect=/calendar" className="font-bold underline">
+              Log in
+            </Link>{' '}
+            to add your family&apos;s events.
+          </div>
+        )}
+
         {/* Month navigation */}
-        <div className="mb-6 flex items-center justify-between">
-          <Button variant="outline" onClick={prevMonth} aria-label="Previous month">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <Button variant="outline" size="sm" onClick={prevMonth} aria-label="Previous month">
             <ChevronLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-2xl font-bold text-gray-900">
-            {MONTHS[viewMonth]} {viewYear}
-            <span className="ml-3 inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700">
-              <Sparkles className="h-4 w-4" /> {events.length} event{events.length !== 1 ? 's' : ''}
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900 sm:text-2xl">
+              {MONTHS[viewMonth]} {viewYear}
+            </h2>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+              <Sparkles className="h-3.5 w-3.5" /> {events.length} event{events.length !== 1 ? 's' : ''}
             </span>
-          </h2>
-          <Button variant="outline" onClick={nextMonth} aria-label="Next month">
+          </div>
+          <Button variant="outline" size="sm" onClick={nextMonth} aria-label="Next month">
             <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Day-of-week header */}
-        <div className="mb-2 grid grid-cols-7 gap-2">
+        <div className="mb-1 grid grid-cols-7 gap-1 sm:gap-2">
           {DOW.map((d) => (
-            <div key={d} className="text-center text-xs font-bold uppercase tracking-wide text-gray-400">
+            <div key={d} className="text-center text-[10px] font-bold uppercase tracking-wide text-gray-400 sm:text-xs">
               {d}
             </div>
           ))}
         </div>
 
-        {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-2">
+        {/* Calendar grid — stretches to fill the screen so the whole month is visible */}
+        <div className="grid min-h-[420px] flex-1 grid-cols-7 grid-rows-6 gap-1 sm:min-h-[480px] sm:gap-2">
           {grid.map((day, i) => {
-            if (day === null) return <div key={`e${i}`} className="min-h-[110px] rounded-2xl bg-gray-50/50" />
+            if (day === null) return <div key={`e${i}`} className="min-h-0 rounded-xl bg-gray-50/50" />
             const key = dateStr(viewYear, viewMonth, day)
             const dayEvents = eventsByDay[key] || []
-            const colorIdx = (day + viewMonth) % DAY_COLORS.length
             return (
               <div
                 key={key}
-                className={`min-h-[110px] rounded-2xl border p-2 transition-all hover:shadow-lg ${
+                className={`flex min-h-0 flex-col overflow-hidden rounded-xl border p-1 transition-all sm:p-1.5 ${
                   isToday(day)
                     ? 'border-fuchsia-400 bg-gradient-to-br from-fuchsia-50 to-purple-50 ring-2 ring-fuchsia-300'
-                    : 'border-gray-100 bg-white hover:-translate-y-0.5'
+                    : 'border-gray-100 bg-white hover:shadow-md'
                 }`}
               >
-                <div className="mb-1 flex items-center justify-between">
+                <div className="mb-0.5 flex items-center justify-between">
                   <span
-                    className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold ${
+                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
                       isToday(day) ? 'bg-gradient-to-br from-fuchsia-500 to-purple-500 text-white' : 'text-gray-600'
                     }`}
                   >
                     {day}
                   </span>
                   {dayEvents.length > 0 && (
-                    <span className="rounded-full bg-purple-100 px-1.5 text-[10px] font-bold text-purple-600">
+                    <span className="rounded-full bg-purple-100 px-1.5 text-[9px] font-bold text-purple-600 sm:text-[10px]">
                       {dayEvents.length}
                     </span>
                   )}
                 </div>
-                <div className="space-y-1">
-                  {dayEvents.slice(0, 2).map((e) => (
+                <div className="min-h-0 flex-1 space-y-0.5 overflow-y-auto">
+                  {dayEvents.slice(0, maxShown).map((e) => (
                     <div
                       key={e.id}
-                      className={`group relative rounded-lg px-1.5 py-1 text-[10px] font-semibold leading-tight text-white shadow-sm ${
+                      className={`group relative rounded-md px-1 py-0.5 text-[9px] font-semibold leading-tight text-white sm:text-[10px] ${
                         e.audience === 'school'
                           ? 'bg-gradient-to-r from-indigo-500 to-blue-500'
                           : 'bg-gradient-to-r from-emerald-500 to-teal-500'
@@ -342,8 +374,10 @@ export default function CalendarPage() {
                       )}
                     </div>
                   ))}
-                  {dayEvents.length > 2 && (
-                    <div className="text-[10px] font-semibold text-gray-400">+{dayEvents.length - 2} more</div>
+                  {dayEvents.length > maxShown && (
+                    <div className="text-[9px] font-semibold text-gray-400 sm:text-[10px]">
+                      +{dayEvents.length - maxShown} more
+                    </div>
                   )}
                 </div>
               </div>
@@ -352,7 +386,7 @@ export default function CalendarPage() {
         </div>
 
         {/* Legend */}
-        <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 text-sm text-gray-600">
+        <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl border border-gray-100 bg-white px-3 py-2 text-xs text-gray-600 sm:text-sm">
           <span className="font-semibold text-gray-900">Legend:</span>
           <span className="inline-flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500" /> School event (everyone sees)
@@ -366,17 +400,17 @@ export default function CalendarPage() {
         </div>
 
         {/* Upcoming events list */}
-        <h3 className="mb-4 mt-10 flex items-center gap-2 text-xl font-bold text-gray-900">
+        <h3 className="mb-3 mt-6 flex items-center gap-2 text-lg font-bold text-gray-900 sm:text-xl">
           <PartyPopper className="h-5 w-5 text-fuchsia-500" /> Upcoming
         </h3>
         {events.filter((e) => e.event_date >= today.toISOString().slice(0, 10)).length === 0 ? (
           <Card>
-            <CardContent className="p-8 text-center text-gray-500">
+            <CardContent className="p-6 text-center text-gray-500 sm:p-8">
               No upcoming events yet. Add one to get the party started!
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {events
               .filter((e) => e.event_date >= today.toISOString().slice(0, 10))
               .slice(0, 10)
@@ -384,15 +418,15 @@ export default function CalendarPage() {
                 const d = new Date(e.event_date + 'T00:00:00')
                 return (
                   <Card key={e.id} fun={e.audience === 'school' ? 'blue' : 'green'}>
-                    <CardContent className="flex items-center gap-4 p-4">
+                    <CardContent className="flex items-center gap-4 p-3 sm:p-4">
                       <div
-                        className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl text-white shadow-md ${
+                        className={`flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-2xl text-white shadow-md sm:h-14 sm:w-14 ${
                           e.audience === 'school'
                             ? 'bg-gradient-to-br from-indigo-500 to-blue-500'
                             : 'bg-gradient-to-br from-emerald-500 to-teal-500'
                         }`}
                       >
-                        <span className="text-lg leading-none font-bold">{d.getDate()}</span>
+                        <span className="text-base leading-none font-bold sm:text-lg">{d.getDate()}</span>
                         <span className="text-[10px] uppercase">{MONTHS[d.getMonth()].slice(0, 3)}</span>
                       </div>
                       <div className="min-w-0 flex-1">
@@ -424,7 +458,7 @@ export default function CalendarPage() {
           </div>
         )}
 
-        <div className="mt-10 rounded-2xl bg-gradient-to-br from-purple-100 to-fuchsia-100 p-4 text-xs text-gray-500">
+        <div className="mt-6 rounded-2xl bg-gradient-to-br from-purple-100 to-fuchsia-100 p-4 text-xs text-gray-500">
           <p>
             <School className="mr-1 inline h-3.5 w-3.5 text-purple-500" />
             <strong>School events</strong> are added by the academy and visible to every family.

@@ -6,9 +6,9 @@ const ADMIN_EMAILS = ['1990jonathanbbrown@gmail.com', 'anneb7669@gmail.com']
 
 /**
  * GET /api/calendar-events
- * Returns events visible to the logged-in user:
- *  - school events (everyone)
- *  - family events for the caller's own family_group(s)
+ * Returns events visible to the viewer:
+ *  - school events (everyone, even not logged in)
+ *  - family events for the caller's own family_group(s) when logged in
  *  - admins see everything
  */
 export async function GET() {
@@ -17,14 +17,22 @@ export async function GET() {
     const {
       data: { user },
     } = await supabase.auth.getUser()
-    if (!user?.email) {
-      return NextResponse.json({ error: 'Not signed in' }, { status: 401 })
-    }
-
     const admin = createAdminClient()
-    const isAdmin = ADMIN_EMAILS.includes(user.email.toLowerCase().trim())
+    const isAdmin = user?.email ? ADMIN_EMAILS.includes(user.email.toLowerCase().trim()) : false
 
-    let query = admin.from('calendar_events').select('*').order('event_date', { ascending: true })
+    // Not logged in → school events only (public)
+    if (!user?.email) {
+      const { data: school, error } = await admin
+        .from('calendar_events')
+        .select('*')
+        .eq('audience', 'school')
+        .order('event_date', { ascending: true })
+      if (error) {
+        console.error('Calendar list error:', error)
+        return NextResponse.json({ error: 'Database error' }, { status: 500 })
+      }
+      return NextResponse.json({ events: school || [] })
+    }
 
     if (!isAdmin) {
       // Own family groups
@@ -57,7 +65,10 @@ export async function GET() {
       return NextResponse.json({ events: [...(school || []), ...family] })
     }
 
-    const { data: events, error } = await query
+    const { data: events, error } = await admin
+      .from('calendar_events')
+      .select('*')
+      .order('event_date', { ascending: true })
     if (error) {
       console.error('Calendar list error:', error)
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
@@ -72,9 +83,7 @@ export async function GET() {
 /**
  * POST /api/calendar-events
  * Body: { title, description?, eventDate, startTime?, endTime?, allDay?, audience?, familyGroupId? }
- *  - Admins: may create school events (audience 'school') OR family events.
- *  - Parents: may create family events for their own family group only.
- *    (If a parent has exactly one family group, familyGroupId is optional.)
+ * Requires login. Admins may create school events; parents may create family events for their own family.
  */
 export async function POST(request: Request) {
   try {
@@ -155,7 +164,9 @@ export async function POST(request: Request) {
 
 /**
  * DELETE /api/calendar-events?id=xxx
- * Only the creator or an admin may delete.
+ * Requires login. Only the person who ADDED the event may delete it.
+ * Exception: admins may delete school events (the academy owns its own calendar),
+ * but admins may NOT delete other families' private events.
  */
 export async function DELETE(request: Request) {
   try {
@@ -181,8 +192,12 @@ export async function DELETE(request: Request) {
 
     const isAdmin = ADMIN_EMAILS.includes(user.email.toLowerCase().trim())
     const isCreator = ev.created_by?.toLowerCase() === user.email.toLowerCase()
-    if (!isAdmin && !isCreator) {
-      return NextResponse.json({ error: 'You can only delete your own events' }, { status: 403 })
+
+    // 🔒 Core rule: only the creator deletes. Admins may delete SCHOOL events
+    // (they manage the academy calendar) but never another family's private events.
+    const canDelete = isCreator || (isAdmin && ev.audience === 'school')
+    if (!canDelete) {
+      return NextResponse.json({ error: 'You can only delete events you added' }, { status: 403 })
     }
 
     const { error } = await admin.from('calendar_events').delete().eq('id', id)
