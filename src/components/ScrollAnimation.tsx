@@ -13,7 +13,7 @@ export default function ScrollAnimation() {
     // This is invisible to the user — those sections would be visible anyway —
     // it only prevents them staying blank after a refresh.
     const revealInViewport = () => {
-      const viewportBottom = window.innerHeight
+      const viewportBottom = window.innerHeight + 120 // generous margin
       elements.forEach((el) => {
         const rect = el.getBoundingClientRect()
         if (rect.top < viewportBottom && rect.bottom > 0) {
@@ -22,9 +22,15 @@ export default function ScrollAnimation() {
       })
     }
 
+    // Fail-safe: whatever the observer or timers miss, everything becomes
+    // visible shortly after load. Content must NEVER stay hidden.
+    const revealAll = () => {
+      elements.forEach((el) => el.classList.add('visible'))
+    }
+
     // If IntersectionObserver is unavailable, just show everything now.
     if (typeof IntersectionObserver === 'undefined') {
-      elements.forEach((el) => el.classList.add('visible'))
+      revealAll()
       return
     }
 
@@ -41,14 +47,25 @@ export default function ScrollAnimation() {
 
     elements.forEach((el) => observer.observe(el))
 
-    // Run the viewport check now AND again after a beat, so content is shown
-    // even if the browser restores scroll position slightly after JS loads.
+    // Run the viewport check now AND repeatedly, so content is shown even if
+    // the browser restores scroll position after JS loads, or images/video
+    // load late and shift the layout. Then a final fail-safe reveals all.
     revealInViewport()
-    const retry = window.setTimeout(revealInViewport, 600)
+    const timers = [
+      window.setTimeout(revealInViewport, 600),
+      window.setTimeout(revealInViewport, 1400),
+      window.setTimeout(revealInViewport, 2200),
+      window.setTimeout(revealAll, 3000),
+    ]
+
+    // pageshow fires on refresh/bfcache restore, when the effect may not re-run.
+    const onPageShow = () => revealInViewport()
+    window.addEventListener('pageshow', onPageShow)
 
     return () => {
       observer.disconnect()
-      window.clearTimeout(retry)
+      timers.forEach((t) => window.clearTimeout(t))
+      window.removeEventListener('pageshow', onPageShow)
     }
   }, [])
 
