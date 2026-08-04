@@ -39,10 +39,22 @@ export default function EnrollPage() {
   const [submittedStudents, setSubmittedStudents] = useState<{ id: string; name: string }[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [defaultGrade, setDefaultGrade] = useState('')
   const [billingMode, setBillingMode] = useState('monthly')
   const [defaultReferral, setDefaultReferral] = useState('')
   const [students, setStudents] = useState<StudentForm[]>([emptyStudent()])
+  const [termsChecked, setTermsChecked] = useState(false)
+
+  // Clear a field's error as soon as the user starts fixing it
+  function clearFieldError(name: string) {
+    setFieldErrors((prev) => {
+      if (!prev[name]) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+  }
 
   // Read URL params for pre-filled grade + referral code (client-side to avoid Suspense boundary)
   useEffect(() => {
@@ -90,51 +102,60 @@ export default function EnrollPage() {
 
     // ✅ Friendly validation — tell the user EXACTLY what's missing instead of
     // relying on silent native browser tooltips (which look like "it didn't let
-    // me through").
+    // me through"). Each missing field gets a red indicator.
+    const errors: Record<string, string> = {}
+
     const parentFields: [string, string][] = [
-      ['parent_first_name', 'your first name'],
-      ['parent_last_name', 'your last name'],
-      ['email', 'your email'],
-      ['phone', 'your phone number'],
-      ['address_line1', 'your street address'],
-      ['city', 'your city'],
-      ['state', 'your state'],
-      ['zip', 'your ZIP code'],
+      ['parent_first_name', 'First name is required'],
+      ['parent_last_name', 'Last name is required'],
+      ['email', 'Email is required'],
+      ['phone', 'Phone number is required'],
+      ['address_line1', 'Street address is required'],
+      ['city', 'City is required'],
+      ['state', 'Please select your state'],
+      ['zip', 'ZIP code is required'],
     ]
-    for (const [name, label] of parentFields) {
-      if (!data.get(name)) {
-        setError(`Please fill in ${label} (Parent / Guardian section).`)
-        setLoading(false)
-        return
-      }
+    for (const [name, msg] of parentFields) {
+      if (!data.get(name)) errors[name] = msg
     }
 
     // Validate: every student block needs full info
     for (let i = 0; i < students.length; i++) {
       const s = students[i]
-      if (!s.first || !s.last || !s.grade || !s.dob || !s.ssn) {
-        setError(`Please fill in every field for child #${i + 1}.`)
-        setLoading(false)
-        return
-      }
-      if (!/^\d{4}$/.test(s.ssn)) {
-        setError(`Child #${i + 1}: SSN last 4 must be exactly 4 digits.`)
-        setLoading(false)
-        return
+      const prefix = `child_${i}`
+      if (!s.first) errors[`${prefix}_first`] = 'First name is required'
+      if (!s.last) errors[`${prefix}_last`] = 'Last name is required'
+      if (!s.grade) errors[`${prefix}_grade`] = 'Please select a grade'
+      if (!s.dob) errors[`${prefix}_dob`] = 'Date of birth is required'
+      if (!s.ssn) {
+        errors[`${prefix}_ssn`] = 'Last 4 of SSN is required'
+      } else if (!/^\d{4}$/.test(s.ssn)) {
+        errors[`${prefix}_ssn`] = 'SSN last 4 must be exactly 4 digits'
       }
       if (s.prevSchoolChoice === 'attended' && !s.prevSchoolName) {
-        setError(`Child #${i + 1}: please enter the name of the previous school.`)
-        setLoading(false)
-        return
+        errors[`${prefix}_prevSchoolName`] = 'Please enter the name of the previous school'
       }
     }
 
     // ✅ Terms — explicit check with a clear message
     if (data.get('agree_to_terms') !== 'on') {
-      setError('Please check the box to accept the Terms of Service before enrolling.')
+      errors['agree_to_terms'] = 'Please check this box to accept the Terms of Service'
+    }
+
+    const errorNames = Object.keys(errors)
+    if (errorNames.length > 0) {
+      setFieldErrors(errors)
+      const first = errorNames[0]
+      const firstMsg = errors[first]
+      setError(
+        first === 'agree_to_terms'
+          ? 'Please check the box to accept the Terms of Service before enrolling.'
+          : `Please fill in the highlighted field${errorNames.length > 1 ? 's' : ''} (${firstMsg.toLowerCase()}).`
+      )
       setLoading(false)
       return
     }
+    setFieldErrors({})
 
     const payload = {
       parent_first_name: data.get('parent_first_name') as string,
@@ -417,6 +438,8 @@ export default function EnrollPage() {
                   label="First Name ✏️"
                   required
                   placeholder="Jane"
+                  error={fieldErrors.parent_first_name}
+                  onChange={() => clearFieldError('parent_first_name')}
                 />
                 <Input
                   id="parent_last_name"
@@ -424,6 +447,8 @@ export default function EnrollPage() {
                   label="Last Name ✏️"
                   required
                   placeholder="Smith"
+                  error={fieldErrors.parent_last_name}
+                  onChange={() => clearFieldError('parent_last_name')}
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -434,6 +459,8 @@ export default function EnrollPage() {
                   label="Email Address 📧"
                   required
                   placeholder="jane@example.com"
+                  error={fieldErrors.email}
+                  onChange={() => clearFieldError('email')}
                 />
                 <Input
                   id="phone"
@@ -442,6 +469,8 @@ export default function EnrollPage() {
                   label="Phone Number 📞"
                   required
                   placeholder="(555) 123-4567"
+                  error={fieldErrors.phone}
+                  onChange={() => clearFieldError('phone')}
                 />
               </div>
               <Input
@@ -450,6 +479,8 @@ export default function EnrollPage() {
                 label="Street Address 🏠"
                 required
                 placeholder="123 Main Street"
+                error={fieldErrors.address_line1}
+                onChange={() => clearFieldError('address_line1')}
               />
               <Input
                 id="address_line2"
@@ -464,6 +495,8 @@ export default function EnrollPage() {
                   label="City 🏙️"
                   required
                   placeholder="Mobile"
+                  error={fieldErrors.city}
+                  onChange={() => clearFieldError('city')}
                 />
                 <Select
                   id="state"
@@ -472,6 +505,8 @@ export default function EnrollPage() {
                   required
                   options={stateOptions}
                   placeholder="Select state"
+                  error={fieldErrors.state}
+                  onChange={() => clearFieldError('state')}
                 />
                 <Input
                   id="zip"
@@ -479,6 +514,8 @@ export default function EnrollPage() {
                   label="ZIP Code 📬"
                   required
                   placeholder="35201"
+                  error={fieldErrors.zip}
+                  onChange={() => clearFieldError('zip')}
                 />
               </div>
             </CardContent>
@@ -532,7 +569,11 @@ export default function EnrollPage() {
                       required
                       placeholder="John"
                       value={s.first}
-                      onChange={(e) => updateStudent(i, 'first', e.target.value)}
+                      error={fieldErrors[`child_${i}_first`]}
+                      onChange={(e) => {
+                        updateStudent(i, 'first', e.target.value)
+                        clearFieldError(`child_${i}_first`)
+                      }}
                     />
                     <Input
                       id={`student_last_name_${i}`}
@@ -540,7 +581,11 @@ export default function EnrollPage() {
                       required
                       placeholder="Smith"
                       value={s.last}
-                      onChange={(e) => updateStudent(i, 'last', e.target.value)}
+                      error={fieldErrors[`child_${i}_last`]}
+                      onChange={(e) => {
+                        updateStudent(i, 'last', e.target.value)
+                        clearFieldError(`child_${i}_last`)
+                      }}
                     />
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -551,7 +596,11 @@ export default function EnrollPage() {
                       options={gradeOptions}
                       placeholder="Select grade"
                       value={s.grade}
-                      onChange={(e) => updateStudent(i, 'grade', e.target.value)}
+                      error={fieldErrors[`child_${i}_grade`]}
+                      onChange={(e) => {
+                        updateStudent(i, 'grade', e.target.value)
+                        clearFieldError(`child_${i}_grade`)
+                      }}
                     />
                     <Input
                       id={`student_dob_${i}`}
@@ -559,7 +608,11 @@ export default function EnrollPage() {
                       label="Date of Birth 🎂"
                       required
                       value={s.dob}
-                      onChange={(e) => updateStudent(i, 'dob', e.target.value)}
+                      error={fieldErrors[`child_${i}_dob`]}
+                      onChange={(e) => {
+                        updateStudent(i, 'dob', e.target.value)
+                        clearFieldError(`child_${i}_dob`)
+                      }}
                     />
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -575,7 +628,10 @@ export default function EnrollPage() {
                           { value: 'attended', label: 'Attended another school' },
                         ]}
                         value={s.prevSchoolChoice}
-                        onChange={(e) => updateStudent(i, 'prevSchoolChoice', e.target.value)}
+                        onChange={(e) => {
+                          updateStudent(i, 'prevSchoolChoice', e.target.value)
+                          clearFieldError(`child_${i}_prevSchoolName`)
+                        }}
                       />
                       {s.prevSchoolChoice === 'attended' && (
                         <Input
@@ -585,7 +641,11 @@ export default function EnrollPage() {
                           placeholder="Name of previous school"
                           className="mt-2"
                           value={s.prevSchoolName}
-                          onChange={(e) => updateStudent(i, 'prevSchoolName', e.target.value)}
+                          error={fieldErrors[`child_${i}_prevSchoolName`]}
+                          onChange={(e) => {
+                            updateStudent(i, 'prevSchoolName', e.target.value)
+                            clearFieldError(`child_${i}_prevSchoolName`)
+                          }}
                         />
                       )}
                     </div>
@@ -598,7 +658,11 @@ export default function EnrollPage() {
                       pattern="[0-9]{4}"
                       placeholder="1234"
                       value={s.ssn}
-                      onChange={(e) => updateStudent(i, 'ssn', e.target.value.replace(/\D/g, ''))}
+                      error={fieldErrors[`child_${i}_ssn`]}
+                      onChange={(e) => {
+                        updateStudent(i, 'ssn', e.target.value.replace(/\D/g, ''))
+                        clearFieldError(`child_${i}_ssn`)
+                      }}
                     />
                   </div>
                 </CardContent>
@@ -642,14 +706,21 @@ export default function EnrollPage() {
           </Card>
 
           {/* Terms */}
-          <Card fun="pink">
+          <Card fun="pink" className={fieldErrors.agree_to_terms ? 'border-red-300 ring-1 ring-red-200' : ''}>
             <CardContent className="p-6">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   name="agree_to_terms"
                   required
-                  className="mt-1 h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 transition-all duration-200"
+                  checked={termsChecked}
+                  onChange={(e) => {
+                    setTermsChecked(e.target.checked)
+                    clearFieldError('agree_to_terms')
+                  }}
+                  className={`mt-1 h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 transition-all duration-200 ${
+                    fieldErrors.agree_to_terms ? 'border-red-400 ring-1 ring-red-200' : ''
+                  }`}
                 />
                 <span className="text-sm text-gray-600 leading-relaxed">
                   ✅ I confirm that the information provided is accurate. I understand
@@ -660,6 +731,11 @@ export default function EnrollPage() {
                   Free curriculum resources are included with your membership.
                 </span>
               </label>
+              {fieldErrors.agree_to_terms && (
+                <p className="mt-2 flex items-center gap-1 text-sm text-red-600">
+                  <span>⚠️</span> {fieldErrors.agree_to_terms}
+                </p>
+              )}
             </CardContent>
           </Card>
 
