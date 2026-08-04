@@ -133,6 +133,68 @@ export default function ReferralPage() {
         </div>
       </section>
 
+      {/* How you get your reward */}
+      <section className="mx-auto max-w-3xl px-4 pb-4 sm:px-6 lg:px-8">
+        <h2 className="text-center text-3xl font-bold text-gray-900 font-heading">
+          How Your Reward Shows Up 🎁
+        </h2>
+        <p className="mt-2 text-center text-gray-500">
+          You don&apos;t have to do anything — no codes to enter, no emails to send. Here&apos;s
+          exactly when you&apos;ll see it:
+        </p>
+        <div className="mt-8 space-y-4">
+          <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-200 to-emerald-100">
+                <CalendarCheck className="h-6 w-6 text-emerald-700" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900">On a Monthly Plan</h3>
+                <p className="text-sm text-gray-500">One month free, automatically</p>
+              </div>
+            </div>
+            <ol className="mt-4 space-y-2 text-sm text-gray-600 leading-relaxed">
+              <li className="flex gap-2"><span className="font-bold text-emerald-600">1.</span><span>Your friend enrolls with your link and pays.</span></li>
+              <li className="flex gap-2"><span className="font-bold text-emerald-600">2.</span><span>We add a <strong>one-time $45 credit</strong> to your account instantly.</span></li>
+              <li className="flex gap-2"><span className="font-bold text-emerald-600">3.</span><span>Your <strong>next monthly bill is $0</strong> — it shows up on your invoice automatically. No action needed.</span></li>
+            </ol>
+          </div>
+          <div className="rounded-2xl border border-amber-100 bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-200 to-amber-100">
+                <DollarSign className="h-6 w-6 text-amber-700" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900">On a Yearly Plan</h3>
+                <p className="text-sm text-gray-500">$45 off your renewal, automatically</p>
+              </div>
+            </div>
+            <ol className="mt-4 space-y-2 text-sm text-gray-600 leading-relaxed">
+              <li className="flex gap-2"><span className="font-bold text-amber-600">1.</span><span>Your friend enrolls with your link and pays.</span></li>
+              <li className="flex gap-2"><span className="font-bold text-amber-600">2.</span><span>We add a <strong>$45 credit</strong> to your account instantly.</span></li>
+              <li className="flex gap-2"><span className="font-bold text-amber-600">3.</span><span>When you renew for the next year, the credit is <strong>taken off automatically</strong> at checkout — $405 instead of $450. No codes needed.</span></li>
+            </ol>
+          </div>
+          <div className="rounded-2xl border border-purple-100 bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-200 to-purple-100">
+                <Gift className="h-6 w-6 text-purple-700" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900">Where to see it</h3>
+                <p className="text-sm text-gray-500">Your credits, at a glance</p>
+              </div>
+            </div>
+            <p className="mt-4 text-sm text-gray-600 leading-relaxed">
+              Log into your <strong>Parent Portal</strong> anytime — your referral card shows how
+              many credits you&apos;ve earned and how many you&apos;ve used. Multiple referrals
+              stack, so the more families you refer, the more free months (or bigger yearly
+              discount) you get.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Fine print */}
       <section className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
