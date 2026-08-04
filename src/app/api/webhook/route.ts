@@ -83,22 +83,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
     }
 
-    // ⏰ Monthly auto-cancel after 10 months (2026-08-03 fix)
+    // ⏰ Monthly auto-cancel after 10 months (2026-08-03 fix; 2026-08-04 corrected)
     // Stripe v22+ removed `cancel_at` from Checkout Session subscription_data,
-    // so we store the target timestamp in metadata and apply it here via
-    // subscriptions.update (which still supports cancel_at).
-    const autoCancelAt = Number(session.metadata?.auto_cancel_at)
-    if (session.subscription && autoCancelAt > 0) {
+    // so create-checkout stores the target timestamp on the SUBSCRIPTION's
+    // metadata (subscription_data.metadata). The webhook must read it from the
+    // subscription itself — the session's own metadata never carries it.
+    if (session.subscription) {
       try {
-        const updatedSub = await stripe.subscriptions.update(session.subscription, {
-          cancel_at: autoCancelAt,
-          metadata: {
-            enrollment_id: enrollmentId,
-            enrollment_ids: enrollmentIds.join(','),
-            type: 'school_year_tuition',
-          },
-        })
-        console.log(`⏰ Auto-cancel set for subscription ${session.subscription} at ${autoCancelAt}`)
+        const sub = await stripe.subscriptions.retrieve(session.subscription)
+        const autoCancelAt = Number(sub.metadata?.auto_cancel_at)
+        if (autoCancelAt > 0) {
+          await stripe.subscriptions.update(session.subscription, {
+            cancel_at: autoCancelAt,
+            metadata: {
+              enrollment_id: enrollmentId,
+              enrollment_ids: enrollmentIds.join(','),
+              type: 'school_year_tuition',
+            },
+          })
+          console.log(`⏰ Auto-cancel set for subscription ${session.subscription} at ${autoCancelAt} (${new Date(autoCancelAt * 1000).toISOString()})`)
+        } else {
+          console.log(`⏰ No auto_cancel_at on subscription ${session.subscription} metadata — skipping auto-cancel`)
+        }
       } catch (err) {
         console.error('Failed to set auto-cancel on subscription:', err)
         // Non-fatal: payment already succeeded, enrollment approved.
