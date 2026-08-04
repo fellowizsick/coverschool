@@ -142,7 +142,7 @@ export default function ReferralPage() {
           <ul className="mt-4 space-y-3 text-sm text-gray-600 leading-relaxed">
             <li className="flex gap-2">
               <span className="text-emerald-500">✓</span>
-              <span><strong>You earn only when the school is paid.</strong> The credit is awarded after the referred family&apos;s payment succeeds — never on a promise.</span>
+              <span><strong>Your reward is sent automatically.</strong> Once your friend&apos;s enrollment is complete, your credit shows up on your account right away — no forms, no waiting.</span>
             </li>
             <li className="flex gap-2">
               <span className="text-emerald-500">✓</span>
