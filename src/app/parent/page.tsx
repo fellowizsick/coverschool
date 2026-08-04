@@ -95,7 +95,9 @@ export default async function ParentPortalPage() {
             </Button>
           </Link>
           <Link href="/enroll">
-            <Button size="sm">Enroll New Student</Button>
+            <Button size="sm">
+              {enrollments && enrollments.length > 0 ? '➕ Add Another Child' : 'Enroll New Student'}
+            </Button>
           </Link>
         </div>
       </div>

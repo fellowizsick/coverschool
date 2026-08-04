@@ -65,6 +65,43 @@ export default function EnrollPage() {
     if (ref) setDefaultReferral(ref.toUpperCase())
   }, [])
 
+  // 🎯 RETURNING PARENT pre-fill: if logged in, fill the email + parent name +
+  // address from their most recent enrollment so adding another child is quick.
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await fetch('/api/auth/user', { credentials: 'include' })
+        if (!res.ok) return
+        const data = await res.json()
+        const email = data?.user?.email
+        if (!email) return
+        const el = document.getElementById('email') as HTMLInputElement | null
+        if (el && !el.value) el.value = email
+        const enrollRes = await fetch(`/api/enrollments?email=${encodeURIComponent(email)}`, {
+          credentials: 'include',
+        })
+        if (!enrollRes.ok) return
+        const encData = await enrollRes.json()
+        const list = Array.isArray(encData) ? encData : encData?.enrollments || []
+        const last = list[0]
+        if (!last) return
+        const setIfEmpty = (id: string, val: string | undefined | null) => {
+          const f = document.getElementById(id) as HTMLInputElement | null
+          if (f && !f.value && val) f.value = val
+        }
+        setIfEmpty('parent_first_name', last.parent_first_name)
+        setIfEmpty('parent_last_name', last.parent_last_name)
+        setIfEmpty('phone', last.phone)
+        setIfEmpty('address_line1', last.address_line1)
+        setIfEmpty('city', last.city)
+        setIfEmpty('state', last.state)
+        setIfEmpty('zip', last.zip)
+      } catch {
+        // Non-fatal: pre-fill is a convenience, not a requirement
+      }
+    })()
+  }, [])
+
   // Apply the URL grade to the first student block once
   useEffect(() => {
     if (defaultGrade) {
@@ -535,7 +572,7 @@ export default function EnrollPage() {
                 size="sm"
                 variant="outline"
                 onClick={addStudent}
-                disabled={studentCount >= 6}
+                disabled={studentCount >= 15}
                 className="flex items-center gap-1"
               >
                 <Plus className="h-4 w-4" /> Add Child

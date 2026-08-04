@@ -210,11 +210,29 @@ export async function POST(request: Request) {
     }
 
     // One family_group_id links every child in this submission together.
-    const familyGroupId = randomUUID()
+    // 👨‍👩‍👧‍👦 RETURNING PARENT: if this email already has enrollments, reuse the
+    // most recent family_group_id so the NEW children join the SAME family as
+    // their siblings. This keeps billing (one subscription per family), the
+    // remove-child logic, and referral handling consistent across re-enrolls.
+    let familyGroupId = randomUUID()
+    const { data: existingFamily } = await supabase
+      .from('enrollments')
+      .select('family_group_id')
+      .eq('email', email.toLowerCase())
+      .not('family_group_id', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (existingFamily?.family_group_id) {
+      familyGroupId = existingFamily.family_group_id
+    }
 
     const nowIso = new Date().toISOString()
     // ⚠️ referral_code has a UNIQUE constraint — only the PRIMARY row carries it.
     // Siblings get null (one referral code per family; no duplicate-key collision).
+    // Note: for a RETURNING parent the primary row here still gets its own fresh
+    // referral code — that's correct: each new child submission is a new referral
+    // opportunity, but they share the family group for billing/records.
     const rows = studentList.map((s, idx) => ({
       parent_first_name,
       parent_last_name,
