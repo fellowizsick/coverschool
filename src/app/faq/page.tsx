@@ -2,6 +2,14 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'FAQ | Larose Christian Academy',
+  description:
+    'Frequently asked questions about Larose Christian Academy — what a cover school is, tuition ($45/month or $450/year per student + $75 registration), legal coverage in Alabama and 8 other states, report cards, transcripts, and more.',
+  alternates: { canonical: '/faq' },
+}
 
 const faqs = [
   {
@@ -49,8 +57,24 @@ const faqs = [
 const cardColors = ['purple', 'blue', 'pink', 'green', 'amber', 'rose'] as const
 
 export default function FAQPage() {
+  // 🧠 FAQPage structured data — tells Google these are real Q&As so it can
+  // show them as expandable rich results in search.
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }
+
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* 🎨 Gradient Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 px-4 py-20 sm:px-6 lg:px-8">
         {/* Decorative floating shapes */}
