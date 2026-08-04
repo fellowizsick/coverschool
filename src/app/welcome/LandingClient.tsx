@@ -107,16 +107,19 @@ export default function LandingClient() {
             {/* Right: video */}
             <div className="relative mx-auto w-full max-w-xl">
               <div className="overflow-hidden rounded-3xl border border-emerald-500/20 bg-emerald-900/40 shadow-2xl shadow-emerald-950/50">
-                <video
-                  className="h-auto w-full"
-                  src="/landing/lca-school-ad.mp4"
-                  poster="/landing/playground-chapel.jpg"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  aria-label="A short video of Larose Christian Academy families learning and playing outdoors"
-                />
+                <div className="relative aspect-video">
+                  <video
+                    className="absolute inset-0 h-full w-full"
+                    src="/landing/lca-school-ad.mp4"
+                    poster="/landing/poster-16x9.jpg"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    aria-label="A short video of Larose Christian Academy families learning and playing outdoors"
+                  />
+                </div>
               </div>
               <div className="absolute -bottom-4 -left-4 hidden h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl shadow-amber-500/20 sm:flex">
                 <span className="text-center">
@@ -160,7 +163,7 @@ export default function LandingClient() {
           <div className="mt-14 grid gap-6 md:grid-cols-2">
             {/* Image cell */}
             <div className="relative min-h-[280px] overflow-hidden rounded-3xl animate-on-scroll">
-              <img src="/landing/outdoor-learning.jpg" alt="A mother and her children learning together at a picnic table under oak trees" className="absolute inset-0 h-full w-full object-cover" />
+              <img src="/landing/outdoor-learning.jpg" alt="A mother and her children learning together at a picnic table under oak trees" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-emerald-950/20 to-transparent" />
               <div className="absolute bottom-0 p-7">
                 <h3 className="text-xl font-bold text-white font-heading">The freedom of learning outdoors</h3>
@@ -192,7 +195,7 @@ export default function LandingClient() {
 
             {/* Image cell */}
             <div className="relative min-h-[280px] overflow-hidden rounded-3xl animate-on-scroll">
-              <img src="/landing/campus-path.jpg" alt="Happy children walking together on a sunlit campus path" className="absolute inset-0 h-full w-full object-cover" />
+              <img src="/landing/campus-path.jpg" alt="Happy children walking together on a sunlit campus path" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-emerald-950/20 to-transparent" />
               <div className="absolute bottom-0 p-7">
                 <h3 className="text-xl font-bold text-white font-heading">A community that supports you</h3>
