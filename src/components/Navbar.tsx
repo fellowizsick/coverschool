@@ -179,7 +179,7 @@ export default function Navbar() {
 
       {/* Mobile Nav Panel */}
       <div
-        className={`fixed top-0 right-0 z-40 h-full w-72 transform border-l border-gray-100 bg-white/95 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed top-0 right-0 z-40 h-full w-72 transform overflow-y-auto border-l border-gray-100 bg-white/95 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-out md:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -189,7 +189,7 @@ export default function Navbar() {
             ✦
           </div>
         </div>
-        <nav className="space-y-1 px-4">
+        <nav className="space-y-1 px-4 pb-28">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href
             return (
@@ -216,8 +216,8 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Bottom accent */}
-        <div className="absolute bottom-0 left-0 right-0 p-4">
+        {/* Bottom accent — pointer-events-none so it never blocks links */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
           <div className="h-px bg-gradient-to-r from-transparent via-emerald-200 to-transparent mb-4" />
           <p className="text-center text-xs text-gray-400">
             ✦ {SCHOOL_CONFIG.name} ✦
