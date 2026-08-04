@@ -162,10 +162,14 @@ export default function StudentIdPage() {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [downloadCount, setDownloadCount] = useState(0);
+  const [reportData, setReportData] = useState<any>(null);
+  const [reportLoading, setReportLoading] = useState(false);
   const lastDownloadRef = useRef(0);
   const MAX_DOWNLOADS = 10;
 
   const cardRef = useRef<HTMLDivElement>(null);
+  const backRef = useRef<HTMLDivElement>(null);
+  const bothSidesRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -201,6 +205,26 @@ export default function StudentIdPage() {
             else if (encData?.enrollment) record = encData.enrollment;
             else if (encData && typeof encData === 'object') record = encData;
             if (!cancelled && record) setEnrollment(record);
+            // 🧠 Pull the latest report-card extraction (grades) for this student
+            if (record?.id) {
+              setReportLoading(true);
+              try {
+                const rc = await fetch(
+                  `/api/report-card-snapshots?enrollmentId=${encodeURIComponent(record.id)}`,
+                  { credentials: 'include' }
+                );
+                if (rc.ok) {
+                  const rcData = await rc.json();
+                  const snaps = rcData?.snapshots || [];
+                  const withData = snaps.find((s: any) => s.extracted_json && s.extraction_status === 'done');
+                  if (withData) setReportData(withData.extracted_json);
+                }
+              } catch {
+                // Non-fatal: report card data is a bonus, not required
+              } finally {
+                if (!cancelled) setReportLoading(false);
+              }
+            }
           }
         } catch {
           // Enrollment lookup failure is non-fatal; fall back to account data.
@@ -288,7 +312,8 @@ export default function StudentIdPage() {
   const studentId = enrollment?.enrollment_id ?? enrollment?.id ?? 'PENDING';
 
   const handleDownload = async () => {
-    if (!cardRef.current || !photo) return;
+    const target = bothSidesRef.current || cardRef.current;
+    if (!target || !photo) return;
 
     // Rate limit: max 1 download per 3 seconds
     const now = Date.now();
@@ -308,7 +333,7 @@ export default function StudentIdPage() {
     setDownloading(true);
     setDownloadError(null);
     try {
-      const dataUrl = await toPng(cardRef.current, { pixelRatio: 3, cacheBust: true });
+      const dataUrl = await toPng(target, { pixelRatio: 3, cacheBust: true });
       const link = document.createElement('a');
       link.download = `LCA-Student-ID-${String(studentId).replace(/[^a-z0-9-]/gi, '_')}.png`;
       link.href = dataUrl;
@@ -587,6 +612,7 @@ export default function StudentIdPage() {
                   onMouseLeave={resetTilt}
                   className="id-card-tilt"
                 >
+                  <div ref={bothSidesRef} className="flex w-full max-w-[540px] flex-col gap-5">
                   <div
                     ref={cardRef}
                     className="relative w-full max-w-[540px] overflow-hidden rounded-2xl border border-amber-200/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]"
@@ -718,6 +744,104 @@ export default function StudentIdPage() {
                       <div className="holo-shine absolute inset-y-0 w-1/3" />
                     </div>
                   </div>
+
+                  {/* 🔄 BACK SIDE — report card data scanned from uploads */}
+                  <div
+                    ref={backRef}
+                    className="relative w-full max-w-[540px] overflow-hidden rounded-2xl border border-amber-200/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]"
+                    style={{
+                      background:
+                        'linear-gradient(130deg, #02120b 0%, #05301f 30%, #0b5c38 52%, #6b5410 78%, #c9a227 100%)',
+                    }}
+                  >
+                    <svg
+                      className="absolute inset-0 h-full w-full opacity-[0.1]"
+                      viewBox="0 0 540 340"
+                      fill="none"
+                    >
+                      <circle cx="480" cy="50" r="150" stroke="#fbbf24" strokeWidth="0.6" strokeDasharray="3 4" />
+                      <circle cx="50" cy="310" r="120" stroke="#ffffff" strokeWidth="0.5" strokeDasharray="2 6" />
+                      <path d="M0 170 Q 135 120 270 170 T 540 170" stroke="#fde68a" strokeWidth="0.7" strokeDasharray="1 4" />
+                    </svg>
+                    <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-amber-300/80 to-transparent" />
+                    <div className="relative z-10 flex h-full flex-col p-5">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-amber-200/80">
+                          Academic Record
+                        </p>
+                        <div className="rounded-md border border-amber-200/30 bg-black/30 px-2.5 py-1 text-right">
+                          <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-amber-200/70">
+                            {reportData?.term || 'Term'}
+                          </p>
+                          <p className="text-[11px] font-bold text-amber-100">
+                            {reportData?.schoolYear || SCHOOL_YEAR}
+                          </p>
+                        </div>
+                      </div>
+
+                      {reportLoading ? (
+                        <div className="mt-4 flex items-center gap-2 text-xs text-zinc-400">
+                          <Loader2 className="h-4 w-4 animate-spin text-amber-300" />
+                          Reading report card…
+                        </div>
+                      ) : reportData?.subjects?.length ? (
+                        <>
+                          <div className="mt-4 grid grid-cols-2 gap-2">
+                            {reportData.subjects.map((s: any, i: number) => (
+                              <div
+                                key={i}
+                                className="flex items-center justify-between rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                              >
+                                <span className="min-w-0 truncate text-[11px] font-semibold text-emerald-50">
+                                  {s.name}
+                                </span>
+                                <span className="ml-2 rounded-md bg-gradient-to-br from-amber-300 to-yellow-500 px-2 py-0.5 text-[11px] font-black text-emerald-950">
+                                  {s.grade}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-4 grid grid-cols-2 gap-3 border-t border-white/10 pt-3">
+                            {reportData.gpa && (
+                              <div>
+                                <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-emerald-100/60">GPA</p>
+                                <p className="text-lg font-black text-amber-100">{reportData.gpa}</p>
+                              </div>
+                            )}
+                            {reportData.attendance && (
+                              <div>
+                                <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-emerald-100/60">Attendance</p>
+                                <p className="text-lg font-black text-amber-100">{reportData.attendance}</p>
+                              </div>
+                            )}
+                          </div>
+                          {reportData.comments && (
+                            <p className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[10px] italic leading-relaxed text-emerald-50/80">
+                              “{reportData.comments}”
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <div className="mt-4 rounded-lg border border-white/10 bg-black/20 px-4 py-6 text-center">
+                          <p className="text-xs font-semibold text-zinc-300">No report card scanned yet</p>
+                          <p className="mt-1 text-[10px] text-zinc-500">
+                            Upload a report card in the Parent Portal and it appears here automatically.
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-2.5">
+                        <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-emerald-100/50">
+                          Larose Christian Academy
+                        </p>
+                        <p className="font-mono text-[8px] tracking-[0.2em] text-white/40">
+                          {studentId}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="holo-layer pointer-events-none absolute inset-0 z-20" />
+                  </div>
+                  </div>
                 </div>
               ) : (
                 <div className="flex h-[240px] w-full max-w-[540px] flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-white/15 bg-white/[0.02] sm:h-[340px]">
@@ -765,7 +889,7 @@ export default function StudentIdPage() {
                 {downloading ? 'Rendering PNG…' : 'Download ID Card'}
               </button>
               <p className="text-[11px] text-zinc-600">
-                Exported as a high-resolution PNG at 3× scale (1620×1020)
+                Exported as a high-resolution PNG — front &amp; back sides together
               </p>
               {downloadError && (
                 <div className="flex items-center gap-2 rounded-lg border border-red-400/20 bg-red-400/10 px-3.5 py-2 text-xs text-red-300">

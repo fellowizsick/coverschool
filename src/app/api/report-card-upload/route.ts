@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { extractReportCard } from '@/lib/reportCardExtract'
 
 const MAX_BYTES = 10 * 1024 * 1024 // 10 MB
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
@@ -94,6 +95,7 @@ export async function POST(request: Request) {
         file_name: fileName.slice(-80),
         mime_type: mimeType,
         uploaded_by: user.email,
+        extraction_status: 'pending',
       })
       .select()
       .single()
@@ -103,12 +105,43 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save record' }, { status: 500 })
     }
 
+    // 🧠 OCR: read the report card with Gemini vision and store structured data
+    let extracted = null
+    let extractionStatus = 'pending'
+    try {
+      extracted = await extractReportCard(base64, mimeType)
+      extractionStatus = extracted ? 'done' : 'failed'
+      if (extracted) {
+        await admin
+          .from('report_card_snapshots')
+          .update({ extraction_status: 'done', extracted_json: extracted })
+          .eq('id', row.id)
+      } else {
+        await admin
+          .from('report_card_snapshots')
+          .update({ extraction_status: 'failed' })
+          .eq('id', row.id)
+      }
+    } catch (err) {
+      console.error('Extraction update error:', err)
+      await admin
+        .from('report_card_snapshots')
+        .update({ extraction_status: 'failed' })
+        .eq('id', row.id)
+    }
+
     // Signed URL valid 7 days for preview (private bucket)
     const { data: signed } = await admin.storage
       .from('report-cards')
       .createSignedUrl(path, 60 * 60 * 24 * 7)
 
-    return NextResponse.json({ ok: true, id: row.id, previewUrl: signed?.signedUrl || null })
+    return NextResponse.json({
+      ok: true,
+      id: row.id,
+      previewUrl: signed?.signedUrl || null,
+      extractionStatus,
+      extracted,
+    })
   } catch (err) {
     console.error('Report card upload error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

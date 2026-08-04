@@ -18,6 +18,8 @@ interface Snapshot {
   mime_type: string | null
   uploaded_at: string
   previewUrl: string | null
+  extraction_status?: string
+  extracted_json?: any
 }
 
 /**
@@ -271,6 +273,42 @@ export default function ReportCardUploader({
             <h4 className="mb-2 text-sm font-semibold text-gray-700">
               Saved for {selectedChild?.name || 'this student'}
             </h4>
+
+            {/* 🧠 Latest scanned grades — organized view */}
+            {(() => {
+              const latest = snapshots.find((s) => s.extraction_status === 'done' && s.extracted_json);
+              if (!latest?.extracted_json?.subjects?.length) return null;
+              const ex = latest.extracted_json;
+              return (
+                <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4">
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="flex items-center gap-1.5 text-sm font-bold text-emerald-800">
+                      <Sparkles className="h-4 w-4" /> Scanned Grades
+                    </p>
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                      {ex.term || 'Latest'} {ex.schoolYear || ''}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                    {ex.subjects.map((s: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between rounded-lg bg-white px-3 py-1.5 shadow-sm">
+                        <span className="text-sm font-medium text-gray-700">{s.name}</span>
+                        <span className="rounded-md bg-emerald-600 px-2 py-0.5 text-sm font-bold text-white">
+                          {s.grade}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {(ex.gpa || ex.attendance) && (
+                    <div className="mt-2 flex gap-4 border-t border-emerald-100 pt-2 text-sm text-gray-600">
+                      {ex.gpa && <span><strong>GPA:</strong> {ex.gpa}</span>}
+                      {ex.attendance && <span><strong>Attendance:</strong> {ex.attendance}</span>}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {snapshots.map((s) => (
                 <div key={s.id} className="group relative">
@@ -282,8 +320,19 @@ export default function ReportCardUploader({
                       className="h-28 w-full rounded-xl border border-gray-200 object-cover shadow-sm transition group-hover:scale-[1.02]"
                     />
                   </a>
-                  <div className="mt-1 truncate text-[10px] text-gray-400">
-                    {new Date(s.uploaded_at).toLocaleDateString()}
+                  <div className="mt-1 flex items-center justify-between text-[10px] text-gray-400">
+                    <span>{new Date(s.uploaded_at).toLocaleDateString()}</span>
+                    {s.extraction_status === 'done' && (
+                      <span className="inline-flex items-center gap-0.5 font-semibold text-emerald-600">
+                        <CheckCircle2 className="h-3 w-3" /> scanned
+                      </span>
+                    )}
+                    {s.extraction_status === 'failed' && (
+                      <span className="font-semibold text-amber-500">scan failed</span>
+                    )}
+                    {s.extraction_status === 'pending' && (
+                      <span className="font-semibold text-gray-400">scanning…</span>
+                    )}
                   </div>
                 </div>
               ))}
