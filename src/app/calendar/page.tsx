@@ -75,6 +75,8 @@ export default function CalendarPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isMom, setIsMom] = useState(false)
+  const [upcomingOpen, setUpcomingOpen] = useState(false)
   const [showAdd, setShowAdd] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -121,6 +123,8 @@ export default function CalendarPage() {
           setIsLoggedIn(!!email)
           const admins = ['1990jonathanbbrown@gmail.com', 'anneb7669@gmail.com']
           setIsAdmin(admins.includes(email.toLowerCase()))
+          // 👩‍🏫 Mom = the academy owner — the only one who can delete anything.
+          setIsMom(email.toLowerCase() === 'anneb7669@gmail.com')
           if (admins.includes(email.toLowerCase())) setFAudience('school')
         }
       } catch {
@@ -237,12 +241,12 @@ export default function CalendarPage() {
     }
   }
 
-  // 🔒 Delete rule: only the person who added the event can delete it.
-  // Admins may delete school events (the academy's own calendar) but NOT
-  // other families' private events. Logged-in required (enforced server-side too).
+  // 🔒 Delete rule: ONLY Mom (the academy owner) can delete anything off the
+  // calendar. If you wrote an event yourself (student or parent), you may delete
+  // only what YOU wrote — nothing else. Must be logged in (server enforces too).
   const canDelete = (e: CalendarEvent) => {
     if (!isLoggedIn) return false
-    if (isAdmin && e.audience === 'school') return true
+    if (isMom) return true
     return e.created_by?.toLowerCase() === (userEmail || '').toLowerCase()
   }
 
@@ -399,64 +403,84 @@ export default function CalendarPage() {
           </span>
         </div>
 
-        {/* Upcoming events list */}
-        <h3 className="mb-3 mt-6 flex items-center gap-2 text-lg font-bold text-gray-900 sm:text-xl">
-          <PartyPopper className="h-5 w-5 text-fuchsia-500" /> Upcoming
-        </h3>
-        {events.filter((e) => e.event_date >= today.toISOString().slice(0, 10)).length === 0 ? (
-          <Card>
-            <CardContent className="p-6 text-center text-gray-500 sm:p-8">
-              No upcoming events yet. Add one to get the party started!
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-2 sm:space-y-3">
-            {events
-              .filter((e) => e.event_date >= today.toISOString().slice(0, 10))
-              .slice(0, 10)
-              .map((e) => {
-                const d = new Date(e.event_date + 'T00:00:00')
-                return (
-                  <Card key={e.id} fun={e.audience === 'school' ? 'blue' : 'green'}>
-                    <CardContent className="flex items-center gap-4 p-3 sm:p-4">
-                      <div
-                        className={`flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-2xl text-white shadow-md sm:h-14 sm:w-14 ${
-                          e.audience === 'school'
-                            ? 'bg-gradient-to-br from-indigo-500 to-blue-500'
-                            : 'bg-gradient-to-br from-emerald-500 to-teal-500'
-                        }`}
-                      >
-                        <span className="text-base leading-none font-bold sm:text-lg">{d.getDate()}</span>
-                        <span className="text-[10px] uppercase">{MONTHS[d.getMonth()].slice(0, 3)}</span>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="flex items-center gap-1.5 font-semibold text-gray-900">
-                          <span className="text-lg">{emojiFor(e.title)}</span> {e.title}
-                          {e.audience === 'family' && (
-                            <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                              <Home className="h-3 w-3" /> Family
-                            </span>
-                          )}
-                        </p>
-                        {e.description && <p className="mt-0.5 truncate text-sm text-gray-500">{e.description}</p>}
-                        {!e.all_day && e.start_time && (
-                          <p className="mt-0.5 text-xs text-gray-400">
-                            🕐 {e.start_time}
-                            {e.end_time ? ` – ${e.end_time}` : ''}
-                          </p>
-                        )}
-                      </div>
-                      {canDelete(e) && (
-                        <Button variant="ghost" size="sm" onClick={() => deleteEvent(e.id)} aria-label="Delete">
-                          <Trash2 className="h-4 w-4 text-rose-400" />
-                        </Button>
-                      )}
-                    </CardContent>
-                  </Card>
-                )
-              })}
-          </div>
-        )}
+        {/* Upcoming events — dropdown, starts closed */}
+        <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white">
+          <button
+            onClick={() => setUpcomingOpen((v) => !v)}
+            className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-purple-50/60 sm:px-5"
+            aria-expanded={upcomingOpen}
+            aria-controls="upcoming-panel"
+          >
+            <span className="flex items-center gap-2 text-lg font-bold text-gray-900 sm:text-xl">
+              <PartyPopper className="h-5 w-5 text-fuchsia-500" /> Upcoming
+              <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-bold text-purple-600">
+                {events.filter((e) => e.event_date >= today.toISOString().slice(0, 10)).length}
+              </span>
+            </span>
+            <ChevronRight
+              className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${upcomingOpen ? 'rotate-90' : ''}`}
+            />
+          </button>
+
+          {upcomingOpen && (
+            <div id="upcoming-panel" className="border-t border-gray-100 p-4 sm:p-5">
+              {events.filter((e) => e.event_date >= today.toISOString().slice(0, 10)).length === 0 ? (
+                <Card>
+                  <CardContent className="p-6 text-center text-gray-500 sm:p-8">
+                    No upcoming events yet. Add one to get the party started!
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-2 sm:space-y-3">
+                  {events
+                    .filter((e) => e.event_date >= today.toISOString().slice(0, 10))
+                    .slice(0, 10)
+                    .map((e) => {
+                      const d = new Date(e.event_date + 'T00:00:00')
+                      return (
+                        <Card key={e.id} fun={e.audience === 'school' ? 'blue' : 'green'}>
+                          <CardContent className="flex items-center gap-4 p-3 sm:p-4">
+                            <div
+                              className={`flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-2xl text-white shadow-md sm:h-14 sm:w-14 ${
+                                e.audience === 'school'
+                                  ? 'bg-gradient-to-br from-indigo-500 to-blue-500'
+                                  : 'bg-gradient-to-br from-emerald-500 to-teal-500'
+                              }`}
+                            >
+                              <span className="text-base leading-none font-bold sm:text-lg">{d.getDate()}</span>
+                              <span className="text-[10px] uppercase">{MONTHS[d.getMonth()].slice(0, 3)}</span>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="flex items-center gap-1.5 font-semibold text-gray-900">
+                                <span className="text-lg">{emojiFor(e.title)}</span> {e.title}
+                                {e.audience === 'family' && (
+                                  <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                                    <Home className="h-3 w-3" /> Family
+                                  </span>
+                                )}
+                              </p>
+                              {e.description && <p className="mt-0.5 truncate text-sm text-gray-500">{e.description}</p>}
+                              {!e.all_day && e.start_time && (
+                                <p className="mt-0.5 text-xs text-gray-400">
+                                  🕐 {e.start_time}
+                                  {e.end_time ? ` – ${e.end_time}` : ''}
+                                </p>
+                              )}
+                            </div>
+                            {canDelete(e) && (
+                              <Button variant="ghost" size="sm" onClick={() => deleteEvent(e.id)} aria-label="Delete">
+                                <Trash2 className="h-4 w-4 text-rose-400" />
+                              </Button>
+                            )}
+                          </CardContent>
+                        </Card>
+                      )
+                    })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="mt-6 rounded-2xl bg-gradient-to-br from-purple-100 to-fuchsia-100 p-4 text-xs text-gray-500">
           <p>

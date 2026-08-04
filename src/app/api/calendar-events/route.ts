@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 
 const ADMIN_EMAILS = ['1990jonathanbbrown@gmail.com', 'anneb7669@gmail.com']
+// 👩‍🏫 "Mom" — the academy owner. The ONLY person who can delete anything off the calendar.
+const MOM_EMAIL = 'anneb7669@gmail.com'
 
 /**
  * GET /api/calendar-events
@@ -190,12 +192,13 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
 
-    const isAdmin = ADMIN_EMAILS.includes(user.email.toLowerCase().trim())
+    const isMom = user.email.toLowerCase().trim() === MOM_EMAIL
     const isCreator = ev.created_by?.toLowerCase() === user.email.toLowerCase()
 
-    // 🔒 Core rule: only the creator deletes. Admins may delete SCHOOL events
-    // (they manage the academy calendar) but never another family's private events.
-    const canDelete = isCreator || (isAdmin && ev.audience === 'school')
+    // 🔒 Core rule: ONLY Mom (the academy owner) may delete anything off the
+    // calendar. Exception: if YOU wrote the event (a student or parent added it),
+    // you may delete only what YOU wrote — nothing else.
+    const canDelete = isMom || isCreator
     if (!canDelete) {
       return NextResponse.json({ error: 'You can only delete events you added' }, { status: 403 })
     }
