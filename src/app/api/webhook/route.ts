@@ -33,6 +33,22 @@ export async function POST(request: Request) {
   // Handle checkout.session.completed
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
+
+    // 🎁 DONATION: sessions with type=donation have no enrollment — record + mark paid
+    if (session.metadata?.type === 'donation') {
+      const { createAdminClient } = await import('@/lib/supabase/server')
+      const supabase = createAdminClient()
+      await supabase
+        .from('donations')
+        .update({
+          status: 'paid',
+          stripe_payment_intent: session.payment_intent || null,
+        })
+        .eq('stripe_session_id', session.id)
+      console.log(`🎗️ Donation recorded: $${(session.amount_total || 0) / 100} (session ${session.id})`)
+      return NextResponse.json({ received: true })
+    }
+
     const enrollmentId = session.metadata?.enrollment_id
 
     if (!enrollmentId) {

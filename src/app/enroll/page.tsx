@@ -75,7 +75,7 @@ export default function EnrollPage() {
   }
 
   const studentCount = students.length
-  const perStudentPrice = billingMode === 'yearly' ? 450 : 45
+  const perStudentPrice = billingMode === 'yearly' ? 525 : 120
   const totalDisplay = studentCount === 1
     ? `$${perStudentPrice}`
     : `$${perStudentPrice * studentCount} (${studentCount} children × $${perStudentPrice})`
@@ -283,18 +283,23 @@ export default function EnrollPage() {
             </div>
             <div>
               <p className="font-semibold text-gray-900 flex items-center gap-1">
-                {billingMode === 'yearly' ? '$450/year per student' : '$45/month per student'} — Tuition Only 💰
+                {billingMode === 'yearly' ? '$525/year per student' : '$45/month per student'} — Tuition + Registration 💰
               </p>
               <p className="text-sm text-gray-600">
                 {billingMode === 'yearly'
-                  ? 'One payment covers the full school year. No recurring charges.'
-                  : 'Recurring monthly subscription. Cancel anytime. First payment due at enrollment.'}{' '}
+                  ? 'One payment of $525 covers the full school year ($450 tuition + $75 one-time registration fee). No recurring charges.'
+                  : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
                 <strong className="text-amber-700">
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
                 </strong>
               </p>
               <p className="mt-1 text-sm font-semibold text-emerald-700">
-                Your total today: {totalDisplay} {studentCount > 1 ? '— one charge per child' : ''}
+                Your total today: {studentCount === 1
+                  ? (billingMode === 'yearly' ? '$525' : '$120')
+                  : (billingMode === 'yearly'
+                      ? `$${525 * studentCount} (${studentCount} children × $525)`
+                      : `$${120 * studentCount} (${studentCount} children × $120)`)}{' '}
+                {studentCount > 1 ? '— one charge per child' : ''}
               </p>
             </div>
           </CardContent>
@@ -310,15 +315,14 @@ export default function EnrollPage() {
               <p className="font-semibold text-gray-900 flex items-center gap-1 flex-wrap">
                 📋 One-Time Registration Fee — $75
                 <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700">
-                  Per student
+                  Per student, first payment
                 </span>
               </p>
               <p className="mt-2 text-sm text-gray-600 leading-relaxed">
                 A one-time <strong>$75 registration fee per student</strong> covers the setup
                 of each student&apos;s permanent file, official transcript initiation,
                 record keeping system configuration, and initial administrative processing.
-                This is a <strong>separate one-time payment</strong> from the $45/month tuition.
-                You&apos;ll be able to pay it after your tuition is processed. 💜
+                It&apos;s included in your <strong>first payment</strong> — no separate checkout needed. 💜
               </p>
             </div>
           </CardContent>
@@ -614,8 +618,9 @@ export default function EnrollPage() {
                   ✅ I confirm that the information provided is accurate. I understand
                   that this enrollment is subject to review and approval by Larose
                   Christian Academy after payment is processed. By enrolling, I agree
-                  to the $45/month tuition fee per student. Free curriculum resources are included
-                  with your membership.
+                  to the $45/month tuition fee per student plus the $75 one-time
+                  registration fee per student (included in the first payment).
+                  Free curriculum resources are included with your membership.
                 </span>
               </label>
             </CardContent>
@@ -633,7 +638,7 @@ export default function EnrollPage() {
             ) : (
               <span className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                Enroll & Pay — {billingMode === 'yearly' ? '$450' : '$45/month'} per student ({totalDisplay})
+                Enroll & Pay — {billingMode === 'yearly' ? '$525' : '$120'} per student ({totalDisplay})
               </span>
             )}
           </Button>

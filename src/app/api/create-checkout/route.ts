@@ -89,38 +89,60 @@ export async function POST(request: Request) {
     }
 
     // One line item PER STUDENT so the Stripe page shows each child's charge
-    // clearly (per-student billing, never per-family).
-    const lineItems = groupEnrollments.map((e) => {
+    // clearly (per-student billing, never per-family). Every new student's FIRST
+    // payment includes the one-time $75 registration fee + tuition, so the first
+    // month totals $120/child ($75 + $45), then $45/mo per child after that.
+    const REG_FEE_CENTS = 7500 // $75 per student, one-time
+    const lineItems = groupEnrollments.flatMap((e) => {
       const childName = `${e.student_first_name} ${e.student_last_name}`
-      if (isYearly) {
-        // Annual: $450 per student, one payment covers one school year
-        return {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: 'Larose Christian Academy — Full Year Tuition',
-              description: `Student: ${childName} | Parent: ${parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name} | School Year 2026-2027`,
-            },
-            unit_amount: 45000, // $450 per student
-          },
-          quantity: 1,
-        }
-      }
-      // Monthly: $45/mo per student for 10-month school year
-      return {
+      const parentLabel = parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name
+      // 🧾 One-time registration fee ($75 per student) — charged on first payment
+      const regFeeItem = {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: 'Larose Christian Academy — Monthly Tuition (10-month school year)',
-            description: `Student: ${childName} | Parent: ${parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name}`,
+            name: 'Larose Christian Academy — One-Time Registration Fee',
+            description: `Registration fee for: ${childName} | Parent: ${parentLabel}. Covers student file setup, transcript initiation, and record-keeping configuration.`,
           },
-          unit_amount: 4500,
-          recurring: {
-            interval: 'month',
-          },
+          unit_amount: REG_FEE_CENTS,
         },
         quantity: 1,
       }
+      if (isYearly) {
+        // Annual: $450 tuition + $75 reg fee per student, one payment
+        return [
+          regFeeItem,
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'Larose Christian Academy — Full Year Tuition',
+                description: `Student: ${childName} | Parent: ${parentLabel} | School Year 2026-2027`,
+              },
+              unit_amount: 45000, // $450 per student
+            },
+            quantity: 1,
+          },
+        ]
+      }
+      // Monthly: $45/mo tuition per student + $75 one-time reg fee
+      return [
+        regFeeItem,
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Larose Christian Academy — Monthly Tuition (10-month school year)',
+              description: `Student: ${childName} | Parent: ${parentLabel}`,
+            },
+            unit_amount: 4500,
+            recurring: {
+              interval: 'month',
+            },
+          },
+          quantity: 1,
+        },
+      ]
     })
 
     const sessionData = {

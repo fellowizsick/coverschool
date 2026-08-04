@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: 'How much does it cost?',
-    a: 'Our school year runs August through May (10 months). Tuition is $45/month per student during the school year — no charges in June or July. There is also a $75 annual registration fee per student (charged each school year at enrollment or re-enrollment). Total is $525/year per student. Curriculum books are purchased separately. Cancel anytime.',
+    a: 'Our school year runs August through May (10 months). Tuition is $45/month per student during the school year — no charges in June or July. Every new student also pays a one-time $75 registration fee (included in the first payment, so the first month is $120 per student: $75 registration + $45 tuition). After that it\'s just $45/month per student. Yearly option: $525/year per student ($450 tuition + $75 registration). Curriculum books are purchased separately. Cancel anytime.',
   },
   {
     q: 'Can I enroll multiple students from the same family?',

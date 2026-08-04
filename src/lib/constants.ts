@@ -112,6 +112,7 @@ export const NAV_LINKS = [
   { label: 'FAQ', href: '/faq' },
   { label: 'Curriculum', href: '/curriculum' },
   { label: 'Refer a Friend', href: '/referral' },
+  { label: 'Donate', href: '/donate' },
   { label: 'Student ID', href: '/student-id' },
   { label: 'Contact', href: '/contact' },
   { label: 'Parent Portal', href: '/parent' },

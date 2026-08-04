@@ -197,8 +197,9 @@ export default function EnrollSuccessPage() {
 
                 <div className="mt-3 text-sm leading-relaxed text-gray-700 space-y-2">
                   <p>
-                    <strong>What is the registration fee?</strong> The one-time $75 registration fee
-                    covers everything needed to set up your student&apos;s official file:
+                    <strong>Already included in your first payment!</strong> The one-time $75 registration fee
+                    per student was charged with your first tuition payment — no separate checkout needed.
+                    It covers everything needed to set up your student&apos;s official file:
                   </p>
                   <ul className="space-y-1 text-gray-600 ml-2">
                     <li>📁 • Creating &amp; maintaining your student&apos;s permanent file</li>
@@ -218,25 +219,13 @@ export default function EnrollSuccessPage() {
                       <p className="font-medium">✅ Registration fee paid!</p>
                       <p className="mt-1 text-emerald-700">Your student file is being set up. We&apos;ll notify you once everything is ready.</p>
                     </div>
-                  ) : registrationStatus === 'loading' ? (
-                    <Button disabled size="lg" variant="purple" className="w-full sm:w-auto">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing...
-                    </Button>
                   ) : (
-                    <div className="space-y-3">
-                      <Button size="lg" variant="purple" onClick={handlePayRegistration}>
-                        💳 Pay $75 Registration Fee Now
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                      <p className="text-xs text-gray-400">
-                        One-time payment. You can also pay this later from the Parent Portal.
+                    <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-sm text-emerald-800">
+                      <p className="font-medium">✅ Registration fee included</p>
+                      <p className="mt-1 text-emerald-700">
+                        Your $75 registration fee per student was included in your first payment.
+                        No further action needed.
                       </p>
-                      {registrationError && (
-                        <p className="text-sm text-red-600 flex items-center gap-1 mt-2">
-                          ⚠️ {registrationError}
-                        </p>
-                      )}
                     </div>
                   )}
                 </div>
