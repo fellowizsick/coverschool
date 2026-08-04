@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes = [
     '',
+    '/welcome',
     '/about',
     '/states',
     '/how-it-works',
@@ -25,6 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'weekly' as const : 'monthly' as const,
-    priority: route === '' ? 1.0 : route.startsWith('/homeschool-law') ? 0.7 : 0.8,
+    priority: route === '' ? 1.0 : route === '/welcome' ? 0.9 : route.startsWith('/homeschool-law') ? 0.7 : 0.8,
   }))
 }
