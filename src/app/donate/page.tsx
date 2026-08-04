@@ -83,7 +83,7 @@ export default function DonatePage() {
                 <Home className="h-6 w-6 text-emerald-700" />
               </div>
               <h3 className="mt-3 font-semibold text-gray-900">Families Served</h3>
-              <p className="mt-1 text-sm text-gray-500">Helping homeschool families stay compliant with Alabama church school law.</p>
+              <p className="mt-1 text-sm text-gray-500">Helping homeschool families in Alabama, Florida, Georgia, Indiana, Mississippi, Missouri, Oklahoma, South Carolina, and Texas stay compliant with church school law.</p>
             </CardContent>
           </Card>
           <Card fun="amber" className="shadow-xl shadow-amber-900/5">
