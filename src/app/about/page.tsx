@@ -78,19 +78,19 @@ export default function AboutPage() {
 
           {/* Church School Foundation ⛪ */}
           <section className="animate-slide-up [animation-delay:300ms]">
-            <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-md shadow-amber-200">
-                <Church className="h-7 w-7" />
-              </div>
-              <div>
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="emoji-badge">⛪</span>
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Church School Foundation
-                  </h2>
+            <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 p-8 shadow-sm ring-1 ring-amber-100">
+              <div className="flex items-start gap-4">
+                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-md shadow-amber-200">
+                  <Church className="h-7 w-7" />
                 </div>
-                <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 p-6 shadow-sm ring-1 ring-amber-100">
-                  <p className="leading-relaxed text-gray-700">
+                <div>
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="emoji-badge">⛪</span>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      Church School Foundation
+                    </h2>
+                  </div>
+                  <p className="mt-3 leading-relaxed text-gray-700">
                     {SCHOOL_CONFIG.name} operates as a church school under Alabama state law.
                     Our founder is an ordained minister, and the school operates under the
                     authority and covering of our ministry. This provides the strongest
@@ -103,17 +103,17 @@ export default function AboutPage() {
 
           {/* Our Heart 💖 */}
           <section className="animate-slide-up [animation-delay:450ms]">
-            <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 text-white shadow-md shadow-rose-200">
-                <Heart className="h-7 w-7" />
-              </div>
-              <div>
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="emoji-badge">💖</span>
-                  <h2 className="text-xl font-bold text-gray-900">Our Heart</h2>
+            <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 p-8 shadow-sm ring-1 ring-rose-100">
+              <div className="flex items-start gap-4">
+                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 text-white shadow-md shadow-rose-200">
+                  <Heart className="h-7 w-7" />
                 </div>
-                <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 p-6 shadow-sm ring-1 ring-rose-100">
-                  <p className="leading-relaxed text-gray-700">
+                <div>
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="emoji-badge">💖</span>
+                    <h2 className="text-xl font-bold text-gray-900">Our Heart</h2>
+                  </div>
+                  <p className="mt-3 leading-relaxed text-gray-700">
                     We believe homeschooling is not just an educational choice — it&apos;s a
                     calling. Our goal is to remove the administrative burden so families
                     can focus on what matters most: nurturing their children&apos;s minds,
