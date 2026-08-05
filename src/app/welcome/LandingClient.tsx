@@ -272,6 +272,28 @@ export default function LandingClient() {
               <div className="mt-8 rounded-2xl bg-white/5 p-4 text-sm text-emerald-100/80">
                 Prefer monthly? Pay <strong className="text-white">$45 per month</strong> for 10 school months instead. A one-time <strong className="text-white">$75 annual registration fee</strong> applies either way.
               </div>
+
+              {/* Cost comparison strip */}
+              <div className="mt-6 grid grid-cols-3 gap-3 text-center">
+                <div className="rounded-xl bg-emerald-400/15 p-3 ring-1 ring-emerald-400/30">
+                  <p className="text-[11px] font-medium text-emerald-200/70">Larose Christian Academy</p>
+                  <p className="mt-1 text-lg font-bold text-white">$525</p>
+                  <p className="text-[10px] text-emerald-200/60">per year</p>
+                </div>
+                <div className="rounded-xl bg-white/5 p-3">
+                  <p className="text-[11px] font-medium text-emerald-200/50">AL private school average</p>
+                  <p className="mt-1 text-lg font-bold text-white">$10,654</p>
+                  <p className="text-[10px] text-emerald-200/50">per year</p>
+                </div>
+                <div className="rounded-xl bg-white/5 p-3">
+                  <p className="text-[11px] font-medium text-emerald-200/50">You save</p>
+                  <p className="mt-1 text-lg font-bold text-amber-300">$10,129</p>
+                  <p className="text-[10px] text-emerald-200/50">per year</p>
+                </div>
+              </div>
+              <p className="mt-2 text-[11px] text-emerald-200/40">
+                Alabama private school tuition average per PrivateSchoolReview. LCA total is $450 tuition plus $75 registration.
+              </p>
               <div className="mt-8">
                 <Link href="/enroll" className="block">
                   <Button size="lg" variant="gold" className="w-full text-base shadow-xl shadow-amber-500/20">
