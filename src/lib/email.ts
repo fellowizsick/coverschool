@@ -151,18 +151,57 @@ export async function sendEnrollmentEmail({
     },
   })
 
+  // Plain-text alternative — Gmail flags HTML-only mail as higher spam risk.
+  const plainText = `Dear ${parentName},
+
+Welcome to ${SCHOOL_CONFIG.name}! Your enrollment is confirmed and your tuition has been processed successfully. ${studentName} (Grade: ${grade}) is now officially part of the ${SCHOOL_CONFIG.name} family.
+
+${referralCode
+  ? `YOUR REFERRAL CODE: ${referralCode}
+
+When another family enrolls using your link and pays, you get $45 off your tuition (one month free on monthly plans). Share link: ${siteUrl}/enroll?ref=${encodeURIComponent(referralCode)}
+
+You can also find this code anytime in your Parent Portal. Multiple referrals stack - refer 3 families, get 3 months free!`
+  : ''}
+
+Your tuition covers administrative services, record-keeping, and legal oversight. Curriculum books are not included and must be purchased separately (we recommend ACE PACE curriculum sets from Christianbook.com).
+
+NEXT STEPS:
+1. Purchase your curriculum books
+2. Complete the Church Enrollment Form (required before starting)
+3. Log into your parent portal to track progress and view records
+4. Start homeschooling with confidence - we handle the paperwork!
+
+If you ever have any questions, reach out to ${SCHOOL_CONFIG.email}.
+
+With gratitude,
+The ${SCHOOL_CONFIG.name} Team
+${SCHOOL_CONFIG.phone} | ${SCHOOL_CONFIG.address}`
+
+  const mailOptions = {
+    from: `"${SCHOOL_CONFIG.name}" <${fromEmail}>`,
+    replyTo: SCHOOL_CONFIG.email,
+    to,
+    subject,
+    html,
+    text: plainText,
+  }
+
+  // Send with ONE retry — transient SMTP failures shouldn't cost a family their email.
   try {
-    await transporter.sendMail({
-      from: fromEmail,
-      to,
-      subject,
-      html,
-    })
+    await transporter.sendMail(mailOptions)
     console.log(`✅ Enrollment email sent to ${to} for ${studentName}`)
     return { sent: true }
   } catch (error) {
-    console.error('Failed to send enrollment email:', error)
-    return { sent: false, reason: 'Email send failed' }
+    console.error('Failed to send enrollment email (attempt 1):', error)
+    try {
+      await transporter.sendMail(mailOptions)
+      console.log(`✅ Enrollment email sent to ${to} (retry)`)
+      return { sent: true, retried: true }
+    } catch (retryError) {
+      console.error('Failed to send enrollment email (attempt 2):', retryError)
+      return { sent: false, reason: 'Email send failed' }
+    }
   }
 }
 
