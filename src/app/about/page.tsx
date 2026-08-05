@@ -1,5 +1,5 @@
 import { SCHOOL_CONFIG } from '@/lib/constants'
-import { Shield, Church, Heart } from 'lucide-react'
+import { Shield, Church, Heart, Bug } from 'lucide-react'
 
 export default function AboutPage() {
   return (
@@ -95,6 +95,89 @@ export default function AboutPage() {
                     Our founder is an ordained minister, and the school operates under the
                     authority and covering of our ministry. This provides the strongest
                     possible legal foundation for the families we serve.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Problem Center 🐛 */}
+          <section className="animate-slide-up [animation-delay:450ms]">
+            <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 p-8 shadow-sm ring-1 ring-emerald-100">
+              <div className="flex items-start gap-4">
+                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-md shadow-emerald-200">
+                  <Bug className="h-7 w-7" />
+                </div>
+                <div className="flex-1">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="emoji-badge">🐛</span>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      Found a Problem on the Website?
+                    </h2>
+                  </div>
+                  <p className="mt-3 leading-relaxed text-gray-700">
+                    If something on the website isn&apos;t working — a page that won&apos;t load,
+                    a button that doesn&apos;t respond, something that looks wrong, or an error
+                    message — you can report it in seconds right from your Parent Portal.
+                    Our team will see it and get it fixed.
+                  </p>
+
+                  <ol className="mt-5 space-y-3">
+                    {[
+                      {
+                        title: 'Log into the Parent Portal',
+                        text: 'Sign in at the top of the site (or visit laroseca.org and click "Parent Portal").',
+                      },
+                      {
+                        title: 'Click the "Problem Center" button',
+                        text: 'You will find it at the top of your dashboard, right beside the School Calendar button.',
+                      },
+                      {
+                        title: 'Tell us what went wrong',
+                        text: 'Write a short description of the problem — what you were doing and what happened.',
+                      },
+                      {
+                        title: 'Attach a screenshot',
+                        text: 'Take a screenshot of what you are seeing, then drag and drop the image into the upload box (up to 4 images).',
+                      },
+                      {
+                        title: 'Send the report',
+                        text: 'Click "Send Report" — your description and screenshots go straight to the school office, and we will work on a fix.',
+                      },
+                    ].map((step, i) => (
+                      <li key={step.title} className="flex items-start gap-3">
+                        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-white shadow-sm">
+                          {i + 1}
+                        </span>
+                        <div>
+                          <p className="font-semibold text-gray-900">{step.title}</p>
+                          <p className="mt-0.5 text-sm leading-relaxed text-gray-600">{step.text}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+
+                  <div className="mt-5 rounded-xl border border-emerald-200 bg-white/70 p-4 text-sm text-gray-700">
+                    <p className="flex items-start gap-2">
+                      <span className="text-emerald-600">💡</span>
+                      <span>
+                        <strong className="font-semibold">Quick tip — how to take a screenshot:</strong>{' '}
+                        On a phone: hold the power and volume-down buttons at the same time. On a
+                        computer: press <span className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs">Windows + Shift + S</span>{' '}
+                        (Windows) or <span className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs">Command + Shift + 4</span>{' '}
+                        (Mac). The image will save to your photos or downloads, ready to attach.
+                      </span>
+                    </p>
+                  </div>
+
+                  <p className="mt-6 text-sm leading-relaxed text-gray-600">
+                    The Problem Center is available to enrolled families through their Parent
+                    Portal. For anything else — enrollment questions, billing, or general
+                    help — please use the{' '}
+                    <a href="/contact" className="font-semibold text-emerald-700 underline hover:text-emerald-900">
+                      Contact page
+                    </a>{' '}
+                    instead.
                   </p>
                 </div>
               </div>
