@@ -156,7 +156,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div className="text-sm text-emerald-200/70">
-                  <span className="font-semibold text-emerald-200">500+</span> families enrolled 🙏
+                  <span className="font-semibold text-emerald-200">500+</span> families supported 🙏
                 </div>
               </div>
             </div>
