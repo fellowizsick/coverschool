@@ -190,7 +190,7 @@ export default function Navbar() {
           </div>
         </div>
         <nav className="space-y-1 px-4 pb-28">
-          {NAV_LINKS.map((link) => {
+          {NAV_LINKS.filter((link) => !link.highlight).map((link) => {
             const isActive = pathname === link.href
             return (
               <Link
@@ -199,16 +199,15 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className={`
                   block rounded-xl px-4 py-3 text-base font-medium transition-all duration-200
-                  ${link.highlight
-                    ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-amber-950 shadow-md'
-                    : isActive
+                  ${
+                    isActive
                       ? 'bg-gradient-to-r from-emerald-50 to-emerald-100/50 text-emerald-700 border border-emerald-100'
                       : 'text-gray-700 hover:bg-emerald-50/50 hover:text-emerald-700 hover:pl-5'
                   }
                 `}
               >
                 <span className="flex items-center gap-2">
-                  {isActive && !link.highlight && <span className="h-2 w-2 rounded-full bg-emerald-500" />}
+                  {isActive && <span className="h-2 w-2 rounded-full bg-emerald-500" />}
                   {link.label}
                 </span>
               </Link>
@@ -216,10 +215,15 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Bottom accent — pointer-events-none so it never blocks links */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
-          <div className="h-px bg-gradient-to-r from-transparent via-emerald-200 to-transparent mb-4" />
-          <p className="text-center text-xs text-gray-400">
+        {/* Enroll CTA pinned at the bottom of the menu */}
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <Link href="/enroll" onClick={() => setIsOpen(false)} className="block">
+            <Button size="lg" variant="gold" className="w-full text-base shadow-xl shadow-amber-500/25">
+              <Sparkles className="h-4 w-4" />
+              Enroll Now
+            </Button>
+          </Link>
+          <p className="pointer-events-none mt-3 text-center text-xs text-gray-400">
             ✦ {SCHOOL_CONFIG.name} ✦
           </p>
         </div>
