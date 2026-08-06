@@ -88,8 +88,19 @@ export async function POST(request: Request) {
     }
 
     // Validate hours (optional; 0 = just "school today")
-    let hours = parseFloat(body.hours)
-    if (isNaN(hours) || hours < 0) hours = 0
+    const rawHours = String(body.hours ?? '').trim()
+    let hours: number
+    if (rawHours === '') {
+      hours = 0
+    } else {
+      hours = parseFloat(rawHours)
+      if (isNaN(hours)) {
+        return NextResponse.json({ ok: false, error: 'Hours must be a number.' }, { status: 400 })
+      }
+    }
+    if (hours < 0) {
+      return NextResponse.json({ ok: false, error: 'Hours cannot be negative.' }, { status: 400 })
+    }
     if (hours > 24) {
       return NextResponse.json({ ok: false, error: 'Hours must be between 0 and 24.' }, { status: 400 })
     }
