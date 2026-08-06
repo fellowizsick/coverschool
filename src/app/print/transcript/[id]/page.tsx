@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { getTransferGrades, groupByYear, computeGpa, formatGpa, letterToPoints } from '@/lib/transfer-grades'
+import { getGradebook, summarizeGradebook, computeGradebookGpa, getAttendance, summarizeAttendance } from '@/lib/academic'
 
 export default async function PrintTranscriptPage({
   params,
@@ -23,6 +24,12 @@ export default async function PrintTranscriptPage({
   const yearGroups = groupByYear(transferGrades)
   const gpa = computeGpa(transferGrades)
   const hasTransfer = transferGrades.length > 0
+
+  // 🏫 LCA coursework (gradebook) + attendance
+  const gbRows = await getGradebook(id)
+  const gbSummaries = summarizeGradebook(gbRows)
+  const gbGpa = computeGradebookGpa(gbSummaries)
+  const att = summarizeAttendance(await getAttendance(id))
 
   return (
     <html>
@@ -75,6 +82,50 @@ export default async function PrintTranscriptPage({
             <div class="info-row"><span class="info-label">Student ID:</span> <span>{enrollment.id.substring(0, 8).toUpperCase()}</span></div>
           </div>
 
+          {/* 🏫 LCA coursework — real gradebook data (always shows) */}
+          <div class="section-title">Larose Christian Academy — Current Coursework</div>
+          {gbSummaries.length > 0 ? (
+            <>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Assignments</th>
+                    <th>Average</th>
+                    <th>Letter</th>
+                    <th>Grade Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gbSummaries.map((s) => {
+                    const points = s.letter !== '—' ? { A: 4.0, B: 3.0, C: 2.0, D: 1.0, F: 0.0 }[s.letter] ?? null : null
+                    return (
+                      <tr key={s.subject}>
+                        <td>{s.subject}</td>
+                        <td>{s.entries.length}</td>
+                        <td>{s.average !== null ? `${s.average}%` : '—'}</td>
+                        <td>{s.letter}</td>
+                        <td>{points !== null ? points.toFixed(1) : '—'}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+              {gbGpa !== null && (
+                <div class="gpa-box">
+                  <span>LCA Coursework GPA: {formatGpa(gbGpa)}</span>
+                </div>
+              )}
+              <div style={{ fontSize: '10pt', color: '#444', marginTop: '8px' }}>
+                Attendance ({att.schoolYear}): {att.days} day{att.days === 1 ? '' : 's'} · {att.hours} hours logged
+              </div>
+            </>
+          ) : (
+            <p class="empty-note">
+              No LCA coursework grades entered yet. Parents add grades in the Student Records portal.
+            </p>
+          )}
+
           {hasTransfer ? (
             <>
               {/* 📚 Transfer Credits — grouped by academic year (newest first) */}
@@ -124,15 +175,7 @@ export default async function PrintTranscriptPage({
                 GPA Scale: A=4.0, B=3.0, C=2.0, D=1.0, F=0.0
               </div>
             </>
-          ) : (
-            <>
-              {/* Current enrollment section (no transferred grades yet) */}
-              <div class="section-title">Current Enrollment</div>
-              <p class="empty-note">
-                No previous school records have been added yet. Courses are currently in progress.
-              </p>
-            </>
-          )}
+          ) : null}
 
           <div style={{ fontStyle: 'italic', fontSize: '10pt', marginTop: '12px' }}>
             This transcript is issued by Larose Christian Academy, an Alabama church school

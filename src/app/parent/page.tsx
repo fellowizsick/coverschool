@@ -112,6 +112,11 @@ export default async function ParentPortalPage() {
               <CalendarDays className="mr-1 h-4 w-4" /> School Calendar
             </Button>
           </Link>
+          <Link href="/records">
+            <Button size="sm" variant="outline">
+              <GraduationCap className="mr-1 h-4 w-4" /> Attendance & Grades
+            </Button>
+          </Link>
           <Link href="/enroll">
             <Button size="sm">
               {enrollments && enrollments.length > 0 ? '➕ Add Another Child' : 'Enroll New Student'}
