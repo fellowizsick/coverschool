@@ -265,6 +265,25 @@ export default function EnrollPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission failed')
       setLoading(false)
+      // 🚨 Report the failure + the family's email so we can alert Jonathan
+      // immediately and send an apology email (user directive 2026-08-05).
+      try {
+        const famEmail = String(data.get('email') || '').trim()
+        await fetch('/api/signup-error', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: famEmail,
+            parentName: `${data.get('parent_first_name') || ''} ${data.get('parent_last_name') || ''}`.trim(),
+            studentName: students[0] ? `${students[0].first} ${students[0].last}` : '',
+            error: err instanceof Error ? err.message : 'Submission failed',
+            stage: 'enroll',
+            payload: { billingMode },
+          }),
+        })
+      } catch {
+        // Never make the user's error worse if reporting fails.
+      }
     }
   }
 

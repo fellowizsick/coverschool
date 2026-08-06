@@ -11,13 +11,19 @@ interface ApprovedStudent {
 
 interface LeaveReviewProps {
   /** Approved (paying) students — the review button only shows when non-empty. */
-  approvedStudents: ApprovedStudent[]
+  approvedStudents?: ApprovedStudent[]
 }
 
 type Status = 'idle' | 'sending' | 'success' | 'error'
 
 export default function LeaveReview({ approvedStudents }: LeaveReviewProps) {
   const [open, setOpen] = useState(false)
+  // Verification: how we confirm this is a real enrolled family.
+  const [email, setEmail] = useState('')
+  const [studentFirst, setStudentFirst] = useState('')
+  const [studentLast, setStudentLast] = useState('')
+  const [pin, setPin] = useState('')
+  // Review content
   const [name, setName] = useState('')
   const [state, setState] = useState('')
   const [rating, setRating] = useState(5)
@@ -26,9 +32,15 @@ export default function LeaveReview({ approvedStudents }: LeaveReviewProps) {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
 
-  if (approvedStudents.length === 0) return null
+  // If no approved students were passed (public page), still show the button —
+  // families verify with email + name + PIN instead of a portal session.
+  const hasApproved = (approvedStudents?.length ?? 0) > 0
 
   function reset() {
+    setEmail('')
+    setStudentFirst('')
+    setStudentLast('')
+    setPin('')
     setName('')
     setState('')
     setRating(5)
@@ -50,7 +62,16 @@ export default function LeaveReview({ approvedStudents }: LeaveReviewProps) {
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, state, rating, quote }),
+        body: JSON.stringify({
+          email,
+          studentFirstName: studentFirst,
+          studentLastName: studentLast,
+          pin,
+          name,
+          state,
+          rating,
+          quote,
+        }),
       })
       const data = await res.json()
       if (!res.ok || !data.ok) {
@@ -74,7 +95,7 @@ export default function LeaveReview({ approvedStudents }: LeaveReviewProps) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-gray-900">Leave a Review</h3>
               <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg p-1 text-gray-500 hover:bg-gray-100">
@@ -91,17 +112,70 @@ export default function LeaveReview({ approvedStudents }: LeaveReviewProps) {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">Your name (shown as First L.)</label>
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Marie"
-                    maxLength={60}
-                    className="w-full rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-amber-500 focus:outline-none"
-                  />
+                {!hasApproved && (
+                  <div className="rounded-xl bg-emerald-50 p-3 text-xs text-emerald-800">
+                    To verify your enrollment, enter the email you used to sign up and the
+                    student&apos;s name + PIN (last 4 of SSN) — same as the student login.
+                  </div>
+                )}
+
+                {/* Verification fields (needed when not signed in via portal) */}
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="sm:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-gray-700">Email used to enroll</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@email.com"
+                      required
+                      className="w-full rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-amber-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-gray-700">Student first name</label>
+                    <input
+                      value={studentFirst}
+                      onChange={(e) => setStudentFirst(e.target.value)}
+                      placeholder="First name"
+                      required
+                      className="w-full rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-amber-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-gray-700">Student last name</label>
+                    <input
+                      value={studentLast}
+                      onChange={(e) => setStudentLast(e.target.value)}
+                      placeholder="Last name"
+                      required
+                      className="w-full rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-amber-500 focus:outline-none"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-gray-700">PIN (last 4 of student&apos;s SSN)</label>
+                    <input
+                      value={pin}
+                      onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                      placeholder="4 digits"
+                      inputMode="numeric"
+                      required
+                      className="w-full rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-amber-500 focus:outline-none"
+                    />
+                  </div>
                 </div>
+
                 <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-gray-700">Show name as</label>
+                    <input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Marie"
+                      maxLength={60}
+                      className="w-full rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-amber-500 focus:outline-none"
+                    />
+                  </div>
                   <div>
                     <label className="mb-1 block text-sm font-medium text-gray-700">State</label>
                     <input
@@ -112,21 +186,21 @@ export default function LeaveReview({ approvedStudents }: LeaveReviewProps) {
                       className="w-full rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-amber-500 focus:outline-none"
                     />
                   </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">Rating</label>
-                    <div className="flex items-center gap-1 pt-1">
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <button
-                          key={n}
-                          type="button"
-                          onClick={() => setRating(n)}
-                          aria-label={`${n} stars`}
-                          className={n <= rating ? 'text-amber-400' : 'text-gray-300'}
-                        >
-                          <Star className="h-6 w-6 fill-current" />
-                        </button>
-                      ))}
-                    </div>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Rating</label>
+                  <div className="flex items-center gap-1 pt-1">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setRating(n)}
+                        aria-label={`${n} stars`}
+                        className={n <= rating ? 'text-amber-400' : 'text-gray-300'}
+                      >
+                        <Star className="h-6 w-6 fill-current" />
+                      </button>
+                    ))}
                   </div>
                 </div>
                 <div>
