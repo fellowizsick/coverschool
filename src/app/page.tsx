@@ -71,13 +71,40 @@ const steps = [
 
 export default function HomePage() {
   const [activeTestimonial, setActiveTestimonial] = useState(0)
+  // Real family reviews from the DB get appended to the static list.
+  const [allTestimonials, setAllTestimonials] = useState(testimonials)
+
+  useEffect(() => {
+    // Load approved reviews from the API and append them to the rotation.
+    fetch('/api/reviews')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.ok && Array.isArray(data.reviews) && data.reviews.length > 0) {
+          const real = data.reviews.map((rv: { quote: string; author_name: string; role: string; rating: number }) => ({
+            quote: rv.quote,
+            author: rv.author_name,
+            role: rv.role,
+            rating: rv.rating,
+          }))
+          setAllTestimonials((prev) => {
+            // Avoid duplicates if the API is called again.
+            const existing = new Set(prev.map((t) => t.quote))
+            const fresh = real.filter((t: { quote: string }) => !existing.has(t.quote))
+            return fresh.length ? [...prev, ...fresh] : prev
+          })
+        }
+      })
+      .catch(() => {
+        // Homepage must never break because reviews failed to load.
+      })
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length)
+      setActiveTestimonial((prev) => (prev + 1) % allTestimonials.length)
     }, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [allTestimonials.length])
 
   return (
     <>
@@ -389,7 +416,7 @@ export default function HomePage() {
 
           <div className="mt-16 mx-auto max-w-3xl">
             <div className="relative min-h-[260px]">
-              {testimonials.map((t, i) => (
+              {allTestimonials.map((t, i) => (
                 <div
                   key={i}
                   className={`absolute inset-0 transition-all duration-700 ease-out ${
@@ -423,7 +450,7 @@ export default function HomePage() {
 
             {/* Dots */}
             <div className="mt-8 flex justify-center gap-2">
-              {testimonials.map((_, i) => (
+              {allTestimonials.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveTestimonial(i)}

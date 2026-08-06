@@ -10,6 +10,7 @@ import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { getTransferGrades, computeGpa, formatGpa } from '@/lib/transfer-grades'
 import ReportCardUploader from '@/components/ReportCardUploader'
 import ProblemCenter from '@/components/ProblemCenter'
+import LeaveReview from '@/components/LeaveReview'
 import { CalendarDays } from 'lucide-react'
 
 export default async function ParentPortalPage() {
@@ -91,6 +92,14 @@ export default async function ParentPortalPage() {
         </h2>
         <div className="flex gap-2">
           <ProblemCenter
+            approvedStudents={(enrollments || [])
+              .filter((e) => e.status === 'approved')
+              .map((e) => ({
+                id: e.id,
+                name: `${e.student_first_name} ${e.student_last_name}`.trim(),
+              }))}
+          />
+          <LeaveReview
             approvedStudents={(enrollments || [])
               .filter((e) => e.status === 'approved')
               .map((e) => ({
