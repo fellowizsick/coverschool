@@ -96,7 +96,7 @@ export const ENROLLMENT_FEE = 0 // Free for initial launch — set later
 export const ANNUAL_TUITION = 540 // $45/month
 
 export const CURRICULUM_BOOKS_URL =
-  'https://www.christianbook.com/page/homeschool/homeschool-curriculum/ace-paces'
+  'https://www.christianbook.com/page/homeschool/ace'
 
 export const PAPERWORK_FEE_AMOUNT = 75 // $75 one-time registration fee
 export const PAPERWORK_FEE_NOTE =

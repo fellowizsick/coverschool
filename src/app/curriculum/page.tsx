@@ -189,7 +189,7 @@ export default function CurriculumPage() {
               Cost: Books only — you buy the set for your child&apos;s grade.
             </p>
             <a
-              href="https://www.christianbook.com/page/homeschool/homeschool-curriculum/ace-paces"
+              href="https://www.christianbook.com/page/homeschool/ace"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-block rounded-xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-600"
