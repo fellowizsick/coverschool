@@ -95,15 +95,17 @@ export const STATE_LAWS: StateLaw[] = [
       'Indiana has no state oversight of non-accredited private schools, so cover schools provide structure and records without state filing. LCA provides the official school-of-record role.',
     curriculum: 'No state-mandated curriculum.',
     attendance:
-      'Parents must provide instruction equivalent to that given in public schools (IC 20-33-2-28). No specific day count is mandated for homeschools, but keeping an attendance log is best practice for records and transcripts.',
-    records: 'No state-required records, but keeping attendance/grades is best practice for transcripts.',
+      'Indiana law requires 180 days of instruction per year (parents choose which days and how long each day), and an accurate daily attendance record must be maintained (IC 20-33-2-20) for verification if requested by the state superintendent or local school superintendent.',
+    records:
+      'An accurate daily attendance record is required (IC 20-33-2-20) — no special form mandated. Keeping grades/transcripts is best practice for high school and college.',
     testing: 'No state testing required.',
     teacherQuals: 'No teacher certification required.',
     summary:
-      'Indiana is a true no-notification state — no LOI, registration, or filing required. Families homeschool freely; LCA adds official school-of-record status, report cards, and transcripts — useful for college and transfers.',
+      'Indiana requires no registration or filing to homeschool — but families must keep a daily attendance record and provide 180 days of instruction. LCA provides official school-of-record status, report cards, transcripts, and attendance record-keeping — useful for college and transfers.',
     sources: [
       { label: 'Indiana Code §20-33-2-28 (equivalent instruction)', url: 'https://law.justia.com/codes/indiana/title-20/article-33/chapter-2/section-20-33-2-28/' },
-      { label: 'Indiana Code §20-33-2 (compulsory attendance)', url: 'https://law.justia.com/codes/indiana/title-20/article-33/chapter-2/' },
+      { label: 'Indiana Code §20-33-2-20 (attendance records)', url: 'https://law.justia.com/codes/indiana/title-20/article-33/chapter-2/section-20-33-2-20/' },
+      { label: 'IN DOE — Homeschool Information (180 days + attendance records)', url: 'https://www.in.gov/doe/students/parents/' },
       { label: 'IAHE — Indiana Association of Home Educators', url: 'https://iahe.net/' },
       { label: 'HSLDA — Indiana Homeschool Law', url: 'https://hslda.org/legal/indiana' },
     ],
