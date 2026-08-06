@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, useState } from 'react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -82,6 +83,18 @@ function LoginForm() {
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
+        <div className="mt-4 space-y-2 text-center text-sm">
+          <p>
+            <Link href="/account?tab=setup" className="font-medium text-emerald-700 hover:text-emerald-800">
+              First time here? Create your portal password
+            </Link>
+          </p>
+          <p>
+            <Link href="/account?tab=recover" className="font-medium text-red-600 hover:text-red-700">
+              Forgot password? Recover your account
+            </Link>
+          </p>
+        </div>
       </CardContent>
     </Card>
   )

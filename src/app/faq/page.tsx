@@ -34,7 +34,7 @@ const faqs = [
   },
   {
     q: 'How do I submit attendance?',
-    a: 'After enrollment, you will receive access to our parent portal. Attendance reporting features will be available there soon.',
+    a: 'Log into the Parent Portal, open Student Records, and tap "Log School Day" — it takes about 10 seconds. You can log the date, hours, and a note. The portal tracks your running total against your state\'s requirement (for example, 180 days in Florida) and keeps the official record for report cards and transcripts.',
   },
   {
     q: 'Do you issue official report cards and transcripts?',

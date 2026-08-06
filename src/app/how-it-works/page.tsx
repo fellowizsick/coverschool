@@ -37,7 +37,7 @@ const faqs = [
   },
   {
     q: 'How does attendance tracking work?',
-    a: 'We maintain official attendance records for your student. Attendance reporting details will be available through the parent portal soon.',
+    a: 'Log into the Parent Portal and open Student Records. Parents log each school day (date, hours, optional note) — it takes about 10 seconds per day. The portal keeps a running total against your state\'s requirement and the official attendance record feeds your report cards and transcripts.',
   },
   {
     q: 'Will you provide report cards and transcripts?',
