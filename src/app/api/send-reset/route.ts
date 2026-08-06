@@ -82,7 +82,12 @@ export async function POST(request: Request) {
       }
     }
 
-    // Generate a recovery link
+    // Generate a recovery link. We use the 6-digit email OTP as the secret in
+    // OUR link: the action_link token only works on Supabase's hosted page
+    // (whose redirect_to falls back to an unconfigured localhost), while the
+    // OTP verifies directly through the public verify endpoint. The link goes
+    // straight to our /auth/callback, which exchanges the OTP for a session
+    // and routes the family to the password change page.
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laroseca.org'
     const callbackUrl = `${siteUrl}/auth/callback?type=recovery&email=${encodeURIComponent(email)}`
     const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
@@ -95,17 +100,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: 'Could not create the reset link.' }, { status: 500 })
     }
 
-    // The action_link points at Supabase's verify page with redirect_to. We
-    // build OUR OWN link that goes straight to our callback with the token:
-    const token = linkData.properties?.action_link?.match(/[?&]token=([^&]+)/)?.[1]
-      || linkData.action_link?.match(/[?&]token=([^&]+)/)?.[1]
-      || ''
-    if (!token) {
-      console.error('send-reset: no token in action link', JSON.stringify(linkData).slice(0, 300))
+    const otp = linkData.email_otp
+    if (!otp) {
+      console.error('send-reset: no OTP in link data', JSON.stringify(linkData).slice(0, 300))
       return NextResponse.json({ ok: false, error: 'Could not build the reset link.' }, { status: 500 })
     }
 
-    const link = `${callbackUrl}&token=${encodeURIComponent(token)}`
+    const link = `${callbackUrl}&token=${encodeURIComponent(otp)}`
 
     // Email the link to the enrolled address
     try {
