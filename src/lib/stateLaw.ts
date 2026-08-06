@@ -214,3 +214,53 @@ export const STATE_LAWS: StateLaw[] = [
 export function getStateLaw(code: string): StateLaw | undefined {
   return STATE_LAWS.find((s) => s.code === code.toUpperCase())
 }
+
+/**
+ * Build a real withdrawal checklist for a state from its law data.
+ * Used by the LeadCapture box on /homeschool-law/[state]. Content is derived
+ * from the actual researched fields above — informational, not legal advice.
+ */
+export function buildWithdrawalChecklist(
+  law: StateLaw
+): { title: string; items: string[] }[] {
+  return [
+    {
+      title: '1. Know the law before you pull anyone out',
+      items: [
+        `In ${law.name}, compulsory attendance covers ${law.compulsoryAges}.`,
+        'Make sure your legal coverage is in place BEFORE the child stops attending public school — that way no day becomes "unexcused."',
+      ],
+    },
+    {
+      title: '2. Choose your legal path',
+      items: [
+        `Notification/registration: ${law.notification}`,
+        `Cover school role: ${law.coverSchoolRole}`,
+      ],
+    },
+    {
+      title: '3. Handle the school-side paperwork',
+      items: [
+        'Send a written, dated withdrawal notice to the current school (keep a copy for your records).',
+        'If your path requires it, get the enrollment notice / certificate filed with the district or state.',
+      ],
+    },
+    {
+      title: '4. Set up your records from day one',
+      items: [
+        `Attendance: ${law.attendance}`,
+        `Records: ${law.records}`,
+        `Testing: ${law.testing}`,
+        `Teacher requirements: ${law.teacherQuals}`,
+      ],
+    },
+    {
+      title: '5. Keep proof for later',
+      items: [
+        'Keep attendance logs, coursework samples, and grades — colleges and schools will want them.',
+        'For high schoolers, start the transcript trail now so it is college-ready.',
+      ],
+    },
+  ]
+}
+

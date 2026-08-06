@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { ArrowRight, ShieldCheck, BookOpen, CalendarDays, FileText, ClipboardCheck, GraduationCap, UserCheck } from 'lucide-react'
-import { STATE_LAWS, getStateLaw } from '@/lib/stateLaw'
+import { STATE_LAWS, getStateLaw, buildWithdrawalChecklist } from '@/lib/stateLaw'
+import LeadCapture from '@/components/LeadCapture'
 import type { Metadata } from 'next'
 
 export function generateStaticParams() {
@@ -94,6 +95,15 @@ export default async function StateLawPage({
             <p className="mt-3 text-lg leading-relaxed text-gray-700">{law.summary}</p>
           </CardContent>
         </Card>
+
+        {/* Email capture — withdrawal checklist lead magnet */}
+        <div className="mb-10">
+          <LeadCapture
+            stateName={law.name}
+            stateCode={law.code}
+            checklist={buildWithdrawalChecklist(law)}
+          />
+        </div>
 
         {/* Requirements grid */}
         <div className="space-y-6">
