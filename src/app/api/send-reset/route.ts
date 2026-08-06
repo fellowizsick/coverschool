@@ -100,7 +100,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: 'Could not create the reset link.' }, { status: 500 })
     }
 
-    const otp = linkData.email_otp
+    // supabase-js nests these under properties; the raw API has them top-level
+    const props = linkData.properties as Record<string, unknown> | undefined
+    const otp = String(props?.email_otp || (linkData as unknown as Record<string, unknown>).email_otp || '')
     if (!otp) {
       console.error('send-reset: no OTP in link data', JSON.stringify(linkData).slice(0, 300))
       return NextResponse.json({ ok: false, error: 'Could not build the reset link.' }, { status: 500 })
