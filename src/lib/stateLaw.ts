@@ -92,15 +92,17 @@ export const STATE_LAWS: StateLaw[] = [
     coverSchoolRole:
       'Indiana has no state oversight of non-accredited private schools, so cover schools provide structure and records without state filing. LCA provides the official school-of-record role.',
     curriculum: 'No state-mandated curriculum.',
-    attendance: '180 days of instruction per year.',
+    attendance:
+      'Parents must provide instruction equivalent to that given in public schools (IC 20-33-2-28). No specific day count is mandated for homeschools, but keeping an attendance log is best practice for records and transcripts.',
     records: 'No state-required records, but keeping attendance/grades is best practice for transcripts.',
     testing: 'No state testing required.',
     teacherQuals: 'No teacher certification required.',
     summary:
-      'Indiana is a true no-notification state. Families homeschool freely; LCA adds official school-of-record status, report cards, and transcripts — useful for college and transfers.',
+      'Indiana is a true no-notification state — no LOI, registration, or filing required. Families homeschool freely; LCA adds official school-of-record status, report cards, and transcripts — useful for college and transfers.',
     sources: [
-      { label: 'Indiana Code §20-33-2 (compulsory attendance)', url: 'https://iga.in.gov/legislative/laws/2024/ic/titles/020/articles/033/chapters/002/' },
-      { label: 'Indiana DOE — Homeschool Information', url: 'https://www.in.gov/doe/students/parents/homeschool-information/' },
+      { label: 'Indiana Code §20-33-2-28 (equivalent instruction)', url: 'https://law.justia.com/codes/indiana/title-20/article-33/chapter-2/section-20-33-2-28/' },
+      { label: 'Indiana Code §20-33-2 (compulsory attendance)', url: 'https://law.justia.com/codes/indiana/title-20/article-33/chapter-2/' },
+      { label: 'IAHE — Indiana Association of Home Educators', url: 'https://iahe.net/' },
       { label: 'HSLDA — Indiana Homeschool Law', url: 'https://hslda.org/legal/indiana' },
     ],
   },
@@ -136,7 +138,8 @@ export const STATE_LAWS: StateLaw[] = [
     curriculum: 'Instruction must include reading, language arts, math, social studies, and science.',
     attendance: 'Children must attend for the entire school term of the school they attend (no fixed hour-count requirement in current law).',
     records: 'No state-required records, but attendance logs are recommended.',
-    testing: 'No state testing/assessment requirement for home schools in current law.',
+    testing:
+      'Missouri requires homeschool students to take a standardized test or other approved evaluation each year (per parent choice among state-approved options).',
     teacherQuals: 'No teacher certification required.',
     summary:
       'Missouri keeps it light: no registration, no notification. Children must attend for the school term, and instruction covers core subjects. LCA provides the school-of-record role so families have official report cards and transcripts when needed.',
