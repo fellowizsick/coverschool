@@ -15,6 +15,64 @@ type SendCancellationEmailParams = {
   studentName: string
 }
 
+type SendPasswordResetEmailParams = {
+  to: string
+  parentName: string
+  link: string
+}
+
+const transporter = () =>
+  nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  })
+
+const fromEmail = () => process.env.SMTP_FROM || SCHOOL_CONFIG.email
+
+export async function sendPasswordResetEmail({ to, parentName, link }: SendPasswordResetEmailParams) {
+  const subject = `Reset your ${SCHOOL_CONFIG.name} parent portal password`
+
+  const html = `
+    <div style="font-family: Arial, Helvetica, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; color: #1f2937;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <span style="font-size: 28px;">🏫</span>
+        <h1 style="font-size: 20px; margin: 8px 0 0; color: #065f46;">${SCHOOL_CONFIG.name}</h1>
+        <p style="color: #6b7280; font-size: 14px; margin: 4px 0 0;">Parent Portal — Password Reset</p>
+      </div>
+
+      <p style="font-size: 15px; line-height: 1.6;">Hi ${parentName},</p>
+      <p style="font-size: 15px; line-height: 1.6;">
+        We received a request to set or change the password for your parent portal account.
+        Click the button below to continue:
+      </p>
+
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="${link}"
+           style="display: inline-block; background: #059669; color: #ffffff; text-decoration: none;
+                  padding: 14px 32px; border-radius: 8px; font-weight: bold; font-size: 15px;">
+          Set My Password →
+        </a>
+      </div>
+
+      <p style="font-size: 13px; color: #6b7280; line-height: 1.6;">
+        If you didn't request this, you can safely ignore this email — your password won't change
+        unless you click the link. This link expires in 1 hour.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
+      <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">
+        ${SCHOOL_CONFIG.name} · ${SCHOOL_CONFIG.city} · ${SCHOOL_CONFIG.email}
+      </p>
+    </div>
+  `
+
+  return transporter().sendMail({ from: fromEmail(), to, subject, html })
+}
 export async function sendEnrollmentEmail({
   to,
   parentName,

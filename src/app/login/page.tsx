@@ -86,7 +86,7 @@ function LoginForm() {
         <div className="mt-4 space-y-2 text-center text-sm">
           <p>
             <Link href="/account?tab=setup" className="font-medium text-emerald-700 hover:text-emerald-800">
-              First time here? Create your portal password
+              First time here? Set your portal password
             </Link>
           </p>
           <p>
