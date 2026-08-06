@@ -36,8 +36,8 @@ export const STATE_LAWS: StateLaw[] = [
     summary:
       'Alabama\u2019s church school model is the cleanest legal path: enroll with a church school, and the school handles state filings. Parents choose curriculum and teach.',
     sources: [
-      { label: 'Alabama Code §16-28-1 (church school definition)', url: 'https://alisondb.legislature.state.al.us/alison/CodeOfAlabama/1975/16-28-1.htm' },
-      { label: 'Alabama State Department of Education — Homeschooling', url: 'https://www.alsde.edu/sec/ses/Pages/homeschooling.aspx' },
+      { label: 'Alabama Code §16-28-1 (church school definition)', url: 'https://law.justia.com/codes/alabama/title-16/chapter-28/section-16-28-1/' },
+      { label: 'Alabama Code §16-28-7 (church school enrollment & reporting)', url: 'https://law.justia.com/codes/alabama/title-16/chapter-28/section-16-28-7/' },
       { label: 'HSLDA — Alabama Homeschool Law', url: 'https://hslda.org/legal/alabama' },
     ],
   },
@@ -67,19 +67,21 @@ export const STATE_LAWS: StateLaw[] = [
     name: 'Georgia',
     flag: '🍑',
     compulsoryAges: 'Ages 6 to 16',
-    notification: 'Parents must file a Declaration of Intent to homeschool with the local school superintendent within 30 days of establishing the program (and by Sept 1 each year).',
+    notification:
+      'Parents must file a Declaration of Intent to homeschool with the Georgia Department of Education within 30 days of establishing the program (and by Sept 1 each year thereafter).',
     coverSchoolRole:
       'Georgia recognizes cover schools. Families may enroll in a private/parochial school (which serves as cover) and are then under that school\u2019s umbrella rather than filing independently.',
     curriculum: 'Instruction must include reading, language arts, math, social studies, and science.',
     attendance: '180 days per year, at least 4.5 hours per day.',
     records: 'Parents maintain attendance records and a portfolio of student work.',
-    testing: 'Standardized test every 3 years (grades 3, 6, 9, 12) or portfolio evaluation by a certified teacher.',
+    testing:
+      'Nationally normed standardized test every 3 years starting in grade 3 (results kept at home, not submitted to the district).',
     teacherQuals: 'Parent must have a high school diploma or GED (or be supervised by a certified teacher for the first year).',
     summary:
       'Georgia requires a Declaration of Intent when filing independently — but cover schools provide the legal umbrella, and LCA handles the administrative side so families can focus on teaching.',
     sources: [
-      { label: 'Georgia Code §20-2-690 (home study programs)', url: 'https://law.justia.com/codes/georgia/title-20/chapter-2/article-16/part-1/section-20-2-690/' },
-      { label: 'Georgia DOE — Homeschooling', url: 'https://www.gadoe.org/External-Affairs-and-Policy/AskDOE/Pages/Homeschooling.aspx' },
+      { label: 'Georgia Code §20-2-690 (home study programs)', url: 'https://law.justia.com/codes/georgia/2022/title-20/chapter-2/article-16/part-1/section-20-2-690/' },
+      { label: 'Georgia DOE — Home School', url: 'https://gadoe.org/parent-family-resources/home-school/' },
       { label: 'HSLDA — Georgia Homeschool Law', url: 'https://hslda.org/legal/georgia' },
     ],
   },
@@ -111,19 +113,22 @@ export const STATE_LAWS: StateLaw[] = [
     name: 'Mississippi',
     flag: '🌺',
     compulsoryAges: 'Ages 6 to 17',
-    notification: 'Parents must file a certificate of enrollment with the local school attendance officer within 15 days of establishing the homeschool program.',
+    notification:
+      'Parents file an annual certificate of enrollment with the local school attendance officer by August 15 each year (or when starting midyear).',
     coverSchoolRole:
-      'Mississippi recognizes legitimate home instruction programs. Cover schools provide the legal standing and record-keeping; the attendance filing is the parent\u2019s step.',
+      'Mississippi recognizes legitimate home instruction programs. Cover schools provide the legal standing and record-keeping; the certificate of enrollment filing is the parent\u2019s step.',
     curriculum: 'No state-mandated curriculum for home instruction programs.',
-    attendance: '180 days of instruction per year.',
-    records: 'Parents submit attendance and scholastic records to the attendance officer annually (or quarterly for 17-year-olds seeking exemption).',
+    attendance:
+      'No minimum day-count for home instruction programs (the 180-day public school requirement does not apply to nonpublic schools including homeschools).',
+    records:
+      'Parents submit the certificate of enrollment to the attendance officer annually; attendance and scholastic records are submitted to the attendance officer as required by the local district.',
     testing: 'No state testing requirement for homeschool students.',
     teacherQuals: 'No teacher certification required.',
     summary:
       'Mississippi is simple: file the certificate of enrollment, keep records, and teach. LCA covers the school-of-record side and issues official documents.',
     sources: [
-      { label: 'Mississippi Code §37-13-91 (home instruction)', url: 'https://law.justia.com/codes/mississippi/2022/title-37/chapter-13/section-37-13-91/' },
-      { label: 'Mississippi DOE — Home Schooling', url: 'https://www.mdek12.org/OSA/homeschooling' },
+      { label: 'Mississippi Code §37-13-91 (home instruction)', url: 'https://hslda.org/post/how-to-comply-with-mississippis-homeschool-law' },
+      { label: 'Mississippi DOE — Certificate of Enrollment', url: 'https://mdek12.org/wp-content/uploads/sites/12/2026/03/Certificate-of-Enrollment-COE-02.26.2026.pdf' },
       { label: 'HSLDA — Mississippi Homeschool Law', url: 'https://hslda.org/legal/mississippi' },
     ],
   },
@@ -136,16 +141,18 @@ export const STATE_LAWS: StateLaw[] = [
     coverSchoolRole:
       'Missouri treats homeschools as private schools with light regulation. Cover schools provide official records and transcripts without state filing.',
     curriculum: 'Instruction must include reading, language arts, math, social studies, and science.',
-    attendance: 'Children must attend for the entire school term of the school they attend (no fixed hour-count requirement in current law).',
-    records: 'No state-required records, but attendance logs are recommended.',
+    attendance:
+      'At least 1,000 hours of instruction per school term (600 of those hours in the core subjects, 400 at the regular homeschool location).',
+    records:
+      'For children under 16, maintain (not submit) a plan book/diary of subjects, academic evaluations, and other credible evidence of instruction. Keep at least two years of records on hand.',
     testing:
-      'Missouri requires homeschool students to take a standardized test or other approved evaluation each year (per parent choice among state-approved options).',
+      'Maintain academic evaluations as part of homeschool records (regular tests or annual standardized tests). No test results are submitted to the state.',
     teacherQuals: 'No teacher certification required.',
     summary:
-      'Missouri keeps it light: no registration, no notification. Children must attend for the school term, and instruction covers core subjects. LCA provides the school-of-record role so families have official report cards and transcripts when needed.',
+      'Missouri keeps it light: no registration, no notification. Children must receive 1,000 hours of instruction per term covering core subjects. LCA provides the school-of-record role so families have official report cards and transcripts when needed.',
     sources: [
       { label: 'Missouri Revised Statutes §167.031 (compulsory attendance)', url: 'https://revisor.mo.gov/main/OneSection.aspx?section=167.031' },
-      { label: 'Missouri DOE — Home Schooling', url: 'https://dese.mo.gov/quality-schools/home-schooling' },
+      { label: 'HSLDA — How to Comply with Missouri Homeschool Law', url: 'https://hslda.org/post/how-to-comply-with-missouris-homeschool-law' },
       { label: 'HSLDA — Missouri Homeschool Law', url: 'https://hslda.org/legal/missouri' },
     ],
   },
@@ -175,19 +182,25 @@ export const STATE_LAWS: StateLaw[] = [
     name: 'South Carolina',
     flag: '🌴',
     compulsoryAges: 'Ages 5 to 17',
-    notification: 'Three legal options: (1) independent homeschool filed with the district, (2) membership in a homeschool association (e.g. SCISA), or (3) enrollment in a church school — no state registration.',
+    notification:
+      'Three legal homeschool pathways: (1) independent homeschool approved by the district, (2) membership in a homeschool association (SCAIHS), or (3) membership in a 50+ member accountability association. Separately, a child may attend a church-related private school (which satisfies compulsory attendance under §59-65-10(A)) without any state registration.',
     coverSchoolRole:
-      'Option 3 is the church school route: families enroll in a church school and the school maintains the records. This is the path LCA provides — no district filing.',
-    curriculum: 'Instruction must include reading, writing, math, science, and social studies (church school option sets its own standards).',
-    attendance: '180 days of instruction per year, at least 4.5 hours per day.',
-    records: 'Church school keeps attendance and scholastic records; parents keep a portfolio of student work.',
-    testing: 'Church school option: no state testing required (the independent option with the district requires assessment).',
-    teacherQuals: 'Church school option: the person providing instruction must have a high school diploma or GED.',
+      'Families may enroll in a church-related private school and the school maintains the records — this is the route LCA provides. It is a private school path under §59-65-10(A), distinct from the three home-school options that require district filing or association membership.',
+    curriculum:
+      'Homeschool options: reading, writing, math, science, and social studies (plus composition/literature grades 7-12). Church school route: the school sets its own curriculum.',
+    attendance:
+      'Homeschool options: at least 180 days per year, at least 4.5 hours per day (excluding lunch/recess). Church school route: the school sets its own calendar.',
+    records:
+      'Homeschool options: parent keeps attendance, academic progress records, and semiannual progress reports. Church school route: the school maintains enrollment and scholastic records.',
+    testing:
+      'Homeschool options: annual statewide testing and Basic Skills Assessment (options 1-2). Church school route: no state testing requirement.',
+    teacherQuals:
+      'Homeschool options: the parent-teacher must hold a high school diploma or GED (options 1-2; option 3 per association standards). Church school route: no parent qualification requirement — the school directs instruction.',
     summary:
-      'South Carolina\u2019s church school option is the cleanest: no district filing, no state testing. LCA is the church school of record — parents teach, we handle the legal side.',
+      'South Carolina offers three regulated homeschool options (district, SCAIHS, or 50+ member association), all with diploma and 180-day requirements. The church school route LCA provides is a private school path under §59-65-10(A): the school is the operator of record, parents are not subject to the homeschool statutes, and there is no district filing or state testing.',
     sources: [
-      { label: 'South Carolina Code §59-65-40/45/47/48 (homeschooling)', url: 'https://www.scstatehouse.gov/code/t59c065.php' },
-      { label: 'SC DOE — Home Schooling', url: 'https://ed.sc.gov/policy/state-board-of-education-implementation-details/home-schooling/' },
+      { label: 'South Carolina Code §59-65-10 (compulsory attendance / private & church schools)', url: 'https://www.scstatehouse.gov/code/t59c065.php' },
+      { label: 'South Carolina Code §59-65-40/45/47 (homeschool options)', url: 'https://www.scstatehouse.gov/code/t59c065.php' },
       { label: 'HSLDA — South Carolina Homeschool Law', url: 'https://hslda.org/legal/south-carolina' },
     ],
   },
@@ -207,8 +220,8 @@ export const STATE_LAWS: StateLaw[] = [
     summary:
       'Texas is one of the freest states for homeschoolers — no registration, no testing. LCA provides the official school record families need for the college application trail.',
     sources: [
-      { label: 'Texas Education Code §25.085 (compulsory attendance)', url: 'https://statutes.capitol.texas.gov/Docs/ED/htm/ED.25.htm' },
-      { label: 'Texas Education Agency — Home Schooling', url: 'https://tea.texas.gov/about-tea/laws-and-rules/home-schooling' },
+      { label: 'Texas Education Code §25.086 (exemptions)', url: 'https://statutes.capitol.texas.gov/Docs/ED/htm/ED.25.htm' },
+      { label: 'HSLDA — How to Comply with Texas Homeschool Law', url: 'https://hslda.org/post/how-to-comply-with-texas-homeschool-law' },
       { label: 'HSLDA — Texas Homeschool Law', url: 'https://hslda.org/legal/texas' },
     ],
   },
