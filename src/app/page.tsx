@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { COVERED_STATES } from '@/lib/constants'
+import LeaveReview from '@/components/LeaveReview'
 import {
   CheckCircle, Shield, FileText, HeartHandshake,
   ArrowRight, Star, Users, BookOpen, ScrollText,
@@ -461,6 +462,16 @@ export default function HomePage() {
                   }`}
                 />
               ))}
+            </div>
+
+            {/* Enrolled families: leave a review */}
+            <div className="mt-10 text-center">
+              <p className="text-sm text-gray-500">
+                Are you an LCA family? Share your experience — we'd love to hear from you. 💚
+              </p>
+              <div className="mt-4 flex justify-center">
+                <LeaveReview />
+              </div>
             </div>
           </div>
         </div>
