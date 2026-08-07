@@ -136,8 +136,9 @@ export default async function StateLawPage({
             ))}
           </ul>
           <p className="mt-4 text-xs text-gray-500">
-            Informational only — not legal advice. Laws change; confirm current requirements with
-            your state\u2019s education department.
+            Informational only — not legal advice. Laws change, and this summary may not be
+            perfect. Please double-check what we wrote against your state&apos;s education
+            department or the linked statutes before relying on it.
           </p>
         </div>
 
