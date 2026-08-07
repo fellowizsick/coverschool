@@ -49,7 +49,7 @@ export const STATE_LAWS: StateLaw[] = [
     compulsoryAges: 'Ages 6 to 16',
     notification: 'If homeschooling independently (home education option), parents file a Notice of Intent with the county school superintendent within 30 days of starting. Families enrolled in a private cover school do not file their own notice.',
     coverSchoolRole:
-      'Florida recognizes umbrella/cover schools as a separate legal route (private school option). Families may enroll in a private/parochial school that covers them instead of filing their own Notice of Intent.',
+      'Florida recognizes umbrella/cover schools as a separate legal route (private school option, F.S. §1002.01(3) — including schools operating through correspondence/extension). Families may enroll in a private school that covers them instead of filing their own Notice of Intent. A private school serving Florida families must complete the annual private school survey with the Florida DOE (F.S. §1002.42).',
     curriculum: 'No state-prescribed curriculum; instruction must be regular.',
     attendance:
       'No statutory day-count for home education — instruction must be regular (the 180-day school term applies to public schools, not home education programs).',
@@ -72,7 +72,7 @@ export const STATE_LAWS: StateLaw[] = [
     notification:
       'Parents must file a Declaration of Intent to homeschool with the Georgia Department of Education within 30 days of establishing the program (and by Sept 1 each year thereafter).',
     coverSchoolRole:
-      'Georgia recognizes cover schools. Families may enroll in a private/parochial school (which serves as cover) and are then under that school\u2019s umbrella rather than filing independently.',
+      'Georgia law (O.C.G.A. §20-2-690) requires parents of a home study program to file a Declaration of Intent with the Georgia Department of Education annually by September 1 — this applies regardless of enrollment with an out-of-state umbrella. LCA serves Georgia families as the school of record (report cards, transcripts, records) while the parent keeps the DOI filing current with the GA DOE.',
     curriculum: 'Instruction must include reading, language arts, math, social studies, and science.',
     attendance: '180 days per year, at least 4.5 hours per day.',
     records: 'Parents maintain attendance records and a portfolio of student work.',
