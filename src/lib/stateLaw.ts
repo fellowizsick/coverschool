@@ -25,9 +25,10 @@ export const STATE_LAWS: StateLaw[] = [
     name: 'Alabama',
     flag: '🌴',
     compulsoryAges: 'Ages 6 to 17',
-    notification: 'Parents enroll in a church school; the church school files a notice of enrollment/attendance with the Alabama State Department of Education. No parent-level registration with the district.',
+    notification:
+      'Parents enroll in a church school. The parent files an enrollment/attendance form with the local public school superintendent (Ala. Code §16-28-7); the church school administrator countersigns it. No parent-level registration with the state Department of Education.',
     coverSchoolRole:
-      'Under Alabama Code §16-28-1, a church school covers the family legally. Larose Christian Academy files the required notice and maintains enrollment records for the state.',
+      'Under Alabama Code §16-28-1, a church school covers the family legally. The church school administrator countersigns the enrollment form the parent files with the local superintendent (Ala. Code §16-28-7) and maintains enrollment records.',
     curriculum: 'No state-mandated curriculum for church school students.',
     attendance: 'Church schools set their own calendar; instruction is expected during the school year.',
     records: 'The church school maintains enrollment and attendance records.',
@@ -50,7 +51,8 @@ export const STATE_LAWS: StateLaw[] = [
     coverSchoolRole:
       'Florida recognizes umbrella/cover schools as a separate legal route (private school option). Families may enroll in a private/parochial school that covers them instead of filing their own Notice of Intent.',
     curriculum: 'No state-prescribed curriculum; instruction must be regular.',
-    attendance: '180 days of instruction per year.',
+    attendance:
+      'No statutory day-count for home education — instruction must be regular (the 180-day school term applies to public schools, not home education programs).',
     records: 'Parents keep a portfolio of educational activities, samples, and assessments.',
     testing: 'Independent home education: annual evaluation (portfolio review by a certified teacher or standardized test). Cover-school families are not subject to this requirement.',
     teacherQuals: 'No teacher certification required for home education.',
@@ -75,8 +77,8 @@ export const STATE_LAWS: StateLaw[] = [
     attendance: '180 days per year, at least 4.5 hours per day.',
     records: 'Parents maintain attendance records and a portfolio of student work.',
     testing:
-      'Nationally normed standardized test every 3 years starting in grade 3 (results kept at home, not submitted to the district).',
-    teacherQuals: 'Parent must have a high school diploma or GED (or be supervised by a certified teacher for the first year).',
+      'Nationally normed standardized test at least every 3 years after completing 3rd grade (results kept at home, not submitted to public school officials).',
+    teacherQuals: 'The teaching parent (and any tutor) must have a high school diploma or GED (O.C.G.A. §20-2-690).',
     summary:
       'Georgia requires a Declaration of Intent when filing independently — but cover schools provide the legal umbrella, and LCA handles the administrative side so families can focus on teaching.',
     sources: [
@@ -144,17 +146,17 @@ export const STATE_LAWS: StateLaw[] = [
       'Missouri treats homeschools as private schools with light regulation. Cover schools provide official records and transcripts without state filing.',
     curriculum: 'Instruction must include reading, language arts, math, social studies, and science.',
     attendance:
-      'At least 1,000 hours of instruction per school term (600 of those hours in the core subjects, 400 at the regular homeschool location).',
+      'At least 1,000 hours of instruction per school year, at least 600 of those hours in reading, language arts, math, social studies, or science, and at least 400 of the 600 hours at the regular home school location (RSMo §167.012). Requirements do not apply to pupils 16 or older.',
     records:
-      'For children under 16, maintain (not submit) a plan book/diary of subjects, academic evaluations, and other credible evidence of instruction. Keep at least two years of records on hand.',
+      'Maintain a plan book/diary of subjects taught, a portfolio of academic work samples, and a record of evaluations (or other written/credible equivalent evidence). Records are reviewed only by the local prosecuting attorney if a question arises.',
     testing:
       'Maintain academic evaluations as part of homeschool records (regular tests or annual standardized tests). No test results are submitted to the state.',
     teacherQuals: 'No teacher certification required.',
     summary:
-      'Missouri keeps it light: no registration, no notification. Children must receive 1,000 hours of instruction per term covering core subjects. LCA provides the school-of-record role so families have official report cards and transcripts when needed.',
+      'Missouri keeps it light: no registration, no notification. Children must receive 1,000 hours of instruction per year covering core subjects (most at home). LCA provides the school-of-record role so families have official report cards and transcripts when needed.',
     sources: [
+      { label: 'Missouri Revised Statutes §167.012 (home school instruction requirements)', url: 'https://revisor.mo.gov/main/OneSection.aspx?section=167.012' },
       { label: 'Missouri Revised Statutes §167.031 (compulsory attendance)', url: 'https://revisor.mo.gov/main/OneSection.aspx?section=167.031' },
-      { label: 'HSLDA — How to Comply with Missouri Homeschool Law', url: 'https://hslda.org/post/how-to-comply-with-missouris-homeschool-law' },
       { label: 'HSLDA — Missouri Homeschool Law', url: 'https://hslda.org/legal/missouri' },
     ],
   },
@@ -167,7 +169,8 @@ export const STATE_LAWS: StateLaw[] = [
     coverSchoolRole:
       'Oklahoma has no state oversight of private schools. Cover schools provide official school-of-record services, report cards, and transcripts.',
     curriculum: 'No state-mandated curriculum for private school students.',
-    attendance: '180 days of instruction per year.',
+    attendance:
+      'Children must receive education for the full term the schools of the district are in session (70 O.S. §10-105) — the district term is the reference, not a fixed statutory day-count for private/home schools.',
     records: 'No state-required records, but keeping attendance/grades is best practice.',
     testing: 'No state testing required.',
     teacherQuals: 'No teacher certification required.',
