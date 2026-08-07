@@ -116,7 +116,7 @@ export const STATE_LAWS: StateLaw[] = [
     flag: '🌺',
     compulsoryAges: 'Ages 6 to 17',
     notification:
-      'Parents file an annual certificate of enrollment with the local school attendance officer by August 15 each year (or when starting midyear).',
+      'Parents file an annual certificate of enrollment with the local school attendance officer on or before September 15 each year (Miss. Code §37-13-91). If found in noncompliance, parents have 10 days after written notice to file.',
     coverSchoolRole:
       'Mississippi recognizes legitimate home instruction programs. Cover schools provide the legal standing and record-keeping; the certificate of enrollment filing is the parent\u2019s step.',
     curriculum: 'No state-mandated curriculum for home instruction programs.',
@@ -127,10 +127,10 @@ export const STATE_LAWS: StateLaw[] = [
     testing: 'No state testing requirement for homeschool students.',
     teacherQuals: 'No teacher certification required.',
     summary:
-      'Mississippi is simple: file the certificate of enrollment, keep records, and teach. LCA covers the school-of-record side and issues official documents.',
+      'Mississippi is simple: file the certificate of enrollment with the local attendance officer by September 15 each year, keep records, and teach. LCA covers the school-of-record side and issues official documents.',
     sources: [
-      { label: 'Mississippi Code §37-13-91 (home instruction)', url: 'https://hslda.org/post/how-to-comply-with-mississippis-homeschool-law' },
-      { label: 'Mississippi DOE — Certificate of Enrollment', url: 'https://mdek12.org/wp-content/uploads/sites/12/2026/03/Certificate-of-Enrollment-COE-02.26.2026.pdf' },
+      { label: 'Mississippi Code §37-13-91 (compulsory attendance; certificate of enrollment)', url: 'https://law.justia.com/codes/mississippi/2025/title-37/chapter-13/section-37-13-91/' },
+      { label: 'Mississippi DOE — Certificate of Enrollment form', url: 'https://mdek12.org/wp-content/uploads/sites/12/2026/03/Certificate-of-Enrollment-COE-02.26.2026.pdf' },
       { label: 'HSLDA — Mississippi Homeschool Law', url: 'https://hslda.org/legal/mississippi' },
     ],
   },
