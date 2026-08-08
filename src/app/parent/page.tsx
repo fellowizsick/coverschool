@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, FileText, Printer, Star } from 'lucide-react'
+import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, FileText, Printer, Star, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
 import RemoveChildButton from '@/components/RemoveChildButton'
@@ -115,6 +115,11 @@ export default async function ParentPortalPage() {
           <Link href="/records">
             <Button size="sm" variant="outline">
               <GraduationCap className="mr-1 h-4 w-4" /> Attendance & Grades
+            </Button>
+          </Link>
+          <Link href="/problem-report">
+            <Button size="sm" variant="outline">
+              <AlertTriangle className="mr-1 h-4 w-4" /> Report a Problem
             </Button>
           </Link>
           <Link href="/enroll">
