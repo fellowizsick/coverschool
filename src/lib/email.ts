@@ -21,7 +21,7 @@ type SendPasswordResetEmailParams = {
   link: string
 }
 
-const transporter = () =>
+export const transporter = () =>
   nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT || 587),
@@ -32,7 +32,7 @@ const transporter = () =>
     },
   })
 
-const fromEmail = () => process.env.SMTP_FROM || SCHOOL_CONFIG.email
+export const fromEmail = () => process.env.SMTP_FROM || SCHOOL_CONFIG.email
 
 export async function sendPasswordResetEmail({ to, parentName, link }: SendPasswordResetEmailParams) {
   const subject = `Reset your ${SCHOOL_CONFIG.name} parent portal password`

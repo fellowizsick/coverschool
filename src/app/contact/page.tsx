@@ -6,6 +6,9 @@ import { SCHOOL_CONFIG } from '@/lib/constants'
 import { Mail, Phone, MapPin, Clock, CheckCircle, Loader2 } from 'lucide-react'
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mykqplgw'
+// 2026-08-08: Formspree DROPPED. Messages were lost (form ID owned by a different
+// account). Now sends direct to the school Gmail via /api/contact (SMTP).
+const CONTACT_API = '/api/contact'
 
 export default function ContactPage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
@@ -16,12 +19,18 @@ export default function ContactPage() {
 
     const form = e.currentTarget
     const data = new FormData(form)
+    const payload = {
+      name: String(data.get('name') || ''),
+      email: String(data.get('email') || ''),
+      subject: String(data.get('subject') || ''),
+      message: String(data.get('message') || ''),
+    }
 
     try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
+      const res = await fetch(CONTACT_API, {
         method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       })
 
       if (res.ok) {
