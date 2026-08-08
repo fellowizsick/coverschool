@@ -52,6 +52,12 @@ function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {!isStudentFlow && (
+          <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-800">
+            Inside the portal: upload your child&apos;s schoolwork, track attendance,
+            and view grades, report cards, and transcripts — all in one place.
+          </div>
+        )}
         <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-700 text-center">
           🎓 Student? <a href="/student-id" className="font-semibold underline">Sign in here</a>
         </div>

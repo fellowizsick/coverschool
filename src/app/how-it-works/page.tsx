@@ -26,7 +26,7 @@ const steps = [
     icon: GraduationCap,
     title: '4. Homeschool Freely',
     description:
-      'Choose your own curriculum, set your own schedule, and teach your way. We handle record-keeping, attendance, and transcripts.',
+      'Choose your own curriculum, set your own schedule, and teach your way. Upload your child\'s work to the Parent Portal and we keep the grades, report cards, and transcripts.',
   },
 ]
 

@@ -148,8 +148,9 @@ export default function HomePage() {
 
               <p className="text-lg leading-relaxed text-emerald-100/80 max-w-xl">
                 We provide the legal oversight, record-keeping, and support your
-                family needs to homeschool with peace of mind. Focus on teaching
-                — we handle the rest.
+                family needs to homeschool with peace of mind. Do school your way —
+                upload your child&apos;s work and we keep the grades, report cards, and
+                transcripts. Focus on teaching — we handle the rest.
               </p>
 
               <div className="flex flex-col gap-3 sm:flex-row">
