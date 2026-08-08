@@ -211,6 +211,69 @@ export default function CurriculumPage() {
         </div>
       </section>
 
+      {/* How grades work — the loop that makes LCA a school */}
+      <section className="max-w-4xl mx-auto px-4 pb-14">
+        <div className="rounded-2xl border border-emerald-100 bg-white p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 font-heading">
+            How Grades &amp; Records Work
+          </h2>
+          <p className="mt-2 text-gray-600">
+            Whether you choose free online resources or printed books, the grading loop is the
+            same — and it&apos;s what makes LCA your school, not just a paperwork service.
+          </p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2">
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-lg font-bold text-emerald-700">1</div>
+              <h3 className="font-bold text-gray-900">Your child does the work</h3>
+            </div>
+            <p className="mt-3 text-sm text-gray-600">
+              Lessons from free platforms like Khan Academy or Discovery K12, or printed
+              workbooks like ACE PACE sets. Whatever you chose in Path A or Path B.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-lg font-bold text-emerald-700">2</div>
+              <h3 className="font-bold text-gray-900">You grade it at home</h3>
+            </div>
+            <p className="mt-3 text-sm text-gray-600">
+              You&apos;re the teacher, and you have the answers — ACE PACE sets include answer
+              keys, and online platforms score automatically. Grade the work, then keep a photo
+              or copy of anything you want in the official record.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-lg font-bold text-emerald-700">3</div>
+              <h3 className="font-bold text-gray-900">Enter the grade in the Parent Portal</h3>
+            </div>
+            <p className="mt-3 text-sm text-gray-600">
+              Sign in, open your child&apos;s dashboard, and add the grade — subject, assignment,
+              and score. You can also upload a screenshot of the work as proof. It takes about
+              a minute per assignment.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-lg font-bold text-emerald-700">4</div>
+              <h3 className="font-bold text-gray-900">LCA turns it into official records</h3>
+            </div>
+            <p className="mt-3 text-sm text-gray-600">
+              Your entries build the gradebook automatically, which becomes report cards and
+              transcripts — the official records your family can use for college, transfers,
+              and more. We keep them safe and ready whenever you need them.
+            </p>
+          </div>
+        </div>
+        <div className="mt-6 rounded-2xl bg-emerald-50 border border-emerald-100 p-5 text-sm text-emerald-900">
+          <strong className="font-semibold">Why it matters:</strong> because LCA keeps the grades,
+          report cards, and transcripts on file, your child&apos;s education has an official,
+          permanent record — not just a stack of papers at home.
+        </div>
+      </section>
+
       {/* Free resources */}
       <section id="free-resources" className="max-w-4xl mx-auto px-4 pb-14 scroll-mt-24">
         <div className="rounded-2xl border border-emerald-100 bg-white p-6 mb-8">
