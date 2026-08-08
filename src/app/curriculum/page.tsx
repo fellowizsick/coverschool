@@ -7,12 +7,15 @@ import {
 } from 'lucide-react'
 import { SUBJECTS_BY_GRADE } from '@/lib/subjects'
 
-// ⚠️ ACCURACY CHECK (2026-08-05): This page is written to match EXACTLY what
-// the enroll page and welcome emails promise:
+// ⚠️ ACCURACY CHECK (2026-08-05, updated 2026-08-07): This page is written to
+// match EXACTLY what the enroll page and welcome emails promise:
 //   - $45/mo tuition = administrative services, record-keeping, legal oversight
 //   - Free curriculum resources INCLUDED with membership (Khan, Discovery K12, ...)
 //   - Curriculum BOOKS are NOT included, purchased separately
 //   - ACE PACE sets from Christianbook.com are the recommended structured option
+// 2026-08-07: split the resource list into TRUE FREE vs PAID/OPTIONAL so nothing
+// paid is shown under "Free Resources". Christianbook (books) + Sophia (paid
+// membership) moved to the paid/optional section with honest pricing wording.
 // Do not change these claims without updating /enroll and src/lib/email.ts too.
 
 const freeResources = [
@@ -39,17 +42,6 @@ const freeResources = [
     bestFor: 'Families that want a ready-made daily structure',
   },
   {
-    icon: Library,
-    name: 'Christianbook.com — Homeschool',
-    url: 'https://www.christianbook.com/page/homeschool',
-    tagline: 'Faith-based textbooks and workbooks',
-    description:
-      'PreK–12 textbooks, workbooks, readers, and full curriculum sets — including the ACE PACE sets we recommend. Both print and digital options.',
-    howToUse:
-      'This is where you purchase your curriculum BOOKS (tuition does not include books). Our welcome email links you to the correct grade-level ACE set for your student.',
-    bestFor: 'Families that prefer printed, faith-based curriculum',
-  },
-  {
     icon: ClipboardList,
     name: 'HomeTrail Planner',
     url: 'https://hometrail.net/free-homeschool-planner',
@@ -61,17 +53,6 @@ const freeResources = [
     bestFor: 'Organized record-keeping for multiple kids',
   },
   {
-    icon: GraduationCap,
-    name: 'Sophia Learning',
-    url: 'https://www.sophia.org/plans-and-pricing/',
-    tagline: 'College credit for high schoolers',
-    description:
-      'Self-paced college-level courses. High school students can earn transferable college credits online with an affordable membership.',
-    howToUse:
-      'Use in high school for dual-credit style learning. LCA keeps the transcript so any credits earned are recorded on your student\'s official record.',
-    bestFor: '9th–12th graders ready for college-level work',
-  },
-  {
     icon: Sparkles,
     name: 'ACT Test Prep',
     url: 'https://www.act.org/content/act/en/products-and-services/the-act/test-preparation.html',
@@ -81,6 +62,34 @@ const freeResources = [
     howToUse:
       'Have your high schooler take a practice test a few months before test day, then focus study on weak areas. LCA transcripts record the coursework that prepares them.',
     bestFor: 'Juniors and seniors preparing for the ACT',
+  },
+]
+
+// Paid / optional resources — clearly separated from the free list.
+const paidResources = [
+  {
+    icon: Library,
+    name: 'ACE PACE Curriculum Sets (Christianbook.com)',
+    url: 'https://www.christianbook.com/page/homeschool/ace',
+    tagline: 'Printed workbooks — purchased separately',
+    description:
+      'The complete grade-level ACE PACE set of workbooks and answer keys — the structured, faith-based printed option we recommend.',
+    howToUse:
+      'Buy the set for your child\'s grade directly from Christianbook.com. Our welcome email links you to the correct grade-level set for your student.',
+    bestFor: 'Families that prefer printed, structured curriculum',
+    priceNote: 'Not included in tuition — you buy the books for your child\'s grade.',
+  },
+  {
+    icon: GraduationCap,
+    name: 'Sophia Learning',
+    url: 'https://www.sophia.org/plans-and-pricing/',
+    tagline: 'College credit for high schoolers — paid membership',
+    description:
+      'Self-paced college-level courses. High school students can earn transferable college credits online with an affordable membership.',
+    howToUse:
+      'Use in high school for dual-credit style learning. LCA keeps the transcript so any credits earned are recorded on your student\'s official record.',
+    bestFor: '9th–12th graders ready for college-level work',
+    priceNote: 'Sophia charges its own membership fee — separate from LCA tuition.',
   },
 ]
 
@@ -186,7 +195,9 @@ export default function CurriculumPage() {
               and answer keys. Books are purchased separately (tuition does not include them).
             </p>
             <p className="mt-3 text-sm font-semibold text-amber-800">
-              Cost: Books only — you buy the set for your child&apos;s grade.
+              Cost: Books only — you buy the set for your child&apos;s grade. Buying direct means you
+              pay the same price a school would, without any school markup — and you can use the
+              books for every child in your family.
             </p>
             <a
               href="https://www.christianbook.com/page/homeschool/ace"
@@ -238,6 +249,58 @@ export default function CurriculumPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+                    >
+                      Visit {r.name} <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Optional / paid resources — clearly separated */}
+      <section className="max-w-4xl mx-auto px-4 pb-14">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 font-heading">
+            Optional Paid Resources (not included in tuition)
+          </h2>
+          <p className="mt-2 text-amber-900/80">
+            These options involve their own cost, and we want to be upfront about that — no surprises.
+            The good news: when you buy directly through the links below, you pay the same price a
+            school would, <strong>without any school markup</strong>. Some schools bundle curriculum
+            and charge extra for it; with LCA, you buy what you need, when you need it, and nothing more.
+          </p>
+        </div>
+        <div className="space-y-5">
+          {paidResources.map((r) => (
+            <Card key={r.name} fun="amber" className="overflow-hidden">
+              <CardContent className="p-6 sm:p-7">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
+                    <r.icon className="h-6 w-6" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="text-lg font-bold text-gray-900">{r.name}</h3>
+                      <span className="rounded-full bg-amber-100 px-3 py-0.5 text-xs font-medium text-amber-800">
+                        {r.tagline}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-gray-600">{r.description}</p>
+                    <div className="mt-3 rounded-xl bg-amber-50/70 p-3">
+                      <p className="text-sm text-amber-900">
+                        <strong className="font-semibold">How to use it with LCA:</strong> {r.howToUse}
+                      </p>
+                    </div>
+                    <p className="mt-2 text-xs font-semibold text-amber-700">{r.priceNote}</p>
+                    <p className="mt-1 text-xs text-gray-500">Best for: {r.bestFor}</p>
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-amber-700 hover:text-amber-800"
                     >
                       Visit {r.name} <ArrowRight className="h-4 w-4" />
                     </a>
