@@ -23,6 +23,7 @@ export const metadata: Metadata = {
       'Supporting homeschool families across America with legal oversight, record-keeping, and community.',
     siteName: 'Larose Christian Academy',
     type: 'website',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: 'Larose Christian Academy crest' }],
   },
 }
 
