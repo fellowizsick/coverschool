@@ -252,8 +252,11 @@ export default function CalendarPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* 🎨 Compact hero — keeps the calendar on screen */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-600 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+      {/* 🎨 Compact hero — keeps the calendar on screen.
+          NOTE: pt-20 sm:pt-24 clears the FIXED navbar (80px). Without it the
+          title bleeds up behind the transparent nav gradient (desktop bug
+          reported 2026-08-08: "words behind the top words"). */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-600 px-4 pb-6 pt-20 sm:px-6 sm:pb-8 sm:pt-24 lg:px-8">
         <div className="absolute -left-10 top-8 h-36 w-36 animate-float rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-pink-300/15 blur-3xl [animation-delay:1s]" />
         <div className="mx-auto max-w-7xl text-center">
