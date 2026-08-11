@@ -6,7 +6,7 @@ import ScrollAnimation from '@/components/ScrollAnimation'
 import Script from 'next/script'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
@@ -34,6 +34,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <head>
+        {/* Progressive enhancement gate: only hide scroll-animated content when
+            JS is actually running. Prevents the blank-page flash on slow first
+            loads (cold cache / slow bundle) where content stays opacity:0. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body className="min-h-screen bg-white font-sans text-gray-900">
         {/* Decorative floating elements that follow the page */}
         <div className="fixed top-40 left-0 h-64 w-64 rounded-full bg-emerald-200/20 blur-3xl animate-float pointer-events-none -z-10" />

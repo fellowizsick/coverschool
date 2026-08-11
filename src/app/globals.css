@@ -149,12 +149,19 @@
 
 @layer utilities {
   .animate-on-scroll {
-    opacity: 0;
-    transform: translateY(30px);
     transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .animate-on-scroll.visible {
+  /* Only hide scroll-animated elements when JS is confirmed running.
+     Without .js (slow first load / no JS), content is visible immediately —
+     no blank flash. ScrollAnimation still reveals everything within 3s. */
+  html.js .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .animate-on-scroll.visible,
+  html.js .animate-on-scroll.visible {
     opacity: 1;
     transform: translateY(0);
   }
