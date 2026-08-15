@@ -403,7 +403,7 @@ export default function EnrollPage() {
                 {billingMode === 'yearly'
                   ? 'One payment of $525 covers the full school year ($450 tuition + $75 one-time registration fee). No recurring charges.'
                   : assistance
-                    ? 'First payment: $70 per student ($25 of your $75 registration fee + $45 first month — Family Assistance). Then $70 for the next two months, then $45/month. Your registration fee is split into three easy payments.'
+                    ? 'First payment: $70 per student ($25 of your $75 registration fee + $45 first month — Parent Assistance Payments). Then $70 for the next two months, then $45/month. Your registration fee is split into three easy payments.'
                     : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
                 <strong className="text-amber-700">
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
@@ -446,7 +446,7 @@ export default function EnrollPage() {
           </CardContent>
         </Card>
 
-        {/* 🆕 Family Assistance Option (2026-08-15) — monthly plan only */}
+        {/* 🆕 Parent Assistance Payments (2026-08-15) — monthly plan only */}
         {billingMode === 'monthly' && (
           <Card fun="green" className="mt-4">
             <CardContent className="flex items-start gap-4 p-5">
@@ -463,7 +463,7 @@ export default function EnrollPage() {
                   />
                   <span>
                     <span className="font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
-                      🤝 Family Assistance — Pay Over 3 Months
+                      🤝 Parent Assistance Payments — Pay Over 3 Months
                     </span>
                     <span className="mt-1 block text-sm text-gray-600 leading-relaxed">
                       Need a little flexibility? We&apos;ll split your one-time registration
