@@ -96,18 +96,18 @@ export async function POST(request: Request) {
     // clearly (per-student billing, never per-family). Every new student's FIRST
     // payment includes the one-time $75 registration fee + tuition, so the first
     // month totals $120/child ($75 + $45), then $45/mo per child after that.
-    // 🆕 FAMILY ASSISTANCE: the first payment is split — $60 now (half) and the
-    // other $60 on the month-2 invoice. With assistance the one-time reg fee line
-    // is only $15 (the $45 first tuition makes the total $60), and the webhook
-    // adds the remaining $60 as an invoice item on the next billing cycle.
+    // 🆕 FAMILY ASSISTANCE (Option C, 2026-08-15): the $75 reg fee is split into
+    // THREE payments of $25 — charged on the first THREE invoices. Tuition is
+    // $45/mo every month no matter what. So months 1-3 = $70 each ($25 reg +
+    // $45 tuition), then $45/mo. Total $525 — identical to full-pay families.
     const REG_FEE_CENTS = 7500 // $75 per student, one-time
-    const ASSISTANCE_REG_FEE_CENTS = 1500 // $15 now under assistance ($45 tuition brings first payment to $60)
-    const ASSISTANCE_DEFERRED_CENTS = 6000 // $60 remaining half → month-2 invoice via webhook
+    const ASSISTANCE_REG_FEE_CENTS = 2500 // $25 now under assistance; $25 on month 2 and $25 on month 3 via webhook
+    const ASSISTANCE_DEFERRED_CENTS = 2500 // per-month deferred amount on months 2 and 3
     const lineItems = groupEnrollments.flatMap((e) => {
       const childName = `${e.student_first_name} ${e.student_last_name}`
       const parentLabel = parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name
-      // 🧾 One-time registration fee ($75 per student — or $15 now under Family
-      // Assistance with the remaining $60 charged on the month-2 invoice)
+      // 🧾 One-time registration fee ($75 per student — under Family Assistance it's
+      // $25 now, with $25 on each of the next two invoices via the webhook)
       const regFeeItem = {
         price_data: {
           currency: 'usd',

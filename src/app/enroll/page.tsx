@@ -403,7 +403,7 @@ export default function EnrollPage() {
                 {billingMode === 'yearly'
                   ? 'One payment of $525 covers the full school year ($450 tuition + $75 one-time registration fee). No recurring charges.'
                   : assistance
-                    ? 'First payment: $60 per student (half of your $75 registration fee + $45 first month — Family Assistance). Then $45/month per student. The remaining $60 is charged with your second month.'
+                    ? 'First payment: $70 per student ($25 of your $75 registration fee + $45 first month — Family Assistance). Then $70 for the next two months, then $45/month. Your registration fee is split into three easy payments.'
                     : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
                 <strong className="text-amber-700">
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
@@ -411,7 +411,7 @@ export default function EnrollPage() {
               </p>
               <p className="mt-1 text-sm font-semibold text-emerald-700">
                 {assistance && billingMode === 'monthly'
-                  ? `Your total today: $${60 * studentCount}${studentCount > 1 ? ` (${studentCount} children × $60)` : ''} — remaining half charged next month`
+                  ? `Your total today: $${70 * studentCount}${studentCount > 1 ? ` (${studentCount} children × $70)` : ''} — then $70 for the next two months`
                   : `Your total today: ${studentCount === 1
                       ? (billingMode === 'yearly' ? '$525' : '$120')
                       : (billingMode === 'yearly'
@@ -463,16 +463,38 @@ export default function EnrollPage() {
                   />
                   <span>
                     <span className="font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
-                      🤝 Family Assistance — Pay Half Now, Half Next Month
+                      🤝 Family Assistance — Pay Over 3 Months
                     </span>
                     <span className="mt-1 block text-sm text-gray-600 leading-relaxed">
-                      Need a little flexibility? Pay <strong>$60 today</strong> (half of your
-                      registration + first month) and the remaining <strong>$60 with your second
-                      month&apos;s payment</strong>. The full amount is covered by the second
-                      month — no extra fees, same total.
+                      Need a little flexibility? We&apos;ll split your one-time registration
+                      fee into <strong>three easy payments</strong> — <strong>$70/month for
+                      your first three months</strong> instead of one big $120 first payment.
+                      No extra fees, same total.
                     </span>
                   </span>
                 </label>
+
+                {/* 🆕 Expandable breakdown — appears when the option is selected */}
+                {assistance && (
+                  <div className="mt-4 rounded-xl border-2 border-emerald-200 bg-emerald-50 p-4">
+                    <p className="text-sm font-bold text-emerald-900">📊 Here&apos;s what you&apos;ll pay:</p>
+                    <div className="mt-2 space-y-1 text-sm text-emerald-800">
+                      <p className="flex justify-between"><span>Month 1 (today):</span><strong>$70/student</strong></p>
+                      <p className="flex justify-between"><span>Month 2:</span><strong>$70/student</strong></p>
+                      <p className="flex justify-between"><span>Month 3:</span><strong>$70/student</strong></p>
+                      <p className="flex justify-between"><span>Months 4–10:</span><strong>$45/student</strong></p>
+                    </div>
+                    <p className="mt-3 border-t border-emerald-200 pt-2 text-xs text-emerald-700">
+                      Your <strong>$75 registration fee</strong> is split into three $25 payments
+                      (one per month for the first three months). Your <strong>$45/month tuition</strong>{' '}
+                      stays the same every month. Total: <strong>$525</strong> — the same as paying
+                      in full, just spread out. 💜
+                    </p>
+                    <p className="mt-1 text-xs text-emerald-600">
+                      Prefer to pay all at once? Just uncheck this box and pay $120 today.
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
