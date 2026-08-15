@@ -111,6 +111,28 @@ export async function POST(request: Request) {
       }
     }
 
+    // 🆕 FAMILY ASSISTANCE (2026-08-15): the first payment was split — the
+    // family paid half ($60) at enrollment, so schedule the remaining $60 as
+    // an invoice item on the subscription. It lands on the NEXT invoice
+    // (month 2): $60 remaining half + $45 month-2 tuition = $105.
+    if (session.metadata?.assistance === 'true' && session.subscription && session.customer) {
+      try {
+        const invoiceItem = await stripe.invoiceItems.create({
+          customer: session.customer,
+          subscription: session.subscription,
+          amount: 6000, // $60 — remaining half of the first payment
+          currency: 'usd',
+          description: 'Larose Christian Academy — Registration Fee (Family Assistance remaining half)',
+          metadata: { enrollment_id: enrollmentId, type: 'family_assistance_deferred' },
+        })
+        console.log(`🆕 Family Assistance: deferred $60 scheduled for subscription ${session.subscription} (invoice item ${invoiceItem.id})`)
+      } catch (err) {
+        console.error('Failed to schedule Family Assistance deferred payment:', err)
+        // Non-fatal: enrollment is already approved; the deferred half can be
+        // re-scheduled from the dashboard if this ever fails.
+      }
+    }
+
     // 🎁 If this session used yearly referral discounts, mark those credits applied
     const usedCreditIds = session.metadata?.referral_credit_ids
     if (usedCreditIds) {

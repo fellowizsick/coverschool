@@ -5,6 +5,7 @@ import { GraduationCap, Mail, MapPin, BookOpen, CheckCircle, Clock, ArrowRight, 
 import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
 import RemoveChildButton from '@/components/RemoveChildButton'
+import ManagePaymentButton from '@/components/ManagePaymentButton'
 import ReferralCard from '@/components/ReferralCard'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { getTransferGrades, computeGpa, formatGpa } from '@/lib/transfer-grades'
@@ -117,6 +118,9 @@ export default async function ParentPortalPage() {
               <GraduationCap className="mr-1 h-4 w-4" /> Attendance & Grades
             </Button>
           </Link>
+          {/* 💳 Manage Payment / Update Card — opens THIS family's Stripe portal
+              (email-scoped: each parent only ever sees their own billing info) */}
+          <ManagePaymentButton />
           <Link href="/problem-report">
             <Button size="sm" variant="outline">
               <AlertTriangle className="mr-1 h-4 w-4" /> Report a Problem

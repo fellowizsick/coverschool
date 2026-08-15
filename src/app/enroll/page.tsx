@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { ALL_STATES, GRADE_OPTIONS } from '@/lib/constants'
-import { CreditCard, CheckCircle, Sparkles, GraduationCap, FileText, Plus, Trash2, UserPlus } from 'lucide-react'
+import { CreditCard, CheckCircle, Sparkles, GraduationCap, FileText, Plus, Trash2, UserPlus, HeartHandshake } from 'lucide-react'
 
 const stateOptions = ALL_STATES.filter((s) => s.status === 'available').map(
   (s) => ({ value: s.code, label: `${s.name} (${s.code})` })
@@ -43,6 +43,8 @@ export default function EnrollPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [defaultGrade, setDefaultGrade] = useState('')
   const [billingMode, setBillingMode] = useState('monthly')
+  // 🆕 FAMILY ASSISTANCE (2026-08-15): optional — pay half now, half next month.
+  const [assistance, setAssistance] = useState(false)
   const [defaultReferral, setDefaultReferral] = useState('')
   const [students, setStudents] = useState<StudentForm[]>([emptyStudent()])
   const [termsChecked, setTermsChecked] = useState(false)
@@ -242,6 +244,7 @@ export default function EnrollPage() {
           studentName: `${payload.students[0].student_first_name} ${payload.students[0].student_last_name}`,
           parentName: `${payload.parent_first_name} ${payload.parent_last_name}`,
           billing: billingMode,
+          assistance,
         }),
       })
 
@@ -399,18 +402,22 @@ export default function EnrollPage() {
               <p className="text-sm text-gray-600">
                 {billingMode === 'yearly'
                   ? 'One payment of $525 covers the full school year ($450 tuition + $75 one-time registration fee). No recurring charges.'
-                  : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
+                  : assistance
+                    ? 'First payment: $60 per student (half of your $75 registration fee + $45 first month — Family Assistance). Then $45/month per student. The remaining $60 is charged with your second month.'
+                    : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
                 <strong className="text-amber-700">
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
                 </strong>
               </p>
               <p className="mt-1 text-sm font-semibold text-emerald-700">
-                Your total today: {studentCount === 1
-                  ? (billingMode === 'yearly' ? '$525' : '$120')
-                  : (billingMode === 'yearly'
-                      ? `$${525 * studentCount} (${studentCount} children × $525)`
-                      : `$${120 * studentCount} (${studentCount} children × $120)`)}{' '}
-                {studentCount > 1 ? '— one charge per child' : ''}
+                {assistance && billingMode === 'monthly'
+                  ? `Your total today: $${60 * studentCount}${studentCount > 1 ? ` (${studentCount} children × $60)` : ''} — remaining half charged next month`
+                  : `Your total today: ${studentCount === 1
+                      ? (billingMode === 'yearly' ? '$525' : '$120')
+                      : (billingMode === 'yearly'
+                          ? `$${525 * studentCount} (${studentCount} children × $525)`
+                          : `$${120 * studentCount} (${studentCount} children × $120)`)}{' '}
+                  {studentCount > 1 ? '— one charge per child' : ''}`}
               </p>
             </div>
           </CardContent>
@@ -438,6 +445,38 @@ export default function EnrollPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* 🆕 Family Assistance Option (2026-08-15) — monthly plan only */}
+        {billingMode === 'monthly' && (
+          <Card fun="green" className="mt-4">
+            <CardContent className="flex items-start gap-4 p-5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-200 to-emerald-100 shadow-sm">
+                <HeartHandshake className="h-6 w-6 text-emerald-700" />
+              </div>
+              <div className="flex-1">
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={assistance}
+                    onChange={(e) => setAssistance(e.target.checked)}
+                    className="mt-1 h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span>
+                    <span className="font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
+                      🤝 Family Assistance — Pay Half Now, Half Next Month
+                    </span>
+                    <span className="mt-1 block text-sm text-gray-600 leading-relaxed">
+                      Need a little flexibility? Pay <strong>$60 today</strong> (half of your
+                      registration + first month) and the remaining <strong>$60 with your second
+                      month&apos;s payment</strong>. The full amount is covered by the second
+                      month — no extra fees, same total.
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* No Refund Policy */}
         <p className="text-xs text-gray-400 text-center mt-4">
