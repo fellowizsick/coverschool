@@ -227,6 +227,45 @@ function ChurchFormContent() {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+        {/* ⛔ REQUIRED STEP INDICATOR (2026-08-16, user directive): impossible to
+            miss that this form blocks payment/continuation. */}
+        <div className="mb-6 rounded-2xl border-2 border-red-300 bg-red-50 p-5">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">⛔</span>
+            <div>
+              <p className="text-base font-bold text-red-800">
+                Required Step — You Cannot Continue Without This
+              </p>
+              <p className="mt-1 text-sm text-red-700">
+                This form must be <strong>fully completed</strong> before you can finish
+                enrollment or go to payment. You cannot skip it.
+                {studentName && (
+                  <> Form for: <strong>{studentName}</strong>.</>
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Step indicator: 1 Enrollment ✓ → 2 Church Form (required) → 3 Payment */}
+        <div className="mb-6 grid grid-cols-3 gap-2 text-center text-xs font-medium">
+          <div className="rounded-xl bg-emerald-100 border border-emerald-200 px-3 py-2.5 text-emerald-800">
+            ✅ 1. Enrollment Form
+            <br />
+            <span className="text-emerald-600">Complete</span>
+          </div>
+          <div className="rounded-xl bg-red-100 border-2 border-red-300 px-3 py-2.5 text-red-800">
+            📋 2. Church Form
+            <br />
+            <span className="font-bold text-red-600">You are here — Required</span>
+          </div>
+          <div className="rounded-xl bg-gray-100 border border-gray-200 px-3 py-2.5 text-gray-500">
+            🔒 3. Payment
+            <br />
+            <span className="text-gray-400">Locked until step 2 is done</span>
+          </div>
+        </div>
+
         {error && (
           <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
             ⚠️ {error}
@@ -383,16 +422,16 @@ function ChurchFormContent() {
             </CardContent>
           </Card>
 
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-500">
+          <div className="rounded-xl border-2 border-red-200 bg-red-50 p-4 text-sm text-red-700">
             <p className="flex items-center gap-2">
-              <strong>⏰ Required before payment:</strong> Your enrollment cannot be finished
-              until this form is completed.
+              <strong>⛔ Cannot continue until this is done:</strong> All fields and both
+              signatures are required. After you submit, you'll continue to payment.
             </p>
           </div>
 
           <Button type="submit" variant="gold" size="lg" className="w-full text-base shadow-xl"
             disabled={loading}>
-            {loading ? '⏳ Submitting...' : '📋 Submit Church Enrollment Form'}
+            {loading ? '⏳ Submitting...' : '📋 Submit Form & Continue'}
           </Button>
         </form>
       </div>

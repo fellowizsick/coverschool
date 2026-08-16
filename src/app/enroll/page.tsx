@@ -816,10 +816,23 @@ export default function EnrollPage() {
             ) : (
               <span className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                Enroll & Pay — {billingMode === 'yearly' ? '$525' : '$120'} per student ({totalDisplay})
+                Enroll Now — {billingMode === 'yearly' ? '$525' : '$120'} per student ({totalDisplay})
               </span>
             )}
           </Button>
+
+          {/* ⛔ NEXT-STEP INDICATOR (2026-08-16, user directive): set expectations
+              before submit so the church-form redirect doesn't surprise anyone. */}
+          <div className="mt-4 rounded-xl border-2 border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <p className="flex items-start gap-2">
+              <span className="text-lg">📋</span>
+              <span>
+                <strong>Next step:</strong> after enrolling you must complete the{' '}
+                <strong>Church / Home School Enrollment Form</strong> (one per student){' '}
+                before you can pay. Payment is locked until that form is done.
+              </span>
+            </p>
+          </div>
         </form>
       </div>
     </div>
