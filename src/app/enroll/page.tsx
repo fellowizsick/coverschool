@@ -493,6 +493,15 @@ export default function EnrollPage() {
                       each of your first three months. Total: <strong>$525</strong> — the same
                       as paying in full, just spread out. 💜
                     </p>
+                    <p className="mt-1 text-xs font-medium text-emerald-700">
+                      🎁 Don&apos;t forget: you still get your referral code! When a family you
+                      refer enrolls and pays, you earn <strong>one month free ($45 credit)</strong> —{' '}
+                      no limit, every referral stacks. Your code is in your Parent Portal after
+                      enrollment.{' '}
+                      <Link href="/referral" className="underline underline-offset-2 hover:text-emerald-800">
+                        See how referrals work
+                      </Link>
+                    </p>
                     <p className="mt-1 text-xs text-emerald-600">
                       Prefer to pay all at once? Just uncheck this box and pay $120 today.
                     </p>
