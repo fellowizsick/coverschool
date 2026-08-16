@@ -403,7 +403,7 @@ export default function EnrollPage() {
                 {billingMode === 'yearly'
                   ? 'One payment of $525 covers the full school year ($450 tuition + $75 one-time registration fee). No recurring charges.'
                   : assistance
-                    ? 'First payment: $70 per student ($25 of your $75 registration fee + $45 first month — Parent Assistance Payments). Then $70 for the next two months, then $45/month. Your registration fee is split into three easy payments.'
+                    ? 'Covers both your $45/month tuition and your $75 one-time paperwork fee — split into 3 easy payments. First payment: $70 per student ($45 tuition + $25 of the $75 paperwork fee). Then $70 for the next two months, then $45/month.'
                     : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
                 <strong className="text-amber-700">
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
@@ -466,10 +466,12 @@ export default function EnrollPage() {
                       🤝 Parent Assistance Payments — Pay Over 3 Months
                     </span>
                     <span className="mt-1 block text-sm text-gray-600 leading-relaxed">
-                      Need a little flexibility? We&apos;ll split your one-time registration
-                      fee into <strong>three easy payments</strong> — <strong>$70/month for
-                      your first three months</strong> instead of one big $120 first payment.
-                      No extra fees, same total.
+                      Need a little flexibility? This option covers <strong>both</strong> your{' '}
+                      <strong>$45/month tuition fee</strong> and your <strong>$75 one-time
+                      paperwork fee</strong> — we split the $75 paperwork fee into{' '}
+                      <strong>three payments of $25</strong>. So for the first three months you
+                      pay <strong>$70/month</strong> ($45 tuition + $25 paperwork) instead of one
+                      big $120 first payment. No extra fees, same total.
                     </span>
                   </span>
                 </label>
@@ -485,10 +487,11 @@ export default function EnrollPage() {
                       <p className="flex justify-between"><span>Months 4–10:</span><strong>$45/student</strong></p>
                     </div>
                     <p className="mt-3 border-t border-emerald-200 pt-2 text-xs text-emerald-700">
-                      Your <strong>$75 registration fee</strong> is split into three $25 payments
-                      (one per month for the first three months). Your <strong>$45/month tuition</strong>{' '}
-                      stays the same every month. Total: <strong>$525</strong> — the same as paying
-                      in full, just spread out. 💜
+                      This plan covers <strong>both</strong> your <strong>$45/month tuition fee</strong>{' '}
+                      and your <strong>$75 one-time paperwork fee</strong>. We split the $75
+                      paperwork fee into <strong>three payments of $25</strong> — one added to
+                      each of your first three months. Total: <strong>$525</strong> — the same
+                      as paying in full, just spread out. 💜
                     </p>
                     <p className="mt-1 text-xs text-emerald-600">
                       Prefer to pay all at once? Just uncheck this box and pay $120 today.
