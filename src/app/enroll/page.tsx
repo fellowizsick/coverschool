@@ -233,25 +233,7 @@ export default function EnrollPage() {
 
       const { id: enrollmentId, ids } = await res.json()
 
-      const checkoutRes = await fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          enrollmentId,
-          email: payload.email,
-          studentName: `${payload.students[0].student_first_name} ${payload.students[0].student_last_name}`,
-          parentName: `${payload.parent_first_name} ${payload.parent_last_name}`,
-          billing: billingMode,
-        }),
-      })
-
-      if (!checkoutRes.ok) {
-        throw new Error('Failed to start payment')
-      }
-
-      const { url } = await checkoutRes.json()
-
-      // Remember who we enrolled so the success page can show per-child forms
+      // Remember who we enrolled so the church-form flow can step through each child
       const enrolled = students.map((s, i) => ({
         id: ids?.[i] || enrollmentId,
         name: `${s.first} ${s.last}`,
@@ -261,7 +243,20 @@ export default function EnrollPage() {
       } catch (e) {}
       setSubmittedStudents(enrolled)
 
-      window.location.href = url
+      // ⛔ CHURCH FORM GATE (2026-08-16, user directive): signup cannot finish —
+      // and payment cannot be accepted — until the Church / Home School
+      // Enrollment Form is fully completed for EVERY student. We send them to
+      // the church form first; its success screen hands off to payment.
+      const qs = new URLSearchParams({
+        enrollment_id: enrolled[0]?.id || enrollmentId,
+        group_id: enrollmentId,
+        student: enrolled[0]?.name || '',
+        email: payload.email,
+        billing: billingMode,
+        parent: `${payload.parent_first_name} ${payload.parent_last_name}`,
+        students: JSON.stringify(enrolled),
+      })
+      window.location.href = `/enroll/church-form?${qs.toString()}`
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission failed')
       setLoading(false)
@@ -305,14 +300,15 @@ export default function EnrollPage() {
           <div className="flex items-start gap-3">
             <span className="text-2xl">📋</span>
             <div>
-              <h3 className="font-bold text-amber-900">One More Step Required!</h3>
+              <h3 className="font-bold text-amber-900">One More Step Before Payment!</h3>
               <p className="mt-2 text-sm text-amber-800">
-                You must also complete the <strong>Church / Home School Enrollment Form</strong>
-                for <strong>each student</strong> before they can begin. This is a state-required
-                form that gives us permission to oversee your homeschool records.
+                Before you can finish enrollment, you must complete the{' '}
+                <strong>Church / Home School Enrollment Form</strong> for{' '}
+                <strong>each student</strong>. This is a state-required form that gives
+                us permission to oversee your homeschool records.
               </p>
               <p className="mt-1 text-sm text-amber-700">
-                ⏰ Please fill it out within <strong>10 days</strong>.
+                ⏰ Payment is only available after this form is completed.
               </p>
               {submittedStudents.map((s) => (
                 <a

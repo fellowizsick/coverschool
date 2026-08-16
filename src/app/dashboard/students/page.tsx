@@ -34,6 +34,20 @@ export default async function StudentsPage() {
     .from('curriculum_progress')
     .select('*')
 
+  // 📋 Church enrollment forms — one per student (latest), so Mom can view/print
+  // each student's form right from the Students list (user directive 2026-08-16).
+  const { data: churchForms } = await supabase
+    .from('church_enrollment_forms')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  const churchByEnrollment: Record<string, (typeof churchForms)[number]> = {}
+  churchForms?.forEach((f) => {
+    if (f.enrollment_id && !churchByEnrollment[f.enrollment_id]) {
+      churchByEnrollment[f.enrollment_id] = f
+    }
+  })
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -47,7 +61,10 @@ export default async function StudentsPage() {
           Admin Access Only
         </span>
       </div>
-      <AdminStudentsPage enrollments={enrollments || []} />
+      <AdminStudentsPage
+        enrollments={enrollments || []}
+        churchFormsByEnrollment={churchByEnrollment}
+      />
     </div>
   )
 }

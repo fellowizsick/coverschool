@@ -62,6 +62,17 @@ export async function POST(request: Request) {
     const groupIds = groupEnrollments.map((e) => e.id)
     const studentCount = groupEnrollments.length
 
+    // ⛔ CHURCH FORM GATE (2026-08-16, user directive): payment cannot be
+    // accepted until the Church / Home School Enrollment Form is completed for
+    // EVERY student in the family. This blocks direct URL hits too.
+    const missingChurchForm = groupEnrollments.filter((e) => e.church_form_status !== 'submitted')
+    if (missingChurchForm.length > 0) {
+      return NextResponse.json(
+        { error: 'Please complete the Church / Home School Enrollment Form for every student before payment.' },
+        { status: 400 }
+      )
+    }
+
     // 🎁 REFERRAL: if this family has awarded referral credits, apply them
     // (for yearly one-time payments we deduct $45 × count; for monthly the credit
     // is applied to their next subscription invoice via the webhook instead).

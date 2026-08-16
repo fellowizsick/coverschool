@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import {
@@ -29,6 +30,16 @@ type ProgressRow = {
   enrollment_id: string
   completed_steps: number[]
   updated_at: string
+}
+
+type ChurchFormRow = {
+  id: string
+  enrollment_id: string | null
+  student_name: string
+  church_form_status: string
+  school_year: string
+  parent_signature: string
+  created_at: string
 }
 
 // Calculate total steps from grade
@@ -66,7 +77,13 @@ function ProgressBar({ completed, total }: { completed: number; total: number })
   )
 }
 
-export default function AdminStudentsPage({ enrollments: initialEnrollments }: { enrollments: Enrollment[] }) {
+export default function AdminStudentsPage({
+  enrollments: initialEnrollments,
+  churchFormsByEnrollment = {},
+}: {
+  enrollments: Enrollment[]
+  churchFormsByEnrollment?: Record<string, ChurchFormRow>
+}) {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -285,11 +302,34 @@ export default function AdminStudentsPage({ enrollments: initialEnrollments }: {
                           <p className="text-xs text-gray-600">🎓 Transcript</p>
                           <p className="text-[10px] text-gray-400 mt-0.5">Click to print</p>
                         </a>
+                        {/* 📋 Church Enrollment Form — per student, view/print + PDF (admin only) */}
+                        {(() => {
+                          const cf = churchFormsByEnrollment?.[e.id]
+                          return cf ? (
+                            <a
+                              href={`/enroll/church-form/${cf.id}`}
+                              target="_blank"
+                              className="block p-3 rounded-xl bg-gray-50 border border-gray-100 text-center hover:bg-emerald-50 hover:border-emerald-200 transition-colors cursor-pointer"
+                            >
+                              <FileText className="h-4 w-4 text-amber-600 mx-auto mb-1" />
+                              <p className="text-xs text-gray-600">📋 Church Enrollment Form</p>
+                              <p className="text-[10px] text-gray-400 mt-0.5">
+                                Click to view / print · {new Date(cf.created_at).toLocaleDateString()}
+                              </p>
+                            </a>
+                          ) : (
+                            <div className="block p-3 rounded-xl bg-amber-50/60 border border-amber-100 text-center">
+                              <FileText className="h-4 w-4 text-amber-400 mx-auto mb-1" />
+                              <p className="text-xs text-gray-600">📋 Church Enrollment Form</p>
+                              <p className="text-[10px] text-amber-600 mt-0.5">⚠️ Not submitted</p>
+                            </div>
+                          )
+                        })()}
                       </div>
                     </div>
 
                     {/* Enrollment Info */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-gray-500">
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs text-gray-500">
                       <div>
                         <span className="block text-gray-400 font-medium">Enrolled</span>
                         {new Date(e.created_at).toLocaleDateString()}
@@ -306,6 +346,24 @@ export default function AdminStudentsPage({ enrollments: initialEnrollments }: {
                         <span className="block text-gray-400 font-medium">Payment</span>
                         {e.payment_status || 'N/A'}
                       </div>
+                      <div>
+                        <span className="block text-gray-400 font-medium">Church Form</span>
+                        {churchFormsByEnrollment?.[e.id] ? (
+                          <span className="text-emerald-600 font-medium">✓ Submitted</span>
+                        ) : (
+                          <span className="text-amber-600 font-medium">⚠️ Pending</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Full profile (includes the full church form card) */}
+                    <div className="pt-1">
+                      <Link
+                        href={`/dashboard/student/${e.id}`}
+                        className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                      >
+                        View Full Profile →
+                      </Link>
                     </div>
                   </div>
                 )}

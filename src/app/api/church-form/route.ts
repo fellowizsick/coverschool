@@ -16,6 +16,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Student name and parent name are required' }, { status: 400 })
     }
 
+    // ⛔ COMPLETENESS GATE (2026-08-16, user directive): every field must be
+    // filled before the form counts as done — a partial form is not legal.
+    const requiredFields = [
+      'school_year', 'public_school_district', 'student_name', 'student_dob', 'grade',
+      'parent_name', 'parent_email', 'home_phone', 'address', 'city', 'state', 'zip',
+      'form_date', 'parent_signature', 'parent_signature_date',
+      'consent_date', 'consent_signature',
+    ]
+    const missing = requiredFields.filter((f) => !String(body[f] || '').trim())
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { error: `Please complete every field before submitting (missing: ${missing.join(', ')})` },
+        { status: 400 }
+      )
+    }
+
     const supabase = createAdminClient()
 
     const { data, error } = await supabase
