@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { ALL_STATES, GRADE_OPTIONS } from '@/lib/constants'
-import { CreditCard, CheckCircle, Sparkles, GraduationCap, FileText, Plus, Trash2, UserPlus, HeartHandshake } from 'lucide-react'
+import { CreditCard, CheckCircle, Sparkles, GraduationCap, FileText, Plus, Trash2, UserPlus } from 'lucide-react'
 
 const stateOptions = ALL_STATES.filter((s) => s.status === 'available').map(
   (s) => ({ value: s.code, label: `${s.name} (${s.code})` })
@@ -43,8 +43,6 @@ export default function EnrollPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [defaultGrade, setDefaultGrade] = useState('')
   const [billingMode, setBillingMode] = useState('monthly')
-  // 🆕 FAMILY ASSISTANCE (2026-08-15): optional — pay half now, half next month.
-  const [assistance, setAssistance] = useState(false)
   const [defaultReferral, setDefaultReferral] = useState('')
   const [students, setStudents] = useState<StudentForm[]>([emptyStudent()])
   const [termsChecked, setTermsChecked] = useState(false)
@@ -244,7 +242,6 @@ export default function EnrollPage() {
           studentName: `${payload.students[0].student_first_name} ${payload.students[0].student_last_name}`,
           parentName: `${payload.parent_first_name} ${payload.parent_last_name}`,
           billing: billingMode,
-          assistance,
         }),
       })
 
@@ -402,22 +399,18 @@ export default function EnrollPage() {
               <p className="text-sm text-gray-600">
                 {billingMode === 'yearly'
                   ? 'One payment of $525 covers the full school year ($450 tuition + $75 one-time registration fee). No recurring charges.'
-                  : assistance
-                    ? 'Covers both your $45/month tuition and your $75 one-time paperwork fee — split into 3 easy payments. First payment: $70 per student ($45 tuition + $25 of the $75 paperwork fee). Then $70 for the next two months, then $45/month.'
-                    : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
+                  : 'First payment: $120 per student ($75 one-time registration fee + $45 first month). Then $45/month per student. Cancel anytime.'}{' '}
                 <strong className="text-amber-700">
                   Free curriculum resources included (Khan Academy, Discovery K12, and more).
                 </strong>
               </p>
               <p className="mt-1 text-sm font-semibold text-emerald-700">
-                {assistance && billingMode === 'monthly'
-                  ? `Your total today: $${70 * studentCount}${studentCount > 1 ? ` (${studentCount} children × $70)` : ''} — then $70 for the next two months`
-                  : `Your total today: ${studentCount === 1
-                      ? (billingMode === 'yearly' ? '$525' : '$120')
-                      : (billingMode === 'yearly'
-                          ? `$${525 * studentCount} (${studentCount} children × $525)`
-                          : `$${120 * studentCount} (${studentCount} children × $120)`)}{' '}
-                  {studentCount > 1 ? '— one charge per child' : ''}`}
+                {`Your total today: ${studentCount === 1
+                    ? (billingMode === 'yearly' ? '$525' : '$120')
+                    : (billingMode === 'yearly'
+                        ? `$${525 * studentCount} (${studentCount} children × $525)`
+                        : `$${120 * studentCount} (${studentCount} children × $120)`)}{' '}
+                {studentCount > 1 ? '— one charge per child' : ''}`}
               </p>
             </div>
           </CardContent>
@@ -446,71 +439,6 @@ export default function EnrollPage() {
           </CardContent>
         </Card>
 
-        {/* 🆕 Parent Assistance Payments (2026-08-15) — monthly plan only */}
-        {billingMode === 'monthly' && (
-          <Card fun="green" className="mt-4">
-            <CardContent className="flex items-start gap-4 p-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-200 to-emerald-100 shadow-sm">
-                <HeartHandshake className="h-6 w-6 text-emerald-700" />
-              </div>
-              <div className="flex-1">
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={assistance}
-                    onChange={(e) => setAssistance(e.target.checked)}
-                    className="mt-1 h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                  />
-                  <span>
-                    <span className="font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
-                      🤝 Parent Assistance Payments — Pay Over 3 Months
-                    </span>
-                    <span className="mt-1 block text-sm text-gray-600 leading-relaxed">
-                      Need a little flexibility? This option covers <strong>both</strong> your{' '}
-                      <strong>$45/month tuition fee</strong> and your <strong>$75 one-time
-                      paperwork fee</strong> — we split the $75 paperwork fee into{' '}
-                      <strong>three payments of $25</strong>. So for the first three months you
-                      pay <strong>$70/month</strong> ($45 tuition + $25 paperwork) instead of one
-                      big $120 first payment. No extra fees, same total.
-                    </span>
-                  </span>
-                </label>
-
-                {/* 🆕 Expandable breakdown — appears when the option is selected */}
-                {assistance && (
-                  <div className="mt-4 rounded-xl border-2 border-emerald-200 bg-emerald-50 p-4">
-                    <p className="text-sm font-bold text-emerald-900">📊 Here&apos;s what you&apos;ll pay:</p>
-                    <div className="mt-2 space-y-1 text-sm text-emerald-800">
-                      <p className="flex justify-between"><span>Month 1 (today):</span><strong>$70/student</strong></p>
-                      <p className="flex justify-between"><span>Month 2:</span><strong>$70/student</strong></p>
-                      <p className="flex justify-between"><span>Month 3:</span><strong>$70/student</strong></p>
-                      <p className="flex justify-between"><span>Months 4–10:</span><strong>$45/student</strong></p>
-                    </div>
-                    <p className="mt-3 border-t border-emerald-200 pt-2 text-xs text-emerald-700">
-                      This plan covers <strong>both</strong> your <strong>$45/month tuition fee</strong>{' '}
-                      and your <strong>$75 one-time paperwork fee</strong>. We split the $75
-                      paperwork fee into <strong>three payments of $25</strong> — one added to
-                      each of your first three months. Total: <strong>$525</strong> — the same
-                      as paying in full, just spread out. 💜
-                    </p>
-                    <p className="mt-1 text-xs font-medium text-emerald-700">
-                      🎁 Don&apos;t forget: you still get your referral code! When a family you
-                      refer enrolls and pays, you earn <strong>one month free ($45 credit)</strong> —{' '}
-                      no limit, every referral stacks. Your code is in your Parent Portal after
-                      enrollment.{' '}
-                      <Link href="/referral" className="underline underline-offset-2 hover:text-emerald-800">
-                        See how referrals work
-                      </Link>
-                    </p>
-                    <p className="mt-1 text-xs text-emerald-600">
-                      Prefer to pay all at once? Just uncheck this box and pay $120 today.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* No Refund Policy */}
         <p className="text-xs text-gray-400 text-center mt-4">

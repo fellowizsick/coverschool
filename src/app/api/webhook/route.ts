@@ -111,49 +111,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // 🆕 FAMILY ASSISTANCE (Option C, 2026-08-15): the $75 registration fee is
-    // split into THREE payments of $25. $25 was charged at checkout (reg fee
-    // line), so schedule the remaining TWO $25 items on the NEXT TWO invoices:
-    // month 2 and month 3. Tuition ($45/mo) bills every month automatically.
-    // Months 1-3 = $70 each ($25 reg + $45 tuition), then $45/mo. Total $525.
-    if (session.metadata?.assistance === 'true' && session.subscription && session.customer) {
-      try {
-        const sub = await stripe.subscriptions.retrieve(session.subscription)
-        const monthSeconds = 30 * 24 * 60 * 60 // Stripe months ~30 days for period math
-        const m2Start = sub.current_period_end
-        const m2End = m2Start + monthSeconds
-        const m3Start = m2End
-        const m3End = m3Start + monthSeconds
-
-        // Month-2 invoice gets $25 (lands on the invoice whose billing period
-        // contains this period)
-        const item2 = await stripe.invoiceItems.create({
-          customer: session.customer,
-          subscription: session.subscription,
-          amount: 2500, // $25 — registration fee portion (month 2 of 3)
-          currency: 'usd',
-          description: 'Larose Christian Academy — Registration Fee (Family Assistance, month 2 of 3)',
-          period: { start: m2Start, end: m2End },
-          metadata: { enrollment_id: enrollmentId, type: 'family_assistance_deferred' },
-        })
-        // Month-3 invoice gets $25
-        const item3 = await stripe.invoiceItems.create({
-          customer: session.customer,
-          subscription: session.subscription,
-          amount: 2500, // $25 — registration fee portion (month 3 of 3)
-          currency: 'usd',
-          description: 'Larose Christian Academy — Registration Fee (Family Assistance, month 3 of 3)',
-          period: { start: m3Start, end: m3End },
-          metadata: { enrollment_id: enrollmentId, type: 'family_assistance_deferred' },
-        })
-        console.log(`🆕 Family Assistance: deferred $25→month-2 + $25→month-3 for subscription ${session.subscription} (${item2.id}, ${item3.id})`)
-      } catch (err) {
-        console.error('Failed to schedule Family Assistance deferred payments:', err)
-        // Non-fatal: enrollment is already approved; the deferred amounts can be
-        // re-scheduled from the dashboard if this ever fails.
-      }
-    }
-
     // 🎁 If this session used yearly referral discounts, mark those credits applied
     const usedCreditIds = session.metadata?.referral_credit_ids
     if (usedCreditIds) {

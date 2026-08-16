@@ -5,12 +5,8 @@ const REFERRAL_CREDIT_AMOUNT = 4500 // $45.00 in cents
 
 export async function POST(request: Request) {
   try {
-    const { enrollmentId, email, studentName, parentName, billing, assistance } = await request.json()
+    const { enrollmentId, email, studentName, parentName, billing } = await request.json()
     const isYearly = billing === 'yearly'
-    // 🆕 FAMILY ASSISTANCE (2026-08-15): optional — monthly plan only.
-    // Half the first payment now ($60), other half on the month-2 invoice.
-    // Full-pay families (assistance=false) are 100% unchanged.
-    const isAssistance = !isYearly && assistance === true
 
     if (!enrollmentId || !email) {
       return NextResponse.json(
@@ -96,18 +92,11 @@ export async function POST(request: Request) {
     // clearly (per-student billing, never per-family). Every new student's FIRST
     // payment includes the one-time $75 registration fee + tuition, so the first
     // month totals $120/child ($75 + $45), then $45/mo per child after that.
-    // 🆕 FAMILY ASSISTANCE (Option C, 2026-08-15): the $75 reg fee is split into
-    // THREE payments of $25 — charged on the first THREE invoices. Tuition is
-    // $45/mo every month no matter what. So months 1-3 = $70 each ($25 reg +
-    // $45 tuition), then $45/mo. Total $525 — identical to full-pay families.
     const REG_FEE_CENTS = 7500 // $75 per student, one-time
-    const ASSISTANCE_REG_FEE_CENTS = 2500 // $25 now under assistance; $25 on month 2 and $25 on month 3 via webhook
-    const ASSISTANCE_DEFERRED_CENTS = 2500 // per-month deferred amount on months 2 and 3
     const lineItems = groupEnrollments.flatMap((e) => {
       const childName = `${e.student_first_name} ${e.student_last_name}`
       const parentLabel = parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name
-      // 🧾 One-time registration fee ($75 per student — under Family Assistance it's
-      // $25 now, with $25 on each of the next two invoices via the webhook)
+      // 🧾 One-time registration fee ($75 per student — included in the first payment)
       const regFeeItem = {
         price_data: {
           currency: 'usd',
@@ -115,7 +104,7 @@ export async function POST(request: Request) {
             name: 'Larose Christian Academy — One-Time Registration Fee',
             description: `Registration fee for: ${childName} | Parent: ${parentLabel}. Covers student file setup, transcript initiation, and record-keeping configuration.`,
           },
-          unit_amount: isAssistance ? ASSISTANCE_REG_FEE_CENTS : REG_FEE_CENTS,
+          unit_amount: REG_FEE_CENTS,
         },
         quantity: 1,
       }
@@ -165,8 +154,6 @@ export async function POST(request: Request) {
         // 👨‍👩‍👧‍👦 All sibling enrollment ids so the webhook approves every child
         enrollment_ids: groupIds.join(','),
         billing: isYearly ? 'yearly' : 'monthly',
-        // 🆕 FAMILY ASSISTANCE: tells the webhook to defer the remaining $60
-        assistance: isAssistance ? 'true' : 'false',
         referral_credit_ids: referralDiscount?.creditIds?.join(',') || '',
       },
       line_items: lineItems,
