@@ -130,6 +130,17 @@ export default function ReferralPage() {
               earns you a reward — automatically.
             </p>
           </div>
+          <div className="mt-3 rounded-xl bg-emerald-50 border border-emerald-200 p-5 text-center">
+            <p className="text-sm text-emerald-800">
+              <strong>On the Parent Assistance plan?</strong> You still get referrals! Families on
+              the $70/month split-payment plan earn <strong>one month free ($45 credit)</strong> per
+              paying referral, just like everyone else.{' '}
+              <Link href="/enroll" className="font-semibold text-emerald-700 underline underline-offset-2 hover:text-emerald-800">
+                See the Parent Assistance option
+              </Link>
+              .
+            </p>
+          </div>
         </div>
       </section>
 
