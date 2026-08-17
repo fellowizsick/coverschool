@@ -65,7 +65,18 @@ export async function POST(request: Request) {
     // ⛔ CHURCH FORM GATE (2026-08-16, user directive): payment cannot be
     // accepted until the Church / Home School Enrollment Form is completed for
     // EVERY student in the family. This blocks direct URL hits too.
-    const missingChurchForm = groupEnrollments.filter((e) => e.church_form_status !== 'submitted')
+    // FIX 2026-08-17: filter out duplicate enrollments for the same student
+    // (same first+last name) — only check the LATEST one per student.
+    const latestPerStudent = new Map()
+    for (const e of groupEnrollments) {
+      const key = `${(e.student_first_name || '').trim().toLowerCase()}|${(e.student_last_name || '').trim().toLowerCase()}`
+      const existing = latestPerStudent.get(key)
+      if (!existing || new Date(e.created_at) > new Date(existing.created_at)) {
+        latestPerStudent.set(key, e)
+      }
+    }
+    const dedupedEnrollments = Array.from(latestPerStudent.values())
+    const missingChurchForm = dedupedEnrollments.filter((e) => e.church_form_status !== 'submitted')
     if (missingChurchForm.length > 0) {
       return NextResponse.json(
         { error: 'Please complete the Church / Home School Enrollment Form for every student before payment.' },
