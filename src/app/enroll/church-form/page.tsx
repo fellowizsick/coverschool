@@ -78,7 +78,11 @@ function ChurchFormContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          enrollmentId: groupId || enrollmentId,
+          // 🔧 FIX 2026-08-18: send the REAL enrollment id, not the family
+          // group id — create-checkout looks rows up by id (it now also
+          // accepts family_group_id as a fallback). Before this, every fresh
+          // signup hit "Enrollment not found" on this button.
+          enrollmentId: enrollmentId || groupId || enrollmentId,
           email: emailParam,
           studentName: studentsList[0]?.name || studentName,
           parentName: parentParam,

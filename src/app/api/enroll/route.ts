@@ -228,38 +228,56 @@ export async function POST(request: Request) {
     }
 
     const nowIso = new Date().toISOString()
+    // 🔧 FIX 2026-08-18 (duplicate-row stacking): reuse an existing enrollment
+    // row for the same student (same first+last name) in this family group
+    // instead of inserting a duplicate. Retries used to stack junk rows
+    // (Sherri Parker ×2, Trance Poppy ×3) that confused the church-form and
+    // payment flow. Reused students keep their original id.
+    const { data: existingStudents } = await supabase
+      .from('enrollments')
+      .select('id, student_first_name, student_last_name')
+      .eq('family_group_id', familyGroupId)
+    const existingByKey = new Map<string, string>()
+    for (const e of existingStudents || []) {
+      const key = `${(e.student_first_name || '').trim().toLowerCase()}|${(e.student_last_name || '').trim().toLowerCase()}`
+      if (!existingByKey.has(key)) existingByKey.set(key, e.id)
+    }
     // ⚠️ referral_code has a UNIQUE constraint — only the PRIMARY row carries it.
     // Siblings get null (one referral code per family; no duplicate-key collision).
     // Note: for a RETURNING parent the primary row here still gets its own fresh
     // referral code — that's correct: each new child submission is a new referral
     // opportunity, but they share the family group for billing/records.
-    const rows = studentList.map((s, idx) => ({
-      parent_first_name,
-      parent_last_name,
-      email,
-      phone,
-      address_line1,
-      address_line2: address_line2 || '',
-      city,
-      state,
-      zip,
-      student_first_name: s.student_first_name,
-      student_last_name: s.student_last_name,
-      student_grade: s.student_grade,
-      student_dob: s.student_dob,
-      previous_school: s.previous_school || '',
-      ssn_last_four: s.ssn_last_four,
-      notes: notes || '',
-      status: 'pending',
-      payment_status: 'pending',
-      // One referral code + one referred_by_code live on the PRIMARY row only,
-      // so a single family pays = exactly one referral credit (no farming).
-      referral_code: idx === 0 ? referralCode : null,
-      referred_by_code: idx === 0 ? normalizedReferral : null,
-      family_group_id: familyGroupId,
-      terms_accepted_at: nowIso,
-      terms_ip: ip,
-    }))
+    const rows = studentList.flatMap((s, idx) => {
+      const key = `${(s.student_first_name || '').trim().toLowerCase()}|${(s.student_last_name || '').trim().toLowerCase()}`
+      if (existingByKey.has(key)) return [] // reuse existing row — no duplicate
+      return [{
+        parent_first_name,
+        parent_last_name,
+        email,
+        phone,
+        address_line1,
+        address_line2: address_line2 || '',
+        city,
+        state,
+        zip,
+        student_first_name: s.student_first_name,
+        student_last_name: s.student_last_name,
+        student_grade: s.student_grade,
+        student_dob: s.student_dob,
+        previous_school: s.previous_school || '',
+        ssn_last_four: s.ssn_last_four,
+        notes: notes || '',
+        status: 'pending',
+        payment_status: 'pending',
+        // If the FIRST student is reused, no new referral code is created —
+        // the family keeps their existing code.
+        referral_code: idx === 0 ? referralCode : null,
+        referred_by_code: idx === 0 ? normalizedReferral : null,
+        family_group_id: familyGroupId,
+        terms_accepted_at: nowIso,
+        terms_ip: ip,
+      }]
+    })
 
     const { data, error } = await supabase
       .from('enrollments')
@@ -274,7 +292,15 @@ export async function POST(request: Request) {
       )
     }
 
-    const ids = (data || []).map((r) => r.id)
+    // Response ids must line up 1:1 with the submitted student list (the
+    // church-form flow maps students[i] → ids[i]). Reused students keep their
+    // existing id; brand-new students get the inserted ids in order.
+    let newIdx = 0
+    const ids = studentList.map((s) => {
+      const key = `${(s.student_first_name || '').trim().toLowerCase()}|${(s.student_last_name || '').trim().toLowerCase()}`
+      if (existingByKey.has(key)) return existingByKey.get(key) as string
+      return (data?.[newIdx++] as any)?.id
+    })
     return NextResponse.json(
       {
         message: 'Enrollment submitted successfully',

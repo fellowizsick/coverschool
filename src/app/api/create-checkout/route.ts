@@ -32,11 +32,28 @@ export async function POST(request: Request) {
     const supabase = createAdminClient()
 
     // Look up this enrollment so we know which plan they're on and their email
-    const { data: enrollment } = await supabase
+    let { data: enrollment } = await supabase
       .from('enrollments')
       .select('*')
       .eq('id', enrollmentId)
       .maybeSingle()
+
+    // 🔧 FIX 2026-08-18 (payment dead-end): the church-form "Continue to
+    // Payment" button passes the family_group_id, not an enrollment id —
+    // families finished the church form but got "Enrollment not found" and
+    // never reached Stripe (Sherri Parker tried 3×). Fall back to the LATEST
+    // enrollment in that family group so every path reaches checkout.
+    if (!enrollment) {
+      const { data: byFamily } = await supabase
+        .from('enrollments')
+        .select('*')
+        .eq('family_group_id', enrollmentId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+      if (byFamily && byFamily.length > 0) {
+        enrollment = byFamily[0]
+      }
+    }
 
     if (!enrollment) {
       return NextResponse.json(
