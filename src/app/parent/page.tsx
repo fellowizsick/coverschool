@@ -6,6 +6,7 @@ import Link from 'next/link'
 import StopMembershipButton from '@/components/StopMembershipButton'
 import RemoveChildButton from '@/components/RemoveChildButton'
 import ManagePaymentButton from '@/components/ManagePaymentButton'
+import FinishPaymentButton from '@/components/FinishPaymentButton'
 import ReferralCard from '@/components/ReferralCard'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { getTransferGrades, computeGpa, formatGpa } from '@/lib/transfer-grades'
@@ -253,6 +254,25 @@ export default async function ParentPortalPage() {
                         <Clock className="h-3.5 w-3.5" />
                         Grades and records unlock once enrollment is approved
                       </div>
+                      {/* 🔧 FIX 2026-08-18: self-serve resume — a family who
+                          filled the forms but never paid can finish right here,
+                          no agent-issued links. Church form not done → they
+                          get sent back to finish it first. */}
+                      {e.status !== 'cancelled' && e.payment_status !== 'paid' && (
+                        <div className="mt-3">
+                          {e.church_form_status === 'submitted' ? (
+                            <FinishPaymentButton enrollmentId={e.id} email={e.email} />
+                          ) : (
+                            <Link
+                              href={`/enroll/church-form?enrollment_id=${e.id}&student=${encodeURIComponent(`${e.student_first_name} ${e.student_last_name}`)}`}
+                            >
+                              <Button variant="gold" size="sm" className="w-full sm:w-auto">
+                                📋 Complete Church Form →
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
 
