@@ -70,7 +70,7 @@ export default function ReferralCard({
 
       {referralCodes.length === 0 ? (
         <p className="mt-4 text-sm text-gray-500">
-          Your referral code will appear here once your enrollment is submitted.
+          Your referral code will appear here once your first payment is complete.
         </p>
       ) : (
         <div className="mt-4 space-y-3">

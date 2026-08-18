@@ -2,16 +2,6 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { randomUUID } from 'crypto'
 
-// Generate a short, unique, human-friendly referral code like LCA-K7X2Q
-function generateReferralCode() {
-  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // no 0/O/1/I
-  let code = ''
-  for (let i = 0; i < 5; i++) {
-    code += alphabet[Math.floor(Math.random() * alphabet.length)]
-  }
-  return `LCA-${code}`
-}
-
 // 🛡️ Simple in-memory rate limit: max 10 enrollment submissions per IP per hour.
 // (Vercel serverless is per-instance, so this is a soft limiter — enough to stop
 // casual spam; a hard global limit would need a DB-backed counter.)
@@ -192,28 +182,15 @@ export async function POST(request: Request) {
       normalizedReferral = code
     }
 
-    // Generate a unique referral code for this family (one per submission —
-    // siblings share the family link). Retry on collision.
-    let referralCode = generateReferralCode()
-    let collision = true
-    while (collision) {
-      const { data: existing } = await supabase
-        .from('enrollments')
-        .select('id')
-        .eq('referral_code', referralCode)
-        .maybeSingle()
-      if (existing) {
-        referralCode = generateReferralCode()
-      } else {
-        collision = false
-      }
-    }
-
     // One family_group_id links every child in this submission together.
     // 👨‍👩‍👧‍👦 RETURNING PARENT: if this email already has enrollments, reuse the
     // most recent family_group_id so the NEW children join the SAME family as
     // their siblings. This keeps billing (one subscription per family), the
     // remove-child logic, and referral handling consistent across re-enrolls.
+    // 🔧 FIX 2026-08-18 (Jonathan directive): referral codes are ONLY issued
+    // after the family PAYS — never at enrollment submission. The webhook
+    // assigns the code when checkout completes. referred_by_code (whose code
+    // THIS family used) still records at submission for attribution.
     let familyGroupId = randomUUID()
     const { data: existingFamily } = await supabase
       .from('enrollments')
@@ -269,9 +246,11 @@ export async function POST(request: Request) {
         notes: notes || '',
         status: 'pending',
         payment_status: 'pending',
-        // If the FIRST student is reused, no new referral code is created —
-        // the family keeps their existing code.
-        referral_code: idx === 0 ? referralCode : null,
+        // Referral code is assigned by the WEBHOOK after payment (Jonathan
+        // directive 2026-08-18: no code before paying). The referred_by_code
+        // (attribution) lives on the PRIMARY row only — one referral credit
+        // per family, no farming.
+        referral_code: null,
         referred_by_code: idx === 0 ? normalizedReferral : null,
         family_group_id: familyGroupId,
         terms_accepted_at: nowIso,

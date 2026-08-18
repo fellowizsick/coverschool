@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
+import { generateReferralCode } from '@/lib/referral'
 
 const REFERRAL_CREDIT_AMOUNT = 4500 // $45.00 in cents
 
@@ -81,6 +82,38 @@ export async function POST(request: Request) {
     if (updateError) {
       console.error('Failed to update enrollments:', updateError)
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
+    }
+
+    // 🔧 FIX 2026-08-18 (Jonathan directive): issue the family's referral code
+    // NOW — only after they've PAID. Codes are no longer assigned at signup,
+    // so a family's own code only exists once they're a paying customer.
+    try {
+      const primary = enrollmentIds[0]
+      const { data: primaryRow } = await supabase
+        .from('enrollments')
+        .select('referral_code')
+        .eq('id', primary)
+        .maybeSingle()
+      if (primaryRow && !primaryRow.referral_code) {
+        let code = generateReferralCode()
+        let collision = true
+        while (collision) {
+          const { data: existing } = await supabase
+            .from('enrollments')
+            .select('id')
+            .eq('referral_code', code)
+            .maybeSingle()
+          if (existing) {
+            code = generateReferralCode()
+          } else {
+            collision = false
+          }
+        }
+        await supabase.from('enrollments').update({ referral_code: code }).eq('id', primary)
+        console.log(`🎁 Referral code ${code} issued to ${primary} after payment`)
+      }
+    } catch (refErr) {
+      console.error('Referral code issue failed:', refErr)
     }
 
     // ⏰ Monthly auto-cancel after 10 months (2026-08-03 fix; 2026-08-04 corrected)
