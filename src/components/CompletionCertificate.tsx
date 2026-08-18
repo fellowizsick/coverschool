@@ -144,9 +144,10 @@ export default function CompletionCertificate({
   .name { font-size: 6.4vh; font-weight: 900; color: #6d28d9; margin: 0.6vh 0;
     border-bottom: 3px solid #c4b5fd; padding: 0 5vw 0.4vh; }
   .body { font-size: 2.5vh; max-width: 64vw; margin: 1.2vh 0; line-height: 1.5; }
-  .seal { position: absolute; right: 12%; bottom: 16%; width: 15vh; height: 15vh; border-radius: 50%;
-    border: 4px dashed #f59e0b; background: radial-gradient(circle, #fff7ed, #fed7aa);
-    display: flex; align-items: center; justify-content: center; font-size: 6vh; }
+  .seal { position: absolute; right: 12%; bottom: 16%; width: 17vh; height: 17vh; border-radius: 50%;
+    border: 5px dashed #f59e0b; background: #ffffff; box-shadow: 0 0 0 5px #fde68a inset;
+    display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .seal img { width: 88%; height: 88%; object-fit: contain; border-radius: 50%; }
   .foot { position: absolute; bottom: 7%; width: 70vw; display: flex; justify-content: space-between; font-size: 1.9vh; color: #334155; }
   .sig { border-top: 1.5px solid #475569; padding-top: 0.5vh; min-width: 22vw; }
   .cross { position: absolute; left: 12%; top: 14%; font-size: 4vh; color: #ef444455; }
@@ -161,7 +162,7 @@ export default function CompletionCertificate({
     <div class="award">This certifies that</div>
     <div class="name">${studentName}</div>
     <div class="body">${t.blurb}<br/><br/><strong>${grade}</strong></div>
-    <div class="seal">${t.seal}</div>
+    <div class="seal"><img src="/lca-logo.png" alt="Larose Christian Academy crest"/></div>
     <div class="foot">
       <div class="sig">Date: ${date}</div>
       <div class="sig">Anne Brown, Administrator</div>
