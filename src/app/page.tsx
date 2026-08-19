@@ -155,7 +155,7 @@ export default function HomePage() {
 
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link href="/enroll">
-                  <Button size="lg" variant="fun" className="w-full sm:w-auto shadow-xl shadow-purple-500/20 animate-bounce-soft">
+                  <Button size="lg" variant="fun" className="w-full sm:w-auto shadow-xl shadow-purple-500/20">
                     ✨ Enroll Your Student
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
