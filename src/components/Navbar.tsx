@@ -106,7 +106,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 xl:flex">
+          <nav className="hidden items-center gap-0.5 2xl:flex">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href
               const isEnroll = link.highlight
@@ -117,7 +117,7 @@ export default function Navbar() {
                     <Button
                       size="sm"
                       variant="gold"
-                      className={`ml-2 ${isActive ? 'ring-2 ring-amber-300 ring-offset-2' : ''}`}
+                      className={`ml-1.5 ${isActive ? 'ring-2 ring-amber-300 ring-offset-2' : ''}`}
                     >
                       <Sparkles className="h-3.5 w-3.5" />
                       {link.label}
@@ -130,7 +130,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
+                  className={`relative whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 group ${
                     isActive
                       ? scrolled
                         ? 'text-emerald-700 bg-emerald-50 shadow-sm'
@@ -161,7 +161,7 @@ export default function Navbar() {
                 : scrolled
                   ? 'text-gray-600 hover:bg-emerald-50/50 hover:text-emerald-700'
                   : 'text-white/90 hover:bg-white/10 hover:text-white'
-            } xl:hidden`}
+            } 2xl:hidden`}
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={22} /> : <Menu size={22} />}
@@ -172,14 +172,14 @@ export default function Navbar() {
       {/* Mobile Nav Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-gradient-to-br from-black/30 to-emerald-900/20 backdrop-blur-sm xl:hidden"
+          className="fixed inset-0 z-40 bg-gradient-to-br from-black/30 to-emerald-900/20 backdrop-blur-sm 2xl:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Mobile Nav Panel */}
       <div
-        className={`fixed top-0 right-0 z-40 h-full w-72 transform overflow-y-auto border-l border-gray-100 bg-white/95 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-out xl:hidden ${
+        className={`fixed top-0 right-0 z-40 h-full w-72 transform overflow-y-auto border-l border-gray-100 bg-white/95 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-out 2xl:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
