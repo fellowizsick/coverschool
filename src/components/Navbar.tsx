@@ -75,7 +75,7 @@ export default function Navbar() {
       <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between md:h-20">
           {/* Logo with secret admin long-press (hold 3s) */}
-          <div className="group flex items-center gap-3">
+          <div className="group flex shrink-0 items-center gap-3">
             <div
               className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-700 via-emerald-500 to-amber-400 text-white shadow-lg shadow-emerald-900/20 transition-all duration-300 group-hover:shadow-emerald-900/30 group-hover:scale-110 group-hover:rotate-3 cursor-pointer select-none overflow-hidden md:h-14 md:w-14"
               onMouseDown={() => startHold()}
@@ -106,7 +106,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-1 xl:flex">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href
               const isEnroll = link.highlight
@@ -130,7 +130,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
+                  className={`relative whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 group ${
                     isActive
                       ? scrolled
                         ? 'text-emerald-700 bg-emerald-50 shadow-sm'
@@ -161,7 +161,7 @@ export default function Navbar() {
                 : scrolled
                   ? 'text-gray-600 hover:bg-emerald-50/50 hover:text-emerald-700'
                   : 'text-white/90 hover:bg-white/10 hover:text-white'
-            } md:hidden`}
+            } xl:hidden`}
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={22} /> : <Menu size={22} />}
@@ -172,14 +172,14 @@ export default function Navbar() {
       {/* Mobile Nav Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-gradient-to-br from-black/30 to-emerald-900/20 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-gradient-to-br from-black/30 to-emerald-900/20 backdrop-blur-sm xl:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Mobile Nav Panel */}
       <div
-        className={`fixed top-0 right-0 z-40 h-full w-72 transform overflow-y-auto border-l border-gray-100 bg-white/95 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed top-0 right-0 z-40 h-full w-72 transform overflow-y-auto border-l border-gray-100 bg-white/95 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-out xl:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
