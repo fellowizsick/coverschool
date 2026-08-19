@@ -110,7 +110,7 @@ export default function HomePage() {
   return (
     <>
       {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950">
+      <section className="relative min-h-screen flex items-start lg:items-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950">
         {/* Animated background orbs — more colorful */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl animate-pulse-soft" />
@@ -146,7 +146,7 @@ export default function HomePage() {
                 </span>
               </h1>
 
-              <p className="text-lg leading-relaxed text-emerald-100/80 max-w-xl">
+              <p className="text-base sm:text-lg leading-relaxed text-emerald-100/90 max-w-xl">
                 We provide the legal oversight, record-keeping, and support your
                 family needs to homeschool with peace of mind. Do school your way —
                 upload your child&apos;s work and we keep the grades, report cards, and
