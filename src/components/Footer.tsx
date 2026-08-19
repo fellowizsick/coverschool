@@ -99,7 +99,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm text-gray-400">
               <li className="group flex items-start gap-2 transition-all duration-200 hover:text-emerald-400">
                 <span className="mt-0.5 text-emerald-500 group-hover:animate-wiggle">✉</span>
-                <a href={`mailto:${SCHOOL_CONFIG.email}`} className="transition-colors hover:text-emerald-400">
+                <a href={`mailto:${SCHOOL_CONFIG.email}`} className="transition-colors break-all hover:text-emerald-400">
                   {SCHOOL_CONFIG.email}
                 </a>
               </li>
