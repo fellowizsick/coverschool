@@ -2,8 +2,6 @@
 import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 
-const ADMIN_EMAILS = ['1990jonathanbbrown@gmail.com', 'anneb7669@gmail.com']
-
 /**
  * GET /api/referral-code?enrollmentId=xxx
  * Returns the referral code for an enrollment (used by the enroll success page
@@ -40,10 +38,12 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Enrollment not found' }, { status: 404 })
     }
 
-    // 🔒 Ownership check: the caller must be the enrolled parent, or an admin
-    const isAdmin = ADMIN_EMAILS.includes(user.email.toLowerCase().trim())
+    // 🔒 Ownership check: ONLY the enrolled parent may view their own code.
+    // 🔒 FIX 2026-08-19 (Jonathan directive): admins are NO LONGER allowed to pull
+    // any family's referral code through this API. Codes are the parents' private
+    // share-links — admin staff see forms/records, never referral codes.
     const isOwner = data.email?.toLowerCase() === user.email.toLowerCase().trim()
-    if (!isAdmin && !isOwner) {
+    if (!isOwner) {
       return NextResponse.json({ error: 'You can only view your own referral code' }, { status: 403 })
     }
 

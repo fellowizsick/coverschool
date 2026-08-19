@@ -79,13 +79,18 @@ export default async function ParentPortalPage() {
 
   return (
     <div className="space-y-10 pt-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-      {/* 🎁 Referral Program */}
-      <ReferralCard
-        referralCodes={referralCodes}
-        creditsEarned={creditsEarned}
-        creditsApplied={creditsApplied}
-        siteUrl={siteUrl}
-      />
+      {/* 🎁 Referral Program — PARENTS ONLY. 🔒 FIX 2026-08-19 (Jonathan directive):
+          the admin view was listing EVERY family's referral codes here. Codes are
+          the parents' private share-links — admins see student data, forms, and
+          records, but NOT referral codes. Hidden for admins entirely. */}
+      {!isAdmin && (
+        <ReferralCard
+          referralCodes={referralCodes}
+          creditsEarned={creditsEarned}
+          creditsApplied={creditsApplied}
+          siteUrl={siteUrl}
+        />
+      )}
 
       {/* Header */}
       <div className="flex items-center justify-between">
