@@ -77,7 +77,6 @@ export async function POST(request: Request) {
       }
     }
     const groupIds = groupEnrollments.map((e) => e.id)
-    const studentCount = groupEnrollments.length
 
     // ⛔ CHURCH FORM GATE (2026-08-16, user directive): payment cannot be
     // accepted until the Church / Home School Enrollment Form is completed for
@@ -131,8 +130,12 @@ export async function POST(request: Request) {
     // clearly (per-student billing, never per-family). Every new student's FIRST
     // payment includes the one-time $75 registration fee + tuition, so the first
     // month totals $120/child ($75 + $45), then $45/mo per child after that.
+    // FIX 2026-08-20 (double-charge bug, Sherri Bates): build line items from
+    // dedupedEnrollments, NOT groupEnrollments — duplicate rows for the SAME
+    // student (double-submit) previously charged the child twice on Stripe
+    // ($240 instead of $120) and the parent abandoned checkout.
     const REG_FEE_CENTS = 7500 // $75 per student, one-time
-    const lineItems = groupEnrollments.flatMap((e) => {
+    const lineItems = dedupedEnrollments.flatMap((e) => {
       const childName = `${e.student_first_name} ${e.student_last_name}`
       const parentLabel = parentName || enrollment.parent_first_name + ' ' + enrollment.parent_last_name
       // 🧾 One-time registration fee ($75 per student — included in the first payment)
