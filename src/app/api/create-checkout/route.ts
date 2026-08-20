@@ -62,6 +62,16 @@ export async function POST(request: Request) {
       )
     }
 
+    // FIX 2026-08-20 (removed-child price bug): never open checkout from a
+    // cancelled enrollment (removed child) — covers legacy rows with no
+    // family_group_id that the group filter can't exclude.
+    if (enrollment.status === 'cancelled') {
+      return NextResponse.json(
+        { error: 'This enrollment has been removed. Please contact the school if you need to re-enroll.' },
+        { status: 400 }
+      )
+    }
+
     // 👨‍👩‍👧‍👦 MULTI-CHILD: fetch ALL siblings in this family group so the
     // checkout charges per student, not per family. If this enrollment has no
     // family_group_id (legacy row), it's just the one student.
@@ -71,6 +81,11 @@ export async function POST(request: Request) {
         .from('enrollments')
         .select('*')
         .eq('family_group_id', enrollment.family_group_id)
+        // FIX 2026-08-20 (removed-child price bug): exclude cancelled rows.
+        // A removed child (remove-child marks status='cancelled') must NEVER be
+        // charged again in a new checkout — previously a family that removed a
+        // child then re-entered checkout would be billed for them again.
+        .neq('status', 'cancelled')
         .order('created_at', { ascending: true })
       if (siblings && siblings.length > 0) {
         groupEnrollments = siblings
