@@ -202,7 +202,7 @@ export default function HomePage() {
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-white font-heading">Your Homeschool Journey 🌟</h3>
-                        <p className="mt-2 text-sm text-emerald-200/60">Starts Here</p>
+                        <p className="mt-2 text-sm text-emerald-200">Starts Here</p>
                       </div>
                     </div>
 
@@ -220,23 +220,23 @@ export default function HomePage() {
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-emerald-200/50">
+                    <div className="flex items-center gap-2 text-sm text-emerald-200">
                       <div className="h-px flex-1 bg-emerald-500/20" />
                       <span>$45/mo Tuition (10 months)</span>
                       <div className="h-px flex-1 bg-emerald-500/20" />
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs text-emerald-300/40">
+                    <div className="flex items-center gap-2 text-xs text-emerald-200">
                       <div className="h-px flex-1 bg-emerald-500/10" />
                       <span>+ $75 Annual Registration Fee</span>
                       <div className="h-px flex-1 bg-emerald-500/10" />
                     </div>
 
-                    <p className="mt-2 text-xs text-emerald-300/60 text-center font-semibold">
+                    <p className="mt-2 text-xs text-emerald-100 text-center font-semibold">
                       = $525/year per student
                     </p>
 
-                    <p className="mt-1 text-[10px] text-emerald-300/30 text-center">
+                    <p className="mt-1 text-[10px] text-emerald-200 text-center">
                       Curriculum books purchased separately
                     </p>
                   </div>
