@@ -14,15 +14,20 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://laroseca.org'),
   title: 'Larose Christian Academy | Supporting Homeschool Families',
   description:
     'An Alabama-based church school providing cover school services for homeschooling families across the United States. Homeschool with confidence.',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'Larose Christian Academy',
     description:
       'Supporting homeschool families across America with legal oversight, record-keeping, and community.',
     siteName: 'Larose Christian Academy',
     type: 'website',
+    url: 'https://laroseca.org',
     images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: 'Larose Christian Academy crest' }],
   },
 }
