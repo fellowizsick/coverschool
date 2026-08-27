@@ -49,7 +49,6 @@ export async function POST(request: Request) {
 
   // 2. Sync the students table (if a student row exists for this enrollment).
   await admin.from('students').update({ status: 'graduated' }).eq('enrollment_id', enrollmentId)
-  await admin.from('students').update({ status: 'graduated' }).eq('id', enrollmentId)
 
   // 3. Create the permanent diploma record.
   const { data: diploma, error: dipErr } = await admin.from('diplomas').insert({
