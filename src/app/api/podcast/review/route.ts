@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
-import { createSignedGetUrl } from '@/lib/podcast'
+import { createSignedGetUrl, mediaTypeFromPath } from '@/lib/podcast'
 
 async function admin(request: Request) {
   const supabase = await createClient()
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   const out = []
   for (const row of data || []) {
     const signedUrl = await createSignedGetUrl(row.video_path, 900)
-    out.push({ ...row, previewUrl: signedUrl })
+    out.push({ ...row, previewUrl: signedUrl, media_type: mediaTypeFromPath(row.video_path || '') })
   }
   return NextResponse.json({ ok: true, submissions: out })
 }

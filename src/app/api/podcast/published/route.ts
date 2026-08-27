@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
-import { createSignedGetUrl } from '@/lib/podcast'
+import { createSignedGetUrl, mediaTypeFromPath } from '@/lib/podcast'
 
 // GET /api/podcast/published — PUBLIC. Returns ONLY approved submissions (with short-lived
 // playback URLs). Nothing hidden or pending ever appears here.
@@ -18,6 +18,7 @@ export async function GET() {
     if (signedUrl) out.push({
       id: row.id, student_name: row.student_name, title: row.title,
       description: row.description, reviewed_at: row.reviewed_at, playbackUrl: signedUrl,
+      media_type: mediaTypeFromPath(row.video_path || ''),
     })
   }
   return NextResponse.json({ ok: true, submissions: out })

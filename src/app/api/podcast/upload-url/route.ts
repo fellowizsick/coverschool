@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { getEligibleEnrollment, createSignedUploadUrl } from '@/lib/podcast'
-import { randomUUID } from 'crypto'
+import { getEligibleEnrollment, createSignedUploadUrl, buildMediaPath } from '@/lib/podcast'
 
 // POST /api/podcast/upload-url — returns a signed upload URL for the browser to
 // upload the video DIRECTLY to private Supabase Storage (bypasses Vercel body limit).
@@ -16,11 +15,12 @@ export async function POST(request: Request) {
   if (!eligible.ok) {
     return NextResponse.json({ ok: false, error: eligible.reason }, { status: 403 })
   }
-  const now = new Date()
-  const path = `sub/${eligible.enrollmentId}/${now.toISOString().slice(0, 10)}/${randomUUID()}.webm`
+  const body = await request.json().catch(() => ({}))
+  const mediaType = body.media_type === 'audio' ? 'audio' : 'video'
+  const path = buildMediaPath(eligible.enrollmentId, mediaType)
   const signed = await createSignedUploadUrl(path, 300)
   if (!signed) {
     return NextResponse.json({ ok: false, error: 'Could not create upload URL. Try again.' }, { status: 500 })
   }
-  return NextResponse.json({ ok: true, path: signed.path, url: signed.url, token: signed.token })
+  return NextResponse.json({ ok: true, path: signed.path, url: signed.url, token: signed.token, media_type: mediaType })
 }

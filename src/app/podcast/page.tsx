@@ -3,7 +3,13 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-type Pub = { id: string; student_name: string; title: string; description: string; reviewed_at: string | null; playbackUrl: string }
+type Pub = { id: string; student_name: string; title: string; description: string; reviewed_at: string | null; playbackUrl: string; media_type?: string }
+
+// media type is derived from the stored file extension/path (schema-free):
+// audio files are saved with a .webm audio MIME and path marker '/a/'; video with '/v/'.
+function isAudio(p: Pub): boolean {
+  return p.media_type === 'audio' || /\/a\/|audio_/.test(p.playbackUrl || '')
+}
 
 export default function PodcastPage() {
   const [items, setItems] = useState<Pub[]>([])
@@ -17,7 +23,7 @@ export default function PodcastPage() {
   }, [])
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="px-6 pt-20 sm:pt-24 pb-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">🎙️ LCA Podcast</h1>
@@ -32,8 +38,12 @@ export default function PodcastPage() {
         <div className="grid md:grid-cols-2 gap-4">
           {items.map(p => (
             <div key={p.id} className="p-4 rounded-xl border bg-white">
-              {p.playbackUrl ? <video src={p.playbackUrl} controls preload="metadata" className="w-full rounded-lg bg-black" style={{ maxHeight: 320 }} /> : null}
-              <div className="mt-3 font-semibold text-gray-900">{p.title || 'Untitled'}</div>
+              {p.playbackUrl ? (isAudio(p) ? (
+                <audio src={p.playbackUrl} controls preload="metadata" className="w-full" />
+              ) : (
+                <video src={p.playbackUrl} controls preload="metadata" className="w-full rounded-lg bg-black" style={{ maxHeight: 320 }} />
+              )) : null}
+              <div className="mt-3 font-semibold text-gray-900">{p.title || 'Untitled'} {isAudio(p) && <span className="ml-1 align-middle text-[10px] font-semibold uppercase tracking-wide bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded">Audio</span>}</div>
               <div className="text-xs text-gray-500">{p.student_name}</div>
               {p.description && <p className="text-xs text-gray-600 mt-1">{p.description}</p>}
             </div>

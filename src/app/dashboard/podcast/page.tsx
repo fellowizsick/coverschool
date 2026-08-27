@@ -14,6 +14,11 @@ type Sub = {
   reviewed_at: string | null
   reviewed_by: string | null
   previewUrl: string | null
+  media_type?: 'video' | 'audio'
+}
+
+function isAudio(s: Sub): boolean {
+  return s.media_type === 'audio'
 }
 
 export default function PodcastReviewPage() {
@@ -37,6 +42,14 @@ export default function PodcastReviewPage() {
     const r = await fetch('/api/podcast/review', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, decision }) })
     const d = await r.json()
     setMsg(d.ok ? `Done — ${decision}.` : d.error || 'Failed')
+    await load(tab)
+  }
+
+  async function remove(id: string) {
+    if (!confirm('Permanently delete this submission? This cannot be undone.')) return
+    const r = await fetch('/api/podcast/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+    const d = await r.json()
+    setMsg(d.ok ? 'Done — deleted.' : d.error || 'Failed')
     await load(tab)
   }
 
@@ -72,11 +85,16 @@ export default function PodcastReviewPage() {
               {s.description && <p className="text-xs text-gray-600 mb-2">{s.description}</p>}
               <div className="mb-2 text-[11px] text-gray-400">Submitted {new Date(s.created_at).toLocaleString()}</div>
               {s.previewUrl ? (
-                <video src={s.previewUrl} controls preload="metadata" className="w-full rounded-lg bg-black" style={{ maxHeight: 320 }} />
+                isAudio(s) ? (
+                  <audio src={s.previewUrl} controls preload="metadata" className="w-full" />
+                ) : (
+                  <video src={s.previewUrl} controls preload="metadata" className="w-full rounded-lg bg-black" style={{ maxHeight: 320 }} />
+                )
               ) : <div className="text-xs text-gray-400">Preview unavailable</div>}
               <div className="flex gap-2 mt-3">
                 <button onClick={() => review(s.id, 'approved')} className="flex-1 px-3 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700">✓ Approve</button>
                 <button onClick={() => review(s.id, 'rejected')} className="flex-1 px-3 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700">✕ Reject</button>
+                <button onClick={() => remove(s.id)} className="px-3 py-2 rounded-lg bg-gray-100 text-gray-600 text-sm font-semibold hover:bg-red-100 hover:text-red-600">🗑 Delete</button>
               </div>
             </div>
           ))}

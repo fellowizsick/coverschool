@@ -30,7 +30,12 @@ export async function POST(request: Request) {
   if (!consent) {
     return NextResponse.json({ ok: false, error: 'Parental consent must be acknowledged.' }, { status: 400 })
   }
-
+  // Media type is encoded in the storage path; the client may also claim it,
+  // but the path is authoritative. Validate it matches to avoid a mismatch.
+  const mediaType = /\/a\//.test(path) ? 'audio' : 'video'
+  if (body.media_type && (body.media_type === 'audio' || body.media_type === 'video') && body.media_type !== mediaType) {
+    return NextResponse.json({ ok: false, error: 'Media type mismatch.' }, { status: 400 })
+  }
   const admin = createAdminClient()
   const { data, error } = await admin.from('podcast_submissions').insert({
     enrollment_id: eligible.enrollmentId,

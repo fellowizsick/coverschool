@@ -10,9 +10,36 @@ const BUCKET = 'podcast-videos'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
+/** Media type is encoded in the storage path (schema-free, no DB column): a
+ *  path segment '/a/' means audio, '/v/' means video. Default = video. */
+export function mediaTypeFromPath(path: string): 'video' | 'audio' {
+  return /\/a\//.test(path) ? 'audio' : 'video'
+}
+
+/** Build a storage path for a new submission, embedding the media type. */
+export function buildMediaPath(enrollmentId: string, mediaType: 'video' | 'audio'): string {
+  const seg = mediaType === 'audio' ? 'a' : 'v'
+  const now = new Date()
+  const date = now.toISOString().slice(0, 10)
+  return `sub/${enrollmentId}/${date}/${seg}/${crypto.randomUUID()}.webm`
+}
+
 export type Eligible =
   | { ok: true; enrollmentId: string; studentName: string; studentEmail: string }
   | { ok: false; reason: string }
+
+/** Delete a storage object (file) from the private bucket. */
+export async function deleteStorageObject(path: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${SERVICE_ROLE}` },
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
 
 /** A student may submit ONLY if their enrollment is approved AND paid. */
 export async function getEligibleEnrollment(email: string): Promise<Eligible> {
@@ -84,7 +111,7 @@ export async function notifyNewSubmission(sub: {
   const botToken = process.env.TELEGRAM_BOT_TOKEN || ''
   const reviewUrl = `https://laroseca.org/dashboard/podcast?s=${sub.enrollment_id}`
   const text =
-    `🎬 New podcast video submitted\n` +
+    `🎬 New podcast submission\n` +
     `Student: ${sub.student_name}\n` +
     `Title: ${sub.title || '(untitled)'}\n` +
     `Review: ${reviewUrl}`
@@ -108,8 +135,8 @@ export async function notifyNewSubmission(sub: {
       await transporter.sendMail({
         from: `"${SCHOOL_CONFIG.name}" <${process.env.SMTP_FROM || SCHOOL_CONFIG.email}>`,
         to: process.env.SMTP_USER, // Anne's school mailbox
-        subject: `🎬 New podcast video — ${sub.student_name}`,
-        html: `<p>A student submitted a new podcast video.</p><p><b>Student:</b> ${sub.student_name}<br/><b>Title:</b> ${sub.title || '(untitled)'}</p><p><a href="${reviewUrl}">Review it here</a></p>`,
+        subject: `🎬 New podcast submission — ${sub.student_name}`,
+        html: `<p>A student submitted a new podcast video or audio.</p><p><b>Student:</b> ${sub.student_name}<br/><b>Title:</b> ${sub.title || '(untitled)'}</p><p><a href="${reviewUrl}">Review it here</a></p>`,
       })
     }
   } catch {}
