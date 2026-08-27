@@ -79,6 +79,12 @@ export default async function DashboardLayout({
             >
               Graduation
             </Link>
+            <Link
+              href="/dashboard/podcast"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Podcast
+            </Link>
           </>
         ) : (
           <>
