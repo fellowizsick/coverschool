@@ -124,6 +124,11 @@ export default async function ParentPortalPage() {
               <GraduationCap className="mr-1 h-4 w-4" /> Attendance & Grades
             </Button>
           </Link>
+          <Link href="/podcast/submit">
+            <Button size="sm" variant="outline">
+              <span className="mr-1">🎙️</span> Record a Podcast Video
+            </Button>
+          </Link>
           {/* 💳 Manage Payment / Update Card — opens THIS family's Stripe portal
               (email-scoped: each parent only ever sees their own billing info) */}
           <ManagePaymentButton />
