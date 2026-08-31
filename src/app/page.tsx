@@ -122,20 +122,21 @@ export default function HomePage() {
   return (
     <>
       {/* ===== HERO — editorial, warm cream, one strong line ===== */}
-      <section className="relative overflow-hidden bg-[#faf7f0]">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950">
         <div className="mx-auto grid w-full max-w-[90rem] gap-12 px-4 pb-20 pt-28 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:pb-28 lg:pt-36">
           {/* Left — copy */}
           <div className="max-w-xl">
-            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
-              Alabama Church School · Est. 2024
-            </p>
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3.5 py-1.5 text-[13px] font-medium tracking-wide text-emerald-200">
+              <Shield className="h-3.5 w-3.5" />
+              🙌 Alabama Church School · Est. 2024
+            </div>
 
-            <h1 className="mt-6 font-heading text-5xl font-bold leading-[1.05] tracking-tight text-[#12352a] sm:text-6xl lg:text-[4.5rem]">
+            <h1 className="mt-6 font-heading text-5xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[4.5rem]">
               Homeschool with{' '}
-              <span className="italic text-amber-500">confidence</span>
+              <span className="gradient-text-rainbow">Confidence</span>
             </h1>
 
-            <p className="mt-7 max-w-lg text-lg leading-relaxed text-[#12352a]/70 sm:text-xl">
+            <p className="mt-7 max-w-lg text-lg leading-relaxed text-emerald-100/85 sm:text-xl">
               We provide the legal oversight, record-keeping, and support your family needs
               to homeschool with peace of mind. You teach — we handle the rest.
             </p>
@@ -151,24 +152,24 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full border-[#12352a]/20 text-[#12352a] hover:border-[#12352a]/40 hover:bg-[#12352a]/5 sm:w-auto"
+                  className="w-full border-emerald-400/30 text-emerald-100 hover:border-emerald-400/60 hover:bg-emerald-500/10 sm:w-auto"
                 >
                   How it works
                 </Button>
               </Link>
             </div>
 
-            <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-[#12352a]/10 pt-7 text-sm text-[#12352a]/55">
+            <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-emerald-400/15 pt-7 text-sm text-emerald-100/70">
               <span className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                <CheckCircle className="h-4 w-4 text-emerald-400" />
                 {COVERED_STATES.length} states covered
               </span>
               <span className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                <CheckCircle className="h-4 w-4 text-emerald-400" />
                 $45/mo tuition
               </span>
               <span className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                <CheckCircle className="h-4 w-4 text-emerald-400" />
                 $75 annual reg fee
               </span>
             </div>
@@ -176,7 +177,7 @@ export default function HomePage() {
 
           {/* Right — one warm editorial photo, framed */}
           <div className="relative">
-            <div className="overflow-hidden rounded-3xl shadow-[0_40px_90px_-40px_rgba(18,53,42,0.5)]">
+            <div className="overflow-hidden rounded-3xl shadow-[0_40px_90px_-40px_rgba(2,44,34,0.5)]">
               <Image
                 src={IMAGES.hero}
                 alt="A family reading together by a window at home"
@@ -187,9 +188,9 @@ export default function HomePage() {
               />
             </div>
             {/* Offset caption block — the "why" in one line */}
-            <div className="absolute -bottom-8 -left-6 hidden max-w-[300px] rounded-2xl border border-[#12352a]/5 bg-white p-6 shadow-[0_24px_60px_-24px_rgba(18,53,42,0.35)] lg:block">
-              <p className="text-sm font-semibold text-[#12352a]">One less thing to worry about</p>
-              <p className="mt-2 text-sm leading-relaxed text-[#12352a]/60">
+            <div className="absolute -bottom-8 -left-6 hidden max-w-[300px] rounded-2xl border border-emerald-100 bg-white p-6 shadow-[0_24px_60px_-24px_rgba(2,44,34,0.35)] lg:block">
+              <p className="text-sm font-semibold text-emerald-950">One less thing to worry about</p>
+              <p className="mt-2 text-sm leading-relaxed text-emerald-950/60">
                 Every form, every deadline, every record — handled. So your family can simply learn.
               </p>
             </div>
@@ -198,15 +199,15 @@ export default function HomePage() {
       </section>
 
       {/* ===== STATS — quiet credibility band ===== */}
-      <section className="border-y border-[#12352a]/5 bg-white py-12">
+      <section className="border-y border-emerald-100 bg-white py-12">
         <div className="mx-auto grid max-w-[90rem] grid-cols-2 gap-x-6 gap-y-10 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="font-heading text-4xl font-bold tracking-tight text-[#12352a] md:text-5xl">
+              <div className="font-heading text-4xl font-bold tracking-tight text-emerald-800 md:text-5xl">
                 {stat.value}
                 <span className="text-amber-500">{stat.suffix}</span>
               </div>
-              <div className="mt-2 text-[13px] font-medium uppercase tracking-[0.18em] text-[#12352a]/45">
+              <div className="mt-2 text-[13px] font-medium uppercase tracking-[0.18em] text-gray-500">
                 {stat.label}
               </div>
             </div>
@@ -215,7 +216,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== WHY — editorial two-column with photo ===== */}
-      <section className="bg-[#faf7f0] py-24 md:py-32">
+      <section className="bg-emerald-50/40 py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
             {/* Copy side */}
@@ -223,10 +224,10 @@ export default function HomePage() {
               <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
                 Why LCA
               </p>
-              <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-[#12352a] sm:text-5xl">
+              <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-emerald-950 sm:text-5xl">
                 The support that makes homeschooling feel simple
               </h2>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-[#12352a]/65">
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-emerald-950/65">
                 Most families don&apos;t leave public school because they want less structure.
                 They leave because they want more of what matters. We handle the legal and
                 administrative side so you can give your children that.
@@ -235,12 +236,12 @@ export default function HomePage() {
               <div className="mt-10 space-y-8">
                 {features.map((feature, i) => (
                   <div key={feature.title} className="flex items-start gap-5">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#12352a] text-white">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                       <feature.icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="font-heading text-lg font-bold text-[#12352a]">{feature.title}</h3>
-                      <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-[#12352a]/60">
+                      <h3 className="font-heading text-lg font-bold text-emerald-950">{feature.title}</h3>
+                      <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-emerald-950/60">
                         {feature.description}
                       </p>
                     </div>
@@ -251,7 +252,7 @@ export default function HomePage() {
 
             {/* Photo side */}
             <div className="relative">
-              <div className="overflow-hidden rounded-3xl shadow-[0_40px_90px_-40px_rgba(18,53,42,0.45)]">
+              <div className="overflow-hidden rounded-3xl shadow-[0_40px_90px_-40px_rgba(2,44,34,0.45)]">
                 <Image
                   src={IMAGES.feature}
                   alt="A mother helping her daughter with schoolwork at home"
@@ -260,7 +261,7 @@ export default function HomePage() {
                   className="h-[560px] w-full object-cover"
                 />
               </div>
-              <div className="absolute right-6 top-6 rounded-full bg-white/90 px-4 py-2 text-xs font-medium text-[#12352a] shadow-lg backdrop-blur">
+              <div className="absolute right-6 top-6 rounded-full bg-white/90 px-4 py-2 text-xs font-medium text-emerald-950 shadow-lg backdrop-blur">
                 <BookOpen className="mr-1.5 inline h-3.5 w-3.5 text-emerald-600" />
                 Curriculum your way
               </div>
@@ -276,17 +277,17 @@ export default function HomePage() {
             <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
               Getting started
             </p>
-            <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-[#12352a] sm:text-5xl">
+            <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-emerald-950 sm:text-5xl">
               Three steps to homeschool freedom
             </h2>
           </div>
 
           <div className="mt-16 grid gap-10 md:grid-cols-3 md:gap-8">
             {steps.map((step, i) => (
-              <div key={step.step} className="relative border-t-2 border-[#12352a]/10 pt-8">
-                <span className="font-heading text-5xl font-bold text-[#12352a]/10">{step.step}</span>
-                <h3 className="mt-4 font-heading text-xl font-bold text-[#12352a]">{step.title}</h3>
-                <p className="mt-3 max-w-xs text-[15px] leading-relaxed text-[#12352a]/60">
+              <div key={step.step} className="relative border-t-2 border-emerald-100 pt-8">
+                <span className="font-heading text-5xl font-bold text-emerald-900/10">{step.step}</span>
+                <h3 className="mt-4 font-heading text-xl font-bold text-emerald-950">{step.title}</h3>
+                <p className="mt-3 max-w-xs text-[15px] leading-relaxed text-emerald-950/60">
                   {step.description}
                 </p>
               </div>
@@ -296,47 +297,36 @@ export default function HomePage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section className="bg-[#faf7f0] py-24 md:py-32">
+      <section className="bg-emerald-50/40 py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-amber-600">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
               From our families
             </p>
-            <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-[#12352a] sm:text-5xl">
+            <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-emerald-950 sm:text-5xl">
               Peace of mind, in their words
             </h2>
           </div>
 
           <div className="mt-14 max-w-3xl">
-            <div className="relative min-h-[280px]">
-              {allTestimonials.map((t, i) => (
-                <div
-                  key={i}
-                  className={`absolute inset-0 transition-all duration-700 ease-out ${
-                    i === activeTestimonial
-                      ? 'opacity-100 translate-y-0'
-                      : 'opacity-0 translate-y-4 pointer-events-none'
-                  }`}
-                >
-                  <blockquote className="rounded-3xl border border-[#12352a]/5 bg-white p-10 shadow-[0_24px_60px_-36px_rgba(18,53,42,0.3)]">
-                    <Quote className="h-8 w-8 text-amber-400" />
-                    <p className="mt-5 font-heading text-xl leading-relaxed text-[#12352a]/85 sm:text-2xl">
-                      &ldquo;{t.quote}&rdquo;
-                    </p>
-                    <footer className="mt-8 flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-[#12352a]">{t.author}</p>
-                        <p className="text-sm text-[#12352a]/50">{t.role}</p>
-                      </div>
-                      <div className="flex gap-0.5">
-                        {[...Array(t.rating)].map((_, s) => (
-                          <Star key={s} className="h-5 w-5 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                    </footer>
-                  </blockquote>
-                </div>
-              ))}
+            <div key={activeTestimonial} className="animate-[fadeIn_0.5s_ease]">
+              <blockquote className="rounded-3xl border border-emerald-100 bg-white p-10 shadow-[0_24px_60px_-36px_rgba(2,44,34,0.3)]">
+                <Quote className="h-8 w-8 text-amber-400" />
+                <p className="mt-5 font-heading text-xl leading-relaxed text-emerald-950/85 sm:text-2xl">
+                  &ldquo;{allTestimonials[activeTestimonial].quote}&rdquo;
+                </p>
+                <footer className="mt-8 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-emerald-950">{allTestimonials[activeTestimonial].author}</p>
+                    <p className="text-sm text-gray-500">{allTestimonials[activeTestimonial].role}</p>
+                  </div>
+                  <div className="flex gap-0.5">
+                    {[...Array(allTestimonials[activeTestimonial].rating)].map((_, s) => (
+                      <Star key={s} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                </footer>
+              </blockquote>
             </div>
 
             <div className="mt-8 flex justify-center gap-2">
@@ -346,14 +336,14 @@ export default function HomePage() {
                   onClick={() => setActiveTestimonial(i)}
                   aria-label={`Show testimonial ${i + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === activeTestimonial ? 'w-8 bg-[#12352a]' : 'w-1.5 bg-[#12352a]/15 hover:bg-[#12352a]/30'
+                    i === activeTestimonial ? 'w-8 bg-emerald-600' : 'w-1.5 bg-emerald-950/15 hover:bg-emerald-950/30'
                   }`}
                 />
               ))}
             </div>
 
             <div className="mt-10 text-center">
-              <p className="text-sm text-[#12352a]/50">
+              <p className="text-sm text-emerald-950/50">
                 Are you an LCA family? Share your experience — we&apos;d love to hear from you.
               </p>
               <div className="mt-4 flex justify-center">
@@ -365,7 +355,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="relative overflow-hidden bg-[#12352a] py-24 md:py-32">
+      <section className="relative overflow-hidden bg-emerald-950 py-24 md:py-32">
         <div className="pointer-events-none absolute -top-40 right-1/4 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-40 left-1/4 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
 
@@ -375,7 +365,7 @@ export default function HomePage() {
           </p>
           <h2 className="mt-5 font-heading text-4xl font-bold leading-tight text-white sm:text-5xl">
             Ready to homeschool{' '}
-            <span className="italic text-amber-400">with confidence?</span>
+            <span className="gradient-text-rainbow">with Confidence?</span>
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-emerald-100/70">
             Join hundreds of families who have found peace of mind through Larose
@@ -386,7 +376,7 @@ export default function HomePage() {
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link href="/enroll">
-              <Button size="lg" className="w-full bg-amber-500 text-[#12352a] shadow-amber-500/30 hover:bg-amber-400 sm:w-auto">
+              <Button size="lg" className="w-full bg-amber-500 text-emerald-950 shadow-amber-500/30 hover:bg-amber-400 sm:w-auto">
                 Enroll now — $45/mo
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
