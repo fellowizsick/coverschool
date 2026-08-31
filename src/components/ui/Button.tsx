@@ -8,7 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<string, string> = {
   primary:
-    'bg-gradient-to-r from-emerald-700 to-emerald-600 text-white shadow-lg shadow-emerald-900/20 hover:shadow-xl hover:shadow-emerald-900/30 hover:-translate-y-0.5 active:translate-y-0 hover:animate-wobble',
+    'bg-emerald-700 text-white shadow-lg shadow-emerald-900/25 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-900/35 hover:-translate-y-0.5 active:translate-y-0',
   secondary:
     'bg-gradient-to-r from-gray-800 to-gray-700 text-white shadow-lg shadow-gray-900/20 hover:shadow-xl hover:shadow-gray-900/30 hover:-translate-y-0.5',
   outline:
@@ -18,13 +18,13 @@ const variantStyles: Record<string, string> = {
   gold:
     'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-amber-950 shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 hover:-translate-y-0.5 active:translate-y-0 hover:animate-wobble',
   fun:
-    'bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 hover:-translate-y-0.5 active:translate-y-0 animate-gradient',
+    'bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-400 text-white shadow-lg shadow-emerald-900/20 hover:shadow-xl hover:shadow-emerald-900/30 hover:-translate-y-0.5 active:translate-y-0 animate-gradient',
   pink:
-    'bg-gradient-to-r from-pink-600 to-rose-500 text-white shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 active:translate-y-0',
+    'bg-gradient-to-r from-emerald-700 to-emerald-600 text-white shadow-lg shadow-emerald-900/25 hover:shadow-xl hover:shadow-emerald-900/35 hover:-translate-y-0.5 active:translate-y-0',
   purple:
-    'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 hover:-translate-y-0.5 active:translate-y-0',
+    'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/25 hover:shadow-xl hover:shadow-emerald-900/35 hover:-translate-y-0.5 active:translate-y-0',
   sky:
-    'bg-gradient-to-r from-sky-500 to-blue-500 text-white shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-500/40 hover:-translate-y-0.5 active:translate-y-0',
+    'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-lg shadow-emerald-900/25 hover:shadow-xl hover:shadow-emerald-900/35 hover:-translate-y-0.5 active:translate-y-0',
 }
 
 const sizeStyles = {

@@ -115,11 +115,11 @@ export default function FAQAccordion() {
   const toggle = (id: string) => setOpen((prev) => (prev === id ? null : id))
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       {/* 🎨 Gradient Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 px-4 py-16 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 px-4 py-16 sm:px-6 lg:px-8">
         <div className="absolute -left-10 top-8 h-36 w-36 animate-float rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-sky-300/15 blur-3xl [animation-delay:1s]" />
+        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-emerald-300/15 blur-3xl [animation-delay:1s]" />
         <div className="mx-auto max-w-3xl text-center">
           <span className="mb-4 inline-block animate-pop rounded-full bg-white/20 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm">
             ❓ Got Questions?
@@ -127,7 +127,7 @@ export default function FAQAccordion() {
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Frequently Asked Questions
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-cyan-100">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
             {totalQuestions} quick answers — tap a question to see the answer.
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function FAQAccordion() {
               setOpen(null)
             }}
             placeholder="Search questions… (try “cost”, “attendance”, “legal”)"
-            className="w-full rounded-2xl border border-gray-200 bg-white py-4 pl-12 pr-4 text-gray-900 shadow-sm outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100"
+            className="w-full rounded-2xl border border-gray-200 bg-white py-4 pl-12 pr-4 text-gray-900 shadow-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
             aria-label="Search frequently asked questions"
           />
         </div>
@@ -157,7 +157,7 @@ export default function FAQAccordion() {
               <a
                 key={cat.name}
                 href={`#${cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                className="rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50"
+                className="rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50"
               >
                 {cat.emoji} {cat.name}
               </a>
@@ -187,8 +187,8 @@ export default function FAQAccordion() {
                       key={id}
                       className={`overflow-hidden rounded-2xl border transition ${
                         isOpen
-                          ? 'border-cyan-300 bg-white shadow-md'
-                          : 'border-gray-200 bg-white shadow-sm hover:border-cyan-200'
+                          ? 'border-emerald-300 bg-white shadow-md'
+                          : 'border-gray-200 bg-white shadow-sm hover:border-emerald-200'
                       }`}
                     >
                       <button
@@ -200,7 +200,7 @@ export default function FAQAccordion() {
                         <span className="font-semibold text-gray-900">{item.q}</span>
                         <ChevronDown
                           className={`h-5 w-5 flex-shrink-0 text-gray-400 transition-transform duration-200 ${
-                            isOpen ? 'rotate-180 text-cyan-500' : ''
+                            isOpen ? 'rotate-180 text-emerald-500' : ''
                           }`}
                         />
                       </button>

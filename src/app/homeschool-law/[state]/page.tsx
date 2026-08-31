@@ -67,11 +67,11 @@ export default async function StateLawPage({
   ]
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 px-4 py-16 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 px-4 py-16 sm:px-6 lg:px-8">
         <div className="absolute -left-10 top-8 h-36 w-36 animate-float rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-sky-300/15 blur-3xl [animation-delay:1s]" />
+        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-emerald-300/15 blur-3xl [animation-delay:1s]" />
         <div className="mx-auto max-w-3xl text-center">
           <Link href="/homeschool-law" className="mb-4 inline-flex items-center gap-1 rounded-full bg-white/15 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm hover:bg-white/25">
             ← All State Guides
@@ -80,7 +80,7 @@ export default async function StateLawPage({
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Homeschooling in {law.name}
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-cyan-100">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
             The {law.name} law, in plain English — and how Larose Christian Academy keeps your
             family covered.
           </p>

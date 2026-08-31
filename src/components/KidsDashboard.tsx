@@ -115,7 +115,7 @@ export default function KidsLearningDashboard({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 relative overflow-hidden">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 relative overflow-hidden">
       {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-4 h-4 bg-yellow-300 rounded-full opacity-60 animate-bounce"></div>

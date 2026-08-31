@@ -169,7 +169,7 @@ function AccountForm() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/60 to-white px-4 py-16 sm:px-6 lg:px-8">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/60 to-white px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md">
         <Link href="/" className="mb-6 inline-block text-sm font-medium text-emerald-700 hover:text-emerald-800">
           ← Back to home
@@ -234,7 +234,7 @@ function AccountForm() {
 
 export default function AccountPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-emerald-50/60 to-white px-4 py-16 text-center text-gray-500">Loading…</div>}>
+    <Suspense fallback={<div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/60 to-white px-4 py-16 text-center text-gray-500">Loading…</div>}>
       <AccountForm />
     </Suspense>
   )

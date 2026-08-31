@@ -3,12 +3,12 @@ import { Shield, Church, Heart, Bug } from 'lucide-react'
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       {/* 🎨 Gradient Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-500 px-4 py-20 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-700 to-teal-800 px-4 py-20 sm:px-6 lg:px-8">
         {/* Decorative floating shapes */}
         <div className="absolute -left-12 top-10 h-40 w-40 animate-float rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -right-8 bottom-10 h-56 w-56 animate-float rounded-full bg-pink-300/15 blur-3xl [animation-delay:1s]" />
+        <div className="absolute -right-8 bottom-10 h-56 w-56 animate-float rounded-full bg-amber-300/15 blur-3xl [animation-delay:1s]" />
         <div className="absolute left-1/3 top-5 h-24 w-24 animate-bounce-soft rounded-full bg-amber-200/10 blur-2xl [animation-delay:2s]" />
         <div className="mx-auto max-w-4xl text-center">
           <span className="mb-4 inline-block animate-pop rounded-full bg-white/20 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm">
@@ -17,11 +17,11 @@ export default function AboutPage() {
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             About {SCHOOL_CONFIG.name}
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-100">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
             An Alabama church school dedicated to serving homeschooling families.
           </p>
           {/* Decorative divider */}
-          <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-pink-400 via-amber-300 to-emerald-300" />
+          <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-emerald-400 via-amber-300 to-emerald-300" />
         </div>
       </section>
 
@@ -33,7 +33,7 @@ export default function AboutPage() {
               <span className="emoji-badge">📍</span>
               <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 p-8 shadow-sm ring-1 ring-indigo-100">
+            <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 p-8 shadow-sm ring-1 ring-emerald-100">
               <p className="leading-relaxed text-gray-700">
                 {SCHOOL_CONFIG.name}{' '}exists to provide homeschooling families with the legal
                 oversight, administrative support, and spiritual encouragement they need
@@ -186,9 +186,9 @@ export default function AboutPage() {
 
           {/* Our Heart 💖 */}
           <section className="animate-slide-up [animation-delay:450ms]">
-            <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 p-8 shadow-sm ring-1 ring-rose-100">
+            <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-emerald-50 p-8 shadow-sm ring-1 ring-amber-100">
               <div className="flex items-start gap-4">
-                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 text-white shadow-md shadow-rose-200">
+                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-md shadow-amber-200">
                   <Heart className="h-7 w-7" />
                 </div>
                 <div>
@@ -215,13 +215,13 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className="group block"
             >
-              <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-6 shadow-lg ring-1 ring-indigo-100 transition group-hover:shadow-xl">
+              <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-emerald-700 via-emerald-600 to-amber-600 p-6 shadow-lg ring-1 ring-emerald-100 transition group-hover:shadow-xl">
                 <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-white/20 text-2xl text-white backdrop-blur-sm transition group-hover:scale-110">
                   ▶️
                 </div>
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-white">View Our Facebook</h2>
-                  <p className="mt-1 text-sm text-indigo-100">
+                  <p className="mt-1 text-sm text-emerald-100">
                     See Larose Christian Academy on Facebook
                   </p>
                 </div>

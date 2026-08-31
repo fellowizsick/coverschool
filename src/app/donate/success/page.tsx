@@ -3,9 +3,9 @@ import { CheckCircle, Heart, ArrowRight } from 'lucide-react'
 
 export default function DonateSuccessPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 via-white to-rose-50/20 flex items-center justify-center px-4 pt-24 pb-16">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20 flex items-center justify-center px-4 pt-24 pb-16">
       <div className="max-w-lg mx-auto text-center">
-        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 via-emerald-50 to-rose-100 shadow-lg shadow-emerald-900/10 animate-bounce-soft">
+        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 via-emerald-50 to-amber-100 shadow-lg shadow-emerald-900/10 animate-bounce-soft">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-inner">
             <CheckCircle className="h-8 w-8 text-white" />
           </div>
@@ -19,7 +19,7 @@ export default function DonateSuccessPage() {
         </p>
         <div className="mt-8 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-6 text-left">
           <div className="flex items-start gap-3">
-            <Heart className="h-6 w-6 text-rose-500 mt-0.5 shrink-0" />
+            <Heart className="h-6 w-6 text-amber-500 mt-0.5 shrink-0" />
             <div>
               <h3 className="font-semibold text-emerald-900">What happens next?</h3>
               <ul className="mt-2 space-y-1.5 text-sm text-emerald-800">

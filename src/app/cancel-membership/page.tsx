@@ -54,7 +54,7 @@ export default function CancelMembershipPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-gray-50 via-white to-gray-50">
       <div className="mx-auto max-w-lg px-4 py-16 sm:px-6 lg:px-8">
         {/* Back link */}
         <Link

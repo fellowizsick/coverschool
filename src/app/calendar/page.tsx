@@ -251,14 +251,14 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-[100dvh] flex-col">
       {/* 🎨 Compact hero — keeps the calendar on screen.
           NOTE: pt-20 sm:pt-24 clears the FIXED navbar (80px). Without it the
           title bleeds up behind the transparent nav gradient (desktop bug
           reported 2026-08-08: "words behind the top words"). */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-600 px-4 pb-6 pt-20 sm:px-6 sm:pb-8 sm:pt-24 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-amber-700 px-4 pb-6 pt-20 sm:px-6 sm:pb-8 sm:pt-24 lg:px-8">
         <div className="absolute -left-10 top-8 h-36 w-36 animate-float rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-pink-300/15 blur-3xl [animation-delay:1s]" />
+        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-amber-300/15 blur-3xl [animation-delay:1s]" />
         <div className="mx-auto max-w-7xl text-center">
           <span className="mb-2 inline-block animate-pop rounded-full bg-white/20 px-4 py-1 text-xs font-medium text-white backdrop-blur-sm sm:text-sm">
             <CalendarDays className="mr-1 inline h-4 w-4" /> Our School Calendar
@@ -266,7 +266,7 @@ export default function CalendarPage() {
           <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
             What&apos;s happening at LCA?
           </h1>
-          <p className="mx-auto mt-1 max-w-2xl text-sm text-purple-100 sm:text-base">
+          <p className="mx-auto mt-1 max-w-2xl text-sm text-emerald-100 sm:text-base">
             {isLoggedIn
               ? 'Holidays, events, and family moments — all in one happy place.'
               : 'School events are open to everyone. Log in to add your family\u2019s events.'}
@@ -286,7 +286,7 @@ export default function CalendarPage() {
 
       <div className="mx-auto flex w-full max-w-7xl min-h-0 flex-1 flex-col px-3 py-4 sm:px-6 lg:px-8">
         {error && (
-          <div className="mb-3 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-sm font-medium text-rose-700">
+          <div className="mb-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm font-medium text-amber-700">
             {error}
           </div>
         )}
@@ -339,20 +339,20 @@ export default function CalendarPage() {
                 key={key}
                 className={`flex min-h-0 flex-col overflow-hidden rounded-xl border p-1 transition-all sm:p-1.5 ${
                   isToday(day)
-                    ? 'border-fuchsia-400 bg-gradient-to-br from-fuchsia-50 to-purple-50 ring-2 ring-fuchsia-300'
+                    ? 'border-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50 ring-2 ring-emerald-300'
                     : 'border-gray-100 bg-white hover:shadow-md'
                 }`}
               >
                 <div className="mb-0.5 flex items-center justify-between">
                   <span
                     className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                      isToday(day) ? 'bg-gradient-to-br from-fuchsia-500 to-purple-500 text-white' : 'text-gray-600'
+                      isToday(day) ? 'bg-gradient-to-br from-emerald-600 to-teal-600 text-white' : 'text-gray-600'
                     }`}
                   >
                     {day}
                   </span>
                   {dayEvents.length > 0 && (
-                    <span className="rounded-full bg-purple-100 px-1.5 text-[9px] font-bold text-purple-600 sm:text-[10px]">
+                    <span className="rounded-full bg-emerald-100 px-1.5 text-[9px] font-bold text-emerald-600 sm:text-[10px]">
                       {dayEvents.length}
                     </span>
                   )}
@@ -363,7 +363,7 @@ export default function CalendarPage() {
                       key={e.id}
                       className={`group relative rounded-md px-1 py-0.5 text-[9px] font-semibold leading-tight text-white sm:text-[10px] ${
                         e.audience === 'school'
-                          ? 'bg-gradient-to-r from-indigo-500 to-blue-500'
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
                           : 'bg-gradient-to-r from-emerald-500 to-teal-500'
                       }`}
                       title={e.description || e.title}
@@ -396,7 +396,7 @@ export default function CalendarPage() {
         <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl border border-gray-100 bg-white px-3 py-2 text-xs text-gray-600 sm:text-sm">
           <span className="font-semibold text-gray-900">Legend:</span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500" /> School event (everyone sees)
+            <span className="h-3 w-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500" /> School event (everyone sees)
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500" /> Your family event (private)
@@ -410,13 +410,13 @@ export default function CalendarPage() {
         <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white">
           <button
             onClick={() => setUpcomingOpen((v) => !v)}
-            className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-purple-50/60 sm:px-5"
+            className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-emerald-50/60 sm:px-5"
             aria-expanded={upcomingOpen}
             aria-controls="upcoming-panel"
           >
             <span className="flex items-center gap-2 text-lg font-bold text-gray-900 sm:text-xl">
-              <PartyPopper className="h-5 w-5 text-fuchsia-500" /> Upcoming
-              <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-bold text-purple-600">
+              <PartyPopper className="h-5 w-5 text-emerald-500" /> Upcoming
+              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-600">
                 {events.filter((e) => e.event_date >= today.toISOString().slice(0, 10)).length}
               </span>
             </span>
@@ -446,7 +446,7 @@ export default function CalendarPage() {
                             <div
                               className={`flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-2xl text-white shadow-md sm:h-14 sm:w-14 ${
                                 e.audience === 'school'
-                                  ? 'bg-gradient-to-br from-indigo-500 to-blue-500'
+                                  ? 'bg-gradient-to-br from-emerald-500 to-teal-500'
                                   : 'bg-gradient-to-br from-emerald-500 to-teal-500'
                               }`}
                             >
@@ -485,9 +485,9 @@ export default function CalendarPage() {
           )}
         </div>
 
-        <div className="mt-6 rounded-2xl bg-gradient-to-br from-purple-100 to-fuchsia-100 p-4 text-xs text-gray-500">
+        <div className="mt-6 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 p-4 text-xs text-gray-500">
           <p>
-            <School className="mr-1 inline h-3.5 w-3.5 text-purple-500" />
+            <School className="mr-1 inline h-3.5 w-3.5 text-emerald-500" />
             <strong>School events</strong> are added by the academy and visible to every family.
             <Home className="mx-1 inline h-3.5 w-3.5 text-emerald-500" />
             <strong>Family events</strong> are private — only your family sees them. Holidays are
@@ -502,7 +502,7 @@ export default function CalendarPage() {
           <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-xl font-bold text-gray-900">
-                <Plus className="h-5 w-5 text-fuchsia-500" /> Add Event
+                <Plus className="h-5 w-5 text-emerald-500" /> Add Event
               </h3>
               <button onClick={() => setShowAdd(false)} className="rounded-full p-1 text-gray-400 hover:bg-gray-100" aria-label="Close">
                 <X className="h-5 w-5" />
@@ -516,7 +516,7 @@ export default function CalendarPage() {
                   value={fTitle}
                   onChange={(e) => setFTitle(e.target.value)}
                   placeholder="e.g. Christmas Break, Field Trip"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-200"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                 />
               </div>
 
@@ -527,7 +527,7 @@ export default function CalendarPage() {
                   onChange={(e) => setFDesc(e.target.value)}
                   rows={2}
                   placeholder="What should families know?"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-200"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                 />
               </div>
 
@@ -537,7 +537,7 @@ export default function CalendarPage() {
                   type="date"
                   value={fDate}
                   onChange={(e) => setFDate(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-200"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                 />
               </div>
 
@@ -549,7 +549,7 @@ export default function CalendarPage() {
                     value={fStart}
                     onChange={(e) => setFStart(e.target.value)}
                     disabled={fAllDay}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-200 disabled:bg-gray-50"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 disabled:bg-gray-50"
                   />
                 </div>
                 <div>
@@ -559,7 +559,7 @@ export default function CalendarPage() {
                     value={fEnd}
                     onChange={(e) => setFEnd(e.target.value)}
                     disabled={fAllDay}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-200 disabled:bg-gray-50"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 disabled:bg-gray-50"
                   />
                 </div>
               </div>
@@ -569,7 +569,7 @@ export default function CalendarPage() {
                   type="checkbox"
                   checked={fAllDay}
                   onChange={(e) => setFAllDay(e.target.checked)}
-                  className="h-4 w-4 rounded accent-fuchsia-500"
+                  className="h-4 w-4 rounded accent-emerald-500"
                 />
                 All day
               </label>
@@ -582,8 +582,8 @@ export default function CalendarPage() {
                       onClick={() => setFAudience('school')}
                       className={`flex items-center justify-center gap-1.5 rounded-xl border-2 px-3 py-2.5 text-sm font-semibold transition ${
                         fAudience === 'school'
-                          ? 'border-indigo-400 bg-indigo-50 text-indigo-700'
-                          : 'border-gray-200 text-gray-500 hover:border-indigo-200'
+                          ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
+                          : 'border-gray-200 text-gray-500 hover:border-emerald-200'
                       }`}
                     >
                       <School className="h-4 w-4" /> School-wide

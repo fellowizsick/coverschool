@@ -3,7 +3,7 @@ import { Gift, Users, CreditCard, CalendarCheck, Sparkles, ArrowRight, CheckCirc
 
 export default function ReferralPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-amber-900 py-20">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />
@@ -61,11 +61,11 @@ export default function ReferralPage() {
               color: 'from-amber-200 to-amber-100',
             },
             {
-              icon: <CalendarCheck className="h-6 w-6 text-purple-700" />,
+              icon: <CalendarCheck className="h-6 w-6 text-emerald-700" />,
               step: '3',
               title: 'Earn Free Tuition',
               desc: 'When their payment goes through, you get one month of tuition free — automatically applied to your next bill. No forms, no waiting.',
-              color: 'from-purple-200 to-purple-100',
+              color: 'from-emerald-100 to-emerald-50',
             },
           ].map((item) => (
             <div
@@ -175,10 +175,10 @@ export default function ReferralPage() {
               <li className="flex gap-2"><span className="font-bold text-amber-600">3.</span><span>When you renew for the next year, the credit is <strong>taken off automatically</strong> at checkout — $405 instead of $450. No codes needed.</span></li>
             </ol>
           </div>
-          <div className="rounded-2xl border border-purple-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-200 to-purple-100">
-                <Gift className="h-6 w-6 text-purple-700" />
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-emerald-50">
+                <Gift className="h-6 w-6 text-emerald-700" />
               </div>
               <div>
                 <h3 className="font-bold text-gray-900">Where to see it</h3>

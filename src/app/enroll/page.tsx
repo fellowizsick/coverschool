@@ -331,7 +331,7 @@ export default function EnrollPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20 pb-16">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20 pb-16">
       {/* Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-amber-900 py-16">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />
@@ -413,15 +413,15 @@ export default function EnrollPage() {
         </Card>
 
         {/* Registration Fee Notice */}
-        <Card fun="purple" className="mt-4">
+        <Card fun="amber" className="mt-4">
           <CardContent className="flex items-start gap-4 p-5">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-200 to-purple-100 shadow-sm">
-              <FileText className="h-6 w-6 text-purple-700" />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-emerald-50 shadow-sm">
+              <FileText className="h-6 w-6 text-emerald-700" />
             </div>
             <div>
               <p className="font-semibold text-gray-900 flex items-center gap-1 flex-wrap">
                 📋 One-Time Registration Fee — $75
-                <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700">
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
                   Per student, first payment
                 </span>
               </p>
@@ -481,7 +481,7 @@ export default function EnrollPage() {
             in handleSubmit instead. */}
         <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-8">
           {/* Parent/Guardian Information */}
-          <Card fun="blue">
+          <Card fun="green">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 👨‍👩‍👧‍👦 Parent / Guardian Information
@@ -739,7 +739,7 @@ export default function EnrollPage() {
           </div>
 
           {/* Additional Notes */}
-          <Card fun="purple">
+          <Card fun="amber">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 💬 Additional Information
@@ -756,14 +756,14 @@ export default function EnrollPage() {
                 id="notes"
                 name="notes"
                 rows={3}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition-all duration-200 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:shadow-lg focus:shadow-purple-500/10 hover:border-gray-400"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:shadow-lg focus:shadow-emerald-500/10 hover:border-gray-400"
                 placeholder="Any questions or additional information... 📝"
               />
             </CardContent>
           </Card>
 
           {/* Terms */}
-          <Card fun="pink" className={fieldErrors.agree_to_terms ? 'border-red-300 ring-1 ring-red-200' : ''}>
+          <Card fun="amber" className={fieldErrors.agree_to_terms ? 'border-red-300 ring-1 ring-red-200' : ''}>
             <CardContent className="p-6">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input

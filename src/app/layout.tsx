@@ -38,18 +38,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
       <head>
         {/* Progressive enhancement gate: only hide scroll-animated content when
             JS is actually running. Prevents the blank-page flash on slow first
             loads (cold cache / slow bundle) where content stays opacity:0. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
-      <body className="min-h-screen overflow-x-clip bg-white font-sans text-gray-900">
+      <body className="min-h-[100dvh] overflow-x-clip bg-white font-sans text-gray-900">
         {/* Decorative floating elements that follow the page */}
         <div className="fixed top-40 left-0 h-64 w-64 rounded-full bg-emerald-200/20 blur-3xl animate-float pointer-events-none -z-10" />
         <div className="fixed bottom-40 right-0 h-80 w-80 rounded-full bg-amber-200/20 blur-3xl animate-float-delayed pointer-events-none -z-10" />
-        <div className="fixed top-1/2 right-1/4 h-40 w-40 rounded-full bg-pink-200/15 blur-3xl animate-pulse-soft pointer-events-none -z-10" />
+        <div className="fixed top-1/2 right-1/4 h-40 w-40 rounded-full bg-emerald-200/15 blur-3xl animate-pulse-soft pointer-events-none -z-10" />
 
         <ScrollAnimation />
         <Navbar />

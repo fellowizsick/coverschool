@@ -2,45 +2,57 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { COVERED_STATES } from '@/lib/constants'
 import LeaveReview from '@/components/LeaveReview'
 import {
-  CheckCircle, Shield, FileText, HeartHandshake,
-  ArrowRight, Star, Users, BookOpen, ScrollText,
-  GraduationCap, ChevronRight, Quote
+  Shield,
+  FileText,
+  Users,
+  ArrowRight,
+  Star,
+  GraduationCap,
+  CheckCircle,
+  Quote,
+  BookOpen,
 } from 'lucide-react'
+
+const IMG_BASE = 'https://images.pexels.com/photos'
+
+/* Verified Pexels homeschool-family photos (free license, from Pexels API) */
+const IMAGES = {
+  hero: `${IMG_BASE}/9872950/pexels-photo-9872950.jpeg?auto=compress&cs=tinysrgb&w=1400`, // family reading by window
+  feature: `${IMG_BASE}/4260485/pexels-photo-4260485.jpeg?auto=compress&cs=tinysrgb&w=1200`, // mother helping daughter at home
+}
 
 const features = [
   {
     icon: Shield,
-    title: 'Legal Coverage',
+    title: 'Legal coverage, handled',
     description:
-      'Full legal oversight under Alabama church school law. We handle the paperwork so your family stays compliant with state attendance requirements.',
-    color: 'emerald',
+      'We file under Alabama church school law and handle every form, so your family stays compliant — without reading a single statute.',
   },
   {
     icon: FileText,
-    title: 'Record Keeping',
+    title: 'Records, kept for you',
     description:
-      'We maintain enrollment records, attendance tracking, report cards, and transcripts — everything you need organized and accessible.',
-    color: 'blue',
+      'Attendance, report cards, and transcripts — maintained, organized, and ready whenever a school or state asks.',
   },
   {
     icon: Users,
-    title: 'Family Support',
+    title: 'A community that cares',
     description:
-      'Founded by an ordained minister, we offer guidance, prayer, and a welcoming community for families on their homeschool journey.',
-    color: 'amber',
+      'Founded by an ordained minister. Guidance, prayer, and people who understand the homeschool calling.',
   },
 ]
 
 const stats = [
-  { value: '9', label: 'States Served', suffix: '+' },
-  { value: '500', label: 'Families Supported', suffix: '+' },
-  { value: '99', label: 'Satisfaction Rate', suffix: '%' },
-  { value: '10', label: 'Years Experience', suffix: '+' },
+  { value: '9', label: 'States served', suffix: '+' },
+  { value: '500', label: 'Families supported', suffix: '+' },
+  { value: '99', label: 'Satisfaction', suffix: '%' },
+  { value: '10', label: 'Years of service', suffix: '+' },
 ]
 
 const testimonials = [
@@ -66,8 +78,8 @@ const testimonials = [
 
 const steps = [
   { step: '01', title: 'Enroll', description: 'Complete our simple online enrollment form. Tell us about your family and your student(s).' },
-  { step: '02', title: 'Get Covered', description: 'We handle all legal paperwork. Your family is immediately covered under our Alabama church school.' },
-  { step: '03', title: 'Homeschool Freely', description: 'Teach your way. We handle attendance, records, and transcripts — you focus on your children.' },
+  { step: '02', title: 'Get covered', description: 'We handle all legal paperwork. Your family is immediately covered under our Alabama church school.' },
+  { step: '03', title: 'Homeschool freely', description: 'Teach your way. We handle attendance, records, and transcripts — you focus on your children.' },
 ]
 
 export default function HomePage() {
@@ -109,315 +121,194 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex items-start lg:items-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950">
-        {/* Animated background orbs — more colorful */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl animate-pulse-soft" />
-          <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl animate-pulse-soft" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 left-1/3 h-60 w-60 rounded-full bg-emerald-600/5 blur-3xl animate-float" />
-          {/* New colorful orbs */}
-          <div className="absolute top-1/4 right-1/4 h-48 w-48 rounded-full bg-pink-500/10 blur-3xl animate-float-delayed" />
-          <div className="absolute bottom-1/3 right-1/3 h-40 w-40 rounded-full bg-purple-500/8 blur-3xl animate-pulse-soft" style={{ animationDelay: '3s' }} />
-          <div className="absolute top-1/3 left-1/4 h-32 w-32 rounded-full bg-sky-400/8 blur-3xl animate-float" style={{ animationDuration: '8s' }} />
+      {/* ===== HERO — editorial, warm cream, one strong line ===== */}
+      <section className="relative overflow-hidden bg-[#faf7f0]">
+        <div className="mx-auto grid w-full max-w-[90rem] gap-12 px-4 pb-20 pt-28 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:pb-28 lg:pt-36">
+          {/* Left — copy */}
+          <div className="max-w-xl">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
+              Alabama Church School · Est. 2024
+            </p>
 
-          {/* Grid pattern overlay */}
-          <div className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 18c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 35c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
+            <h1 className="mt-6 font-heading text-5xl font-bold leading-[1.05] tracking-tight text-[#12352a] sm:text-6xl lg:text-[4.5rem]">
+              Homeschool with{' '}
+              <span className="italic text-amber-500">confidence</span>
+            </h1>
+
+            <p className="mt-7 max-w-lg text-lg leading-relaxed text-[#12352a]/70 sm:text-xl">
+              We provide the legal oversight, record-keeping, and support your family needs
+              to homeschool with peace of mind. You teach — we handle the rest.
+            </p>
+
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Link href="/enroll">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Enroll Your Student
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+              <Link href="/how-it-works">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full border-[#12352a]/20 text-[#12352a] hover:border-[#12352a]/40 hover:bg-[#12352a]/5 sm:w-auto"
+                >
+                  How it works
+                </Button>
+              </Link>
+            </div>
+
+            <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-[#12352a]/10 pt-7 text-sm text-[#12352a]/55">
+              <span className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                {COVERED_STATES.length} states covered
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                $45/mo tuition
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                $75 annual reg fee
+              </span>
+            </div>
+          </div>
+
+          {/* Right — one warm editorial photo, framed */}
+          <div className="relative">
+            <div className="overflow-hidden rounded-3xl shadow-[0_40px_90px_-40px_rgba(18,53,42,0.5)]">
+              <Image
+                src={IMAGES.hero}
+                alt="A family reading together by a window at home"
+                width={1400}
+                height={1050}
+                priority
+                className="h-[440px] w-full object-cover sm:h-[520px] lg:h-[600px]"
+              />
+            </div>
+            {/* Offset caption block — the "why" in one line */}
+            <div className="absolute -bottom-8 -left-6 hidden max-w-[300px] rounded-2xl border border-[#12352a]/5 bg-white p-6 shadow-[0_24px_60px_-24px_rgba(18,53,42,0.35)] lg:block">
+              <p className="text-sm font-semibold text-[#12352a]">One less thing to worry about</p>
+              <p className="mt-2 text-sm leading-relaxed text-[#12352a]/60">
+                Every form, every deadline, every record — handled. So your family can simply learn.
+              </p>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div className="relative mx-auto max-w-[90rem] px-4 pt-24 pb-20 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-            {/* Left Column */}
-            <div className="space-y-8">
-              {/* Emoji badge instead of plain badge */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-1.5 text-sm text-emerald-300 backdrop-blur-sm animate-fade-in emoji-badge">
-                <Shield className="h-3.5 w-3.5" />
-                🙌 Alabama Church School • Est. 2024
+      {/* ===== STATS — quiet credibility band ===== */}
+      <section className="border-y border-[#12352a]/5 bg-white py-12">
+        <div className="mx-auto grid max-w-[90rem] grid-cols-2 gap-x-6 gap-y-10 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="font-heading text-4xl font-bold tracking-tight text-[#12352a] md:text-5xl">
+                {stat.value}
+                <span className="text-amber-500">{stat.suffix}</span>
               </div>
+              <div className="mt-2 text-[13px] font-medium uppercase tracking-[0.18em] text-[#12352a]/45">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-              <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl font-heading">
-                Homeschool with{' '}
-                <span className="gradient-text-rainbow">
-                  Confidence
-                </span>
-              </h1>
-
-              <p className="text-base sm:text-lg leading-relaxed text-emerald-100/90 max-w-xl">
-                We provide the legal oversight, record-keeping, and support your
-                family needs to homeschool with peace of mind. Do school your way —
-                upload your child&apos;s work and we keep the grades, report cards, and
-                transcripts. Focus on teaching — we handle the rest.
+      {/* ===== WHY — editorial two-column with photo ===== */}
+      <section className="bg-[#faf7f0] py-24 md:py-32">
+        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+            {/* Copy side */}
+            <div>
+              <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
+                Why LCA
+              </p>
+              <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-[#12352a] sm:text-5xl">
+                The support that makes homeschooling feel simple
+              </h2>
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-[#12352a]/65">
+                Most families don&apos;t leave public school because they want less structure.
+                They leave because they want more of what matters. We handle the legal and
+                administrative side so you can give your children that.
               </p>
 
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/enroll">
-                  <Button size="lg" variant="fun" className="w-full sm:w-auto shadow-xl shadow-purple-500/20 !animate-none">
-                    ✨ Enroll Your Student
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </Link>
-                <Link href="/how-it-works">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto border-emerald-400/30 text-emerald-100 hover:bg-emerald-500/10 hover:border-emerald-400/50"
-                  >
-                    📖 How It Works
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Trust indicators */}
-              <div className="flex flex-wrap items-center gap-6 pt-4">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div
-                      key={i}
-                      className="h-8 w-8 rounded-full border-2 border-emerald-800 bg-gradient-to-br from-emerald-600 to-emerald-500 flex items-center justify-center text-[10px] font-bold text-white animate-wiggle"
-                      style={{ animationDelay: `${i * 0.3}s` }}
-                    >
-                      {['JM', 'SK', 'AL', 'RT'][i - 1]}
+              <div className="mt-10 space-y-8">
+                {features.map((feature, i) => (
+                  <div key={feature.title} className="flex items-start gap-5">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#12352a] text-white">
+                      <feature.icon className="h-5 w-5" />
                     </div>
-                  ))}
-                </div>
-                <div className="text-sm text-emerald-200/70">
-                  <span className="font-semibold text-emerald-200">500+</span> families supported 🙏
-                </div>
+                    <div>
+                      <h3 className="font-heading text-lg font-bold text-[#12352a]">{feature.title}</h3>
+                      <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-[#12352a]/60">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Right Column - Visual */}
-            <div className="hidden lg:flex lg:justify-center lg:items-center">
-              <div className="relative">
-                {/* Decorative card */}
-                <div className="relative min-h-[400px] w-[380px] rounded-3xl border border-emerald-500/10 bg-gradient-to-br from-emerald-800/30 to-emerald-900/30 p-8 backdrop-blur-sm shadow-2xl shadow-emerald-950/50 animate-scale-in">
-                  <div className="flex min-h-full flex-col justify-between">
-                    <div className="space-y-4">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-500 shadow-lg animate-bounce-soft">
-                        <GraduationCap className="h-7 w-7 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white font-heading">Your Homeschool Journey 🌟</h3>
-                        <p className="mt-2 text-sm text-emerald-200">Starts Here</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      {[
-                        '✓ Full legal coverage',
-                        '✓ Attendance tracking',
-                        '✓ Transcripts & report cards',
-                        '✓ Supportive community',
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-emerald-100">
-                          <CheckCircle className={`h-4 w-4 ${i === 0 ? 'text-pink-400' : i === 1 ? 'text-purple-400' : i === 2 ? 'text-sky-400' : 'text-amber-400'}`} />
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-emerald-200">
-                      <div className="h-px flex-1 bg-emerald-500/20" />
-                      <span>$45/mo Tuition (10 months)</span>
-                      <div className="h-px flex-1 bg-emerald-500/20" />
-                    </div>
-
-                    <div className="flex items-center gap-2 text-xs text-emerald-200">
-                      <div className="h-px flex-1 bg-emerald-500/10" />
-                      <span>+ $75 Annual Registration Fee</span>
-                      <div className="h-px flex-1 bg-emerald-500/10" />
-                    </div>
-
-                    <p className="mt-2 text-xs text-emerald-100 text-center font-semibold">
-                      = $525/year per student
-                    </p>
-
-                    <p className="mt-1 text-[10px] text-emerald-200 text-center">
-                      Curriculum books purchased separately
-                    </p>
-                  </div>
-                </div>
-
-                {/* Floating decorative element */}
-                <div className="absolute -top-6 -right-6 h-24 w-24 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl shadow-amber-500/20 flex items-center justify-center animate-float">
-                  <div className="text-center">
-                    <span className="text-lg font-bold text-amber-950 block">$45</span>
-                    <span className="text-[9px] font-medium text-amber-800 block -mt-1">/mo</span>
-                  </div>
-                </div>
-
-                {/* Fun floating emoji decorations */}
-                <div className="absolute -bottom-4 -left-6 text-2xl animate-bounce-soft" style={{ animationDelay: '1s' }}>
-                  ✨
-                </div>
+            {/* Photo side */}
+            <div className="relative">
+              <div className="overflow-hidden rounded-3xl shadow-[0_40px_90px_-40px_rgba(18,53,42,0.45)]">
+                <Image
+                  src={IMAGES.feature}
+                  alt="A mother helping her daughter with schoolwork at home"
+                  width={1200}
+                  height={1500}
+                  className="h-[560px] w-full object-cover"
+                />
+              </div>
+              <div className="absolute right-6 top-6 rounded-full bg-white/90 px-4 py-2 text-xs font-medium text-[#12352a] shadow-lg backdrop-blur">
+                <BookOpen className="mr-1.5 inline h-3.5 w-3.5 text-emerald-600" />
+                Curriculum your way
               </div>
             </div>
           </div>
         </div>
-
-        {/* Rainbow divider moved into stats card (between numbers and labels) — 2026-07-31 */}
       </section>
 
-      {/* ===== TRUSTED BY / STATS ===== */}
-      <section className="relative">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="glass rounded-2xl p-8 shadow-2xl shadow-emerald-900/10">
-            {/* Each stat = number + its own label in ONE cell, so mobile 2x2
-                always shows the pair together (9+ / STATES SERVED, etc.) */}
-            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-              {stats.map((stat, i) => {
-                const valueColors = ['text-pink-600', 'text-purple-600', 'text-sky-600', 'text-amber-600']
-                const suffixColors = ['text-pink-400', 'text-purple-400', 'text-sky-400', 'text-amber-400']
-                return (
-                  <div key={stat.label} className={`text-center animate-on-scroll`} style={{ transitionDelay: `${i * 100}ms` }}>
-                    <div className={`text-3xl font-bold font-heading md:text-4xl ${valueColors[i]}`}>
-                      {stat.value}<span className={suffixColors[i]}>{stat.suffix}</span>
-                    </div>
-                    {/* Label directly under its number — no more split blocks */}
-                    <div className="mt-2 text-xs font-medium text-gray-500 uppercase tracking-wide md:text-sm">
-                      {stat.label}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-
-            {/* Rainbow divider sits under the whole stats card as a flourish */}
-            <div className="divider-rainbow mt-8" />
-          </div>
-        </div>
-      </section>
-
-      {/* ===== FEATURES ===== */}
-      <section className="py-24 md:py-32">
+      {/* ===== PROCESS — quiet, numbered ===== */}
+      <section className="bg-white py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center animate-on-scroll">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-50 via-purple-50 to-sky-50 px-4 py-1.5 text-sm font-medium text-purple-700 mb-4 emoji-badge">
-              🌟 Why Choose Us
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 font-heading sm:text-4xl">
-              Everything You Need to{' '}
-              <span className="gradient-text-rainbow">Homeschool with Confidence</span>
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              We handle the administrative burden so you can focus on what matters
-              most — nurturing your children&apos;s minds and character. 💪
+          <div className="max-w-2xl">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
+              Getting started
             </p>
-          </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {features.map((feature, i) => {
-              const funVariants = ['green', 'blue', 'amber'] as const
-              const emojis = ['🛡️', '📋', '💛']
-              return (
-                <Card key={feature.title} fun={funVariants[i]} className={`animate-on-scroll p-6`} style={{ transitionDelay: `${i * 150}ms` }}>
-                  <CardContent className="p-0">
-                    <div className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl shadow-sm animate-bounce-soft`}
-                      style={{
-                        background: feature.color === 'emerald' ? '#d1fae5' : feature.color === 'blue' ? '#dbeafe' : '#fef3c7',
-                        color: feature.color === 'emerald' ? '#059669' : feature.color === 'blue' ? '#2563eb' : '#d97706',
-                        animationDelay: `${i * 0.3}s`,
-                      }}
-                    >
-                      <feature.icon className="h-7 w-7" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 font-heading">
-                      {emojis[i]} {feature.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                      {feature.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Rainbow divider */}
-        <div className="mx-auto max-w-4xl mt-20">
-          <div className="divider-rainbow rounded-full" />
-        </div>
-      </section>
-
-      {/* ===== HOW IT WORKS ===== */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/30 via-pink-50/20 to-white" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-200 to-transparent" />
-
-        <div className="relative mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center animate-on-scroll">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-1.5 text-sm font-medium text-purple-700 mb-4 emoji-badge">
-              🚀 Simple Process
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 font-heading sm:text-4xl">
-              Get Started in{' '}
-              <span className="gradient-text-rainbow">Three Simple Steps</span>
+            <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-[#12352a] sm:text-5xl">
+              Three steps to homeschool freedom
             </h2>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Joining Larose Christian Academy is straightforward. We&apos;ve
-              simplified the process so you can get covered and start homeschooling.
-            </p>
           </div>
 
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {steps.map((step, i) => {
-              const gradients = [
-                'from-pink-100 via-pink-200 to-rose-100',
-                'from-purple-100 via-purple-200 to-violet-100',
-                'from-sky-100 via-sky-200 to-blue-100',
-              ]
-              const textColors = ['text-pink-700', 'text-purple-700', 'text-sky-700']
-              const shadowColors = ['shadow-pink-200/50', 'shadow-purple-200/50', 'shadow-sky-200/50']
-              const emojis = ['📝', '✅', '🎉']
-              return (
-                <div key={step.step} className="relative animate-on-scroll" style={{ transitionDelay: `${i * 150}ms` }}>
-                  {i < steps.length - 1 && (
-                    <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-px bg-gradient-to-r from-purple-200 to-pink-100">
-                      <div className="absolute right-0 top-1/2 -translate-y-1/2">
-                        <ChevronRight className="h-4 w-4 text-purple-300" />
-                      </div>
-                    </div>
-                  )}
-                  <div className="text-center">
-                    <div className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br ${gradients[i]} shadow-inner ${shadowColors[i]}`}>
-                      <span className={`text-2xl font-bold font-heading ${textColors[i]}`}>
-                        {emojis[i]}
-                      </span>
-                    </div>
-                    <h3 className="mt-6 text-xl font-bold text-gray-900 font-heading">{step.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-gray-600">{step.description}</p>
-                  </div>
-                </div>
-              )
-            })}
+          <div className="mt-16 grid gap-10 md:grid-cols-3 md:gap-8">
+            {steps.map((step, i) => (
+              <div key={step.step} className="relative border-t-2 border-[#12352a]/10 pt-8">
+                <span className="font-heading text-5xl font-bold text-[#12352a]/10">{step.step}</span>
+                <h3 className="mt-4 font-heading text-xl font-bold text-[#12352a]">{step.title}</h3>
+                <p className="mt-3 max-w-xs text-[15px] leading-relaxed text-[#12352a]/60">
+                  {step.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section className="py-24 md:py-32">
+      <section className="bg-[#faf7f0] py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center animate-on-scroll">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-50 to-yellow-50 px-4 py-1.5 text-sm font-medium text-amber-700 mb-4 emoji-badge">
-              💬 Testimonials
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 font-heading sm:text-4xl">
-              What Families{' '}
-              <span className="gradient-text-rainbow">Are Saying</span>
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Hear from families who have found peace of mind with our cover school services. ⭐
+          <div className="max-w-2xl">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-amber-600">
+              From our families
             </p>
+            <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-[#12352a] sm:text-5xl">
+              Peace of mind, in their words
+            </h2>
           </div>
 
-          <div className="mt-16 mx-auto max-w-3xl">
-            <div className="relative min-h-[260px]">
+          <div className="mt-14 max-w-3xl">
+            <div className="relative min-h-[280px]">
               {allTestimonials.map((t, i) => (
                 <div
                   key={i}
@@ -427,48 +318,43 @@ export default function HomePage() {
                       : 'opacity-0 translate-y-4 pointer-events-none'
                   }`}
                 >
-                  <Card fun="amber" className="p-8">
-                    <CardContent className="p-0">
-                      <Quote className="h-8 w-8 text-amber-300/60 mb-4" />
-                      <p className="text-lg leading-relaxed text-gray-700 italic">
-                        &ldquo;{t.quote}&rdquo;
-                      </p>
-                      <div className="mt-6 flex items-center justify-between">
-                        <div>
-                          <p className="font-semibold text-gray-900">{t.author} 🙏</p>
-                          <p className="text-sm text-gray-500">{t.role}</p>
-                        </div>
-                        <div className="flex gap-0.5">
-                          {[...Array(t.rating)].map((_, i) => (
-                            <Star key={i} className={`h-4 w-4 fill-amber-400 text-amber-400 ${i === 0 ? 'animate-wiggle' : ''} ${i === 4 ? 'animate-bounce-soft' : ''}`} />
-                          ))}
-                        </div>
+                  <blockquote className="rounded-3xl border border-[#12352a]/5 bg-white p-10 shadow-[0_24px_60px_-36px_rgba(18,53,42,0.3)]">
+                    <Quote className="h-8 w-8 text-amber-400" />
+                    <p className="mt-5 font-heading text-xl leading-relaxed text-[#12352a]/85 sm:text-2xl">
+                      &ldquo;{t.quote}&rdquo;
+                    </p>
+                    <footer className="mt-8 flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-[#12352a]">{t.author}</p>
+                        <p className="text-sm text-[#12352a]/50">{t.role}</p>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="flex gap-0.5">
+                        {[...Array(t.rating)].map((_, s) => (
+                          <Star key={s} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                        ))}
+                      </div>
+                    </footer>
+                  </blockquote>
                 </div>
               ))}
             </div>
 
-            {/* Dots */}
             <div className="mt-8 flex justify-center gap-2">
               {allTestimonials.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveTestimonial(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    i === activeTestimonial
-                      ? 'w-8 bg-gradient-to-r from-pink-500 via-purple-500 to-sky-500'
-                      : 'w-2 bg-gray-300 hover:bg-gray-400'
+                  aria-label={`Show testimonial ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === activeTestimonial ? 'w-8 bg-[#12352a]' : 'w-1.5 bg-[#12352a]/15 hover:bg-[#12352a]/30'
                   }`}
                 />
               ))}
             </div>
 
-            {/* Enrolled families: leave a review */}
             <div className="mt-10 text-center">
-              <p className="text-sm text-gray-500">
-                Are you an LCA family? Share your experience — we'd love to hear from you. 💚
+              <p className="text-sm text-[#12352a]/50">
+                Are you an LCA family? Share your experience — we&apos;d love to hear from you.
               </p>
               <div className="mt-4 flex justify-center">
                 <LeaveReview />
@@ -476,70 +362,45 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* Rainbow divider */}
-        <div className="mx-auto max-w-4xl mt-20">
-          <div className="divider-rainbow rounded-full" />
-        </div>
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-800 to-gray-900" />
-        <div className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 18c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 35c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-        {/* Colorful orbs instead of just emerald/amber */}
-        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl animate-float" />
-        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-amber-500/10 blur-3xl animate-float-delayed" />
-        <div className="absolute top-1/3 right-1/4 h-48 w-48 rounded-full bg-pink-500/8 blur-3xl animate-pulse-soft" />
-        <div className="absolute bottom-1/3 left-1/4 h-36 w-36 rounded-full bg-purple-500/8 blur-3xl animate-float" style={{ animationDelay: '3s' }} />
+      <section className="relative overflow-hidden bg-[#12352a] py-24 md:py-32">
+        <div className="pointer-events-none absolute -top-40 right-1/4 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-40 left-1/4 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <div className="animate-on-scroll space-y-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-1.5 text-sm text-emerald-300 backdrop-blur-sm emoji-badge">
-              <HeartHandshake className="h-3.5 w-3.5" />
-              🌟 Start Your Journey Today
-            </div>
+          <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
+            Start your journey
+          </p>
+          <h2 className="mt-5 font-heading text-4xl font-bold leading-tight text-white sm:text-5xl">
+            Ready to homeschool{' '}
+            <span className="italic text-amber-400">with confidence?</span>
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-emerald-100/70">
+            Join hundreds of families who have found peace of mind through Larose
+            Christian Academy. <strong className="text-white">$45/mo tuition</strong>{' '}
+            (10 months) + $75 annual reg fee ={' '}
+            <strong className="text-white">$525/year per student</strong>.
+          </p>
 
-            <h2 className="text-3xl font-bold text-white font-heading sm:text-4xl lg:text-5xl">
-              Ready to Homeschool{' '}
-              <span className="gradient-text-rainbow">
-                with Confidence?
-              </span>
-            </h2>
-
-            <p className="text-lg leading-relaxed text-emerald-100/70 max-w-xl mx-auto">
-              Join hundreds of families who have found peace of mind through
-              Larose Christian Academy. <strong>$45/mo tuition (10 school months)</strong> + 
-              $75 annual reg fee = <strong>$525/year per student</strong>. 🙌
-            </p>
-
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link href="/enroll">
-                <Button size="lg" variant="fun" className="shadow-xl shadow-purple-500/20 text-base animate-bounce-soft">
-                  ✨ Enroll Now — $45/mo Tuition
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-emerald-400/30 text-emerald-100 hover:bg-emerald-500/10"
-                >
-                  💬 Questions? Contact Us
-                </Button>
-              </Link>
-            </div>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link href="/enroll">
+              <Button size="lg" className="w-full bg-amber-500 text-[#12352a] shadow-amber-500/30 hover:bg-amber-400 sm:w-auto">
+                Enroll now — $45/mo
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-emerald-400/30 text-emerald-100 hover:border-emerald-400/60 hover:bg-emerald-500/10"
+              >
+                Questions? Contact us
+              </Button>
+            </Link>
           </div>
-        </div>
-
-        {/* Rainbow divider at bottom */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <div className="divider-rainbow" />
         </div>
       </section>
     </>

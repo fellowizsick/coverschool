@@ -28,13 +28,13 @@ function ChurchFormViewContent() {
   }, [params.id])
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-[100dvh] flex items-center justify-center">
       <p className="text-gray-500">Loading form...</p>
     </div>
   )
 
   if (error || !form) return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-[100dvh] flex items-center justify-center">
       <div className="text-center">
         <FileText className="mx-auto h-12 w-12 text-gray-400" />
         <h2 className="mt-4 text-xl font-semibold text-gray-700">Form Not Found</h2>
@@ -45,7 +45,7 @@ function ChurchFormViewContent() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-[100dvh] bg-gray-100">
       {/* Toolbar */}
       <div className="sticky top-0 z-10 bg-white border-b shadow-sm print:hidden">
         <div className="mx-auto max-w-4xl px-4 py-3 flex items-center justify-between">
@@ -253,7 +253,7 @@ function ChurchFormViewContent() {
 
 export default function ChurchFormViewPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-gray-500">Loading...</p></div>}>
+    <Suspense fallback={<div className="min-h-[100dvh] flex items-center justify-center"><p className="text-gray-500">Loading...</p></div>}>
       <ChurchFormViewContent />
     </Suspense>
   )

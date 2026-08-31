@@ -92,7 +92,7 @@ export default function EnrollSuccessPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 via-white to-pink-50/20">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20">
       {/* Confetti-like decoration */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-20">
         {['🟢', '🟡', '🟣', '🔵', '🟠', '💚', '💛', '💜', '💙', '🧡'].map((emoji, i) => (
@@ -162,7 +162,7 @@ export default function EnrollSuccessPage() {
           className={`mt-8 animate-on-scroll border-2 ${
             registrationStatus === 'paid'
               ? 'border-emerald-300'
-              : 'border-purple-200'
+              : 'border-amber-200'
           }`}
         >
           <CardContent className="p-6">
@@ -170,16 +170,16 @@ export default function EnrollSuccessPage() {
               <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl shadow-sm animate-wiggle ${
                 registrationStatus === 'paid'
                   ? 'bg-gradient-to-br from-emerald-200 to-emerald-100'
-                  : 'bg-gradient-to-br from-purple-200 to-purple-100'
+                  : 'bg-gradient-to-br from-amber-200 to-amber-100'
               }`}>
                 <FileText className={`h-7 w-7 ${
-                  registrationStatus === 'paid' ? 'text-emerald-700' : 'text-purple-700'
+                  registrationStatus === 'paid' ? 'text-emerald-700' : 'text-amber-700'
                 }`} />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className={`text-lg font-semibold flex items-center gap-2 ${
-                    registrationStatus === 'paid' ? 'text-emerald-900' : 'text-purple-900'
+                    registrationStatus === 'paid' ? 'text-emerald-900' : 'text-amber-900'
                   }`}>
                     📋 One-Time Registration Fee
                   </h2>
@@ -340,7 +340,7 @@ export default function EnrollSuccessPage() {
               key={i}
               className={`rounded-2xl border p-5 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
                 step.highlight
-                  ? 'border-purple-200 bg-gradient-to-b from-purple-50 to-white'
+                  ? 'border-amber-200 bg-gradient-to-b from-amber-50 to-white'
                   : 'border-gray-100 bg-white'
               }`}
               style={{ transitionDelay: `${i * 100}ms` }}

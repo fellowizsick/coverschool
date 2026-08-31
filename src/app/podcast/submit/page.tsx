@@ -130,8 +130,8 @@ export default function PodcastSubmitPage() {
       <p className="text-sm text-gray-500 mb-4">Use your {mode === 'audio' ? 'microphone' : 'camera + microphone'} to record a short podcast clip. It stays private until the school reviews and approves it.</p>
 
       <div className="flex gap-2 mb-4">
-        <button type="button" onClick={() => setMode('video')} disabled={recording} className={`flex-1 py-2 rounded-lg text-sm font-semibold border ${mode === 'video' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'} disabled:opacity-50`}>🎥 Video</button>
-        <button type="button" onClick={() => setMode('audio')} disabled={recording} className={`flex-1 py-2 rounded-lg text-sm font-semibold border ${mode === 'audio' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'} disabled:opacity-50`}>🎙️ Audio</button>
+        <button type="button" onClick={() => setMode('video')} disabled={recording} className={`flex-1 py-2 rounded-lg text-sm font-semibold border ${mode === 'video' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'} disabled:opacity-50`}>🎥 Video</button>
+        <button type="button" onClick={() => setMode('audio')} disabled={recording} className={`flex-1 py-2 rounded-lg text-sm font-semibold border ${mode === 'audio' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'} disabled:opacity-50`}>🎙️ Audio</button>
       </div>
 
       <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" className="w-full p-2 border rounded mb-3 text-sm" />
@@ -148,7 +148,7 @@ export default function PodcastSubmitPage() {
           {previewStream ? <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" /> : <span className="text-gray-500 text-sm">Camera preview</span>}
         </div>
       ) : (
-        <div className="rounded-xl border bg-indigo-50 flex items-center justify-center gap-2 mb-3 py-6 text-sm text-indigo-700">
+        <div className="rounded-xl border bg-emerald-50 flex items-center justify-center gap-2 mb-3 py-6 text-sm text-emerald-700">
           <span className="text-xl">🎙️</span> {recording ? 'Recording audio…' : 'Microphone only — no camera needed.'}
         </div>
       )}
@@ -172,7 +172,7 @@ export default function PodcastSubmitPage() {
             {mine.map(s => (
               <div key={s.id} className="p-3 rounded-xl border bg-gray-50 flex items-center gap-3">
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-800 truncate">{s.title || 'Untitled'} {s.media_type === 'audio' ? <span className="text-[10px] font-semibold uppercase text-indigo-600">· Audio</span> : null}</div>
+                  <div className="text-sm font-medium text-gray-800 truncate">{s.title || 'Untitled'} {s.media_type === 'audio' ? <span className="text-[10px] font-semibold uppercase text-emerald-600">· Audio</span> : null}</div>
                   <div className="text-xs text-gray-500">
                     <span className={`capitalize ${s.status === 'approved' ? 'text-green-600' : s.status === 'rejected' ? 'text-red-600' : 'text-amber-600'}`}>{s.status}</span>
                     {s.previewUrl ? (

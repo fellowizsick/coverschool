@@ -147,7 +147,7 @@ function ChurchFormContent() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white py-20">
+      <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50 to-white py-20">
         <div className="mx-auto max-w-lg px-4 text-center">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
             <CheckCircle className="h-10 w-10 text-emerald-600" />
@@ -212,7 +212,7 @@ function ChurchFormContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20 pb-16">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20 pb-16">
       {/* Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-amber-900 py-16">
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
@@ -279,7 +279,7 @@ function ChurchFormContent() {
         <form onSubmit={handleSubmit} className="space-y-6">
 
           {/* ===== PART 1 ===== */}
-          <Card fun="blue">
+          <Card fun="green">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
                 📝 Part 1 — Parent / Guardian Information
@@ -446,7 +446,7 @@ function ChurchFormContent() {
 export default function ChurchEnrollmentFormPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[100dvh] flex items-center justify-center">
         <p className="text-gray-500">Loading form...</p>
       </div>
     }>

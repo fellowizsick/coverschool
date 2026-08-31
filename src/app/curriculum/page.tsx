@@ -97,7 +97,7 @@ const gradeRows = Object.entries(SUBJECTS_BY_GRADE)
 
 export default function CurriculumPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-gray-50 to-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
@@ -145,7 +145,7 @@ export default function CurriculumPage() {
               </p>
             </CardContent>
           </Card>
-          <Card fun="blue">
+          <Card fun="green">
             <CardContent className="p-6">
               <FileText className="h-8 w-8 text-blue-600" />
               <h3 className="mt-3 font-bold text-gray-900">3. Records That Follow</h3>

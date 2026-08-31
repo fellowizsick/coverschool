@@ -51,14 +51,14 @@ const faqs = [
 
 const iconGradients = [
   'from-amber-400 to-orange-500',
-  'from-sky-400 to-blue-500',
+  'from-emerald-400 to-teal-600',
   'from-emerald-400 to-teal-500',
-  'from-purple-400 to-violet-500',
+  'from-amber-500 to-amber-600',
 ]
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       {/* 🎨 Gradient Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-400 px-4 py-20 sm:px-6 lg:px-8">
         {/* Decorative floating shapes */}
@@ -123,7 +123,7 @@ export default function HowItWorksPage() {
         {/* Quick FAQ */}
         <div className="mt-20">
           <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-400 to-indigo-500 text-white shadow-md">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md">
               <span className="text-lg">💬</span>
             </div>
             <div>

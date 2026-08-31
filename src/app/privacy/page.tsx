@@ -3,7 +3,7 @@ import { Shield } from 'lucide-react'
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-white to-gray-50">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-b from-emerald-900 to-emerald-800 py-20">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />

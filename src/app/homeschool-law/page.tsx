@@ -15,11 +15,11 @@ const cardColors = ['blue', 'green', 'amber', 'purple', 'pink', 'sky', 'rose', '
 
 export default function HomeschoolLawHubPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       {/* Gradient Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 px-4 py-20 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 px-4 py-20 sm:px-6 lg:px-8">
         <div className="absolute -left-10 top-8 h-36 w-36 animate-float rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-sky-300/15 blur-3xl [animation-delay:1s]" />
+        <div className="absolute -right-6 bottom-12 h-48 w-48 animate-float rounded-full bg-emerald-300/15 blur-3xl [animation-delay:1s]" />
         <div className="absolute left-1/4 top-4 h-20 w-20 animate-bounce-soft rounded-full bg-teal-200/10 blur-2xl [animation-delay:2s]" />
         <div className="mx-auto max-w-3xl text-center">
           <span className="mb-4 inline-block animate-pop rounded-full bg-white/20 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm">
@@ -28,11 +28,11 @@ export default function HomeschoolLawHubPage() {
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Homeschool Laws by State
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-cyan-100">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
             Plain-English summaries of the legal requirements in every state we cover — and how a
             church school keeps your family protected.
           </p>
-          <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-pink-400 via-amber-300 to-emerald-300" />
+          <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-emerald-400 via-amber-300 to-emerald-300" />
         </div>
       </section>
 

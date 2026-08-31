@@ -45,11 +45,11 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       {/* 🎨 Gradient Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-pink-500 via-rose-500 to-red-400 px-4 py-20 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-amber-700 px-4 py-20 sm:px-6 lg:px-8">
         <div className="absolute -left-12 top-6 h-40 w-40 animate-float rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -right-8 bottom-8 h-48 w-48 animate-float rounded-full bg-rose-300/15 blur-3xl [animation-delay:1s]" />
+        <div className="absolute -right-8 bottom-8 h-48 w-48 animate-float rounded-full bg-amber-300/15 blur-3xl [animation-delay:1s]" />
         <div className="absolute left-1/2 top-4 h-20 w-20 animate-bounce-soft rounded-full bg-amber-200/10 blur-2xl [animation-delay:2s]" />
         <div className="mx-auto max-w-4xl text-center">
           <span className="mb-4 inline-block animate-pop rounded-full bg-white/20 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm">
@@ -58,10 +58,10 @@ export default function ContactPage() {
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Contact Us
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-rose-100">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
             Have questions? We&apos;d love to hear from you.
           </p>
-          <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-yellow-300 via-emerald-300 to-sky-300" />
+          <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-amber-300 via-emerald-300 to-teal-300" />
         </div>
       </section>
 
@@ -77,10 +77,10 @@ export default function ContactPage() {
         <div className="grid gap-8 md:grid-cols-2">
           {/* Contact Info */}
           <div className="animate-slide-up space-y-6">
-            <Card fun="pink">
+            <Card fun="green">
               <CardContent className="space-y-6 p-6">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-md">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md">
                     <Mail className="h-5 w-5" />
                   </div>
                   <div>
@@ -88,9 +88,9 @@ export default function ContactPage() {
                     <p className="text-sm text-gray-600">{SCHOOL_CONFIG.email}</p>
                   </div>
                 </div>
-                <div className="divider-rainbow !h-[3px] !rounded-full !border-0 !bg-gradient-to-r from-pink-300 via-rose-300 to-red-300" />
+                <div className="divider-rainbow !h-[3px] !rounded-full !border-0 !bg-gradient-to-r from-emerald-300 via-amber-300 to-emerald-300" />
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-md">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md">
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
@@ -98,9 +98,9 @@ export default function ContactPage() {
                     <p className="text-sm text-gray-600">{SCHOOL_CONFIG.phone}</p>
                   </div>
                 </div>
-                <div className="divider-rainbow !h-[3px] !rounded-full !border-0 !bg-gradient-to-r from-pink-300 via-rose-300 to-red-300" />
+                <div className="divider-rainbow !h-[3px] !rounded-full !border-0 !bg-gradient-to-r from-emerald-300 via-amber-300 to-emerald-300" />
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-md">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
@@ -108,9 +108,9 @@ export default function ContactPage() {
                     <p className="text-sm text-gray-600">{SCHOOL_CONFIG.address}</p>
                   </div>
                 </div>
-                <div className="divider-rainbow !h-[3px] !rounded-full !border-0 !bg-gradient-to-r from-pink-300 via-rose-300 to-red-300" />
+                <div className="divider-rainbow !h-[3px] !rounded-full !border-0 !bg-gradient-to-r from-emerald-300 via-amber-300 to-emerald-300" />
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-md">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md">
                     <Clock className="h-5 w-5" />
                   </div>
                   <div>
@@ -126,7 +126,7 @@ export default function ContactPage() {
 
           {/* Contact Form */}
           <div className="animate-slide-up [animation-delay:200ms]">
-            <Card fun="rose">
+            <Card fun="amber">
               <CardContent className="p-6">
                 <div className="mb-2 flex items-center gap-2">
                   <span className="text-xl">✉️</span>
@@ -157,22 +157,22 @@ export default function ContactPage() {
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                       <input id="name" name="name" type="text" required
-                        className="mt-1 block w-full rounded-lg border border-rose-200 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500" />
+                        className="mt-1 block w-full rounded-lg border border-emerald-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500" />
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                       <input id="email" name="email" type="email" required
-                        className="mt-1 block w-full rounded-lg border border-rose-200 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500" />
+                        className="mt-1 block w-full rounded-lg border border-emerald-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500" />
                     </div>
                     <div>
                       <label htmlFor="subject" className="block text-sm font-medium text-gray-700">Subject</label>
                       <input id="subject" name="subject" type="text"
-                        className="mt-1 block w-full rounded-lg border border-rose-200 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500" />
+                        className="mt-1 block w-full rounded-lg border border-emerald-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500" />
                     </div>
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
                       <textarea id="message" name="message" rows={4} required
-                        className="mt-1 block w-full rounded-lg border border-rose-200 px-3 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500" />
+                        className="mt-1 block w-full rounded-lg border border-emerald-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500" />
                     </div>
                     {status === 'error' && (
                       <p className="text-center text-sm font-medium text-red-600">
@@ -180,7 +180,7 @@ export default function ContactPage() {
                       </p>
                     )}
                     <button type="submit" disabled={status === 'submitting'}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-rose-500 to-pink-600 px-4 py-2 text-sm font-medium text-white shadow-md shadow-rose-200 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-rose-300 disabled:cursor-not-allowed disabled:opacity-60">
+                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2 text-sm font-medium text-white shadow-md shadow-emerald-900/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-900/30 disabled:cursor-not-allowed disabled:opacity-60">
                       {status === 'submitting' ? (
                         <><Loader2 className="h-4 w-4 animate-spin" /> Sending...</>
                       ) : '✉️ Send Message'}
@@ -193,9 +193,9 @@ export default function ContactPage() {
         </div>
 
         <div className="mt-12 flex items-center justify-center gap-3">
-          <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-pink-300 to-transparent" />
+          <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
           <span className="animate-float text-lg">💫</span>
-          <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-pink-300 to-transparent" />
+          <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
         </div>
       </div>
     </div>

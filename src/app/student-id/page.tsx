@@ -348,7 +348,7 @@ export default function StudentIdPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#060a08]">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#060a08]">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-emerald-400/20 blur-xl" />
@@ -367,7 +367,7 @@ export default function StudentIdPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#060a08] text-zinc-100">
+    <div className="min-h-[100dvh] bg-[#060a08] text-zinc-100">
       <style>{HOLO_CSS}</style>
 
       {/* Light header band so the site navbar text is readable */}

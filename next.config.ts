@@ -3,6 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.pexels.com' },
+    ],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -24,7 +29,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://gc.zgo.at",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://*.supabase.co https://*.gstatic.com",
+              "img-src 'self' data: blob: https://*.supabase.co https://*.gstatic.com https://images.pexels.com",
               "media-src 'self' blob: https://*.supabase.co",
               "font-src 'self' data:",
               "connect-src 'self' https://*.supabase.co https://gc.zgo.at",

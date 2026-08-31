@@ -53,18 +53,18 @@ export default function DonatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 via-white to-rose-50/20 pb-20">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-emerald-50/30 via-white to-amber-50/20 pb-20">
       {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-rose-900 py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-rose-400/20 via-transparent to-transparent" />
+      <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-amber-900 py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-400/20 via-transparent to-transparent" />
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-emerald-200 backdrop-blur-sm mb-5">
-            <Heart className="h-4 w-4 text-rose-300" />
+            <Heart className="h-4 w-4 text-amber-300" />
             Support Homeschool Families
           </div>
           <h1 className="text-4xl font-bold text-white font-heading sm:text-5xl md:text-6xl">
-            Give the Gift of <span className="bg-gradient-to-r from-amber-300 via-rose-300 to-emerald-300 bg-clip-text text-transparent">Education</span> 🎓
+            Give the Gift of <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-emerald-300 bg-clip-text text-transparent">Education</span> 🎓
           </h1>
           <p className="mt-5 text-lg text-emerald-100/85 max-w-2xl mx-auto leading-relaxed">
             Your donation helps Larose Christian Academy provide affordable legal oversight,
@@ -95,10 +95,10 @@ export default function DonatePage() {
               <p className="mt-1 text-sm text-gray-500">Official transcripts, report cards, and student files maintained with care.</p>
             </CardContent>
           </Card>
-          <Card fun="rose" className="shadow-xl shadow-rose-900/5">
+          <Card fun="amber" className="shadow-xl shadow-amber-900/5">
             <CardContent className="p-6 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-200 to-rose-100">
-                <ShieldCheck className="h-6 w-6 text-rose-700" />
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-200 to-amber-100">
+                <ShieldCheck className="h-6 w-6 text-amber-700" />
               </div>
               <h3 className="mt-3 font-semibold text-gray-900">Legal Oversight</h3>
               <p className="mt-1 text-sm text-gray-500">Peace of mind for parents — the legal side handled so they can focus on teaching.</p>
@@ -110,8 +110,8 @@ export default function DonatePage() {
         <Card className="mt-8 shadow-2xl shadow-emerald-900/10 border-2 border-emerald-100">
           <CardContent className="p-8 sm:p-10">
             <div className="text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-rose-100 to-emerald-100">
-                <Heart className="h-7 w-7 text-rose-600" />
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-emerald-100">
+                <Heart className="h-7 w-7 text-amber-600" />
               </div>
               <h2 className="mt-4 text-2xl font-bold text-gray-900 font-heading">Make a Donation</h2>
               <p className="mt-2 text-gray-600">Every gift — no matter the size — makes a difference. 💚</p>
@@ -244,7 +244,7 @@ export default function DonatePage() {
             <Card>
               <CardContent className="p-6 text-left">
                 <div className="flex items-center gap-3">
-                  <Users className="h-6 w-6 text-rose-600 shrink-0" />
+                  <Users className="h-6 w-6 text-amber-600 shrink-0" />
                   <h3 className="font-semibold text-gray-900">Support for Every Family</h3>
                 </div>
                 <p className="mt-2 text-sm text-gray-600 leading-relaxed">
