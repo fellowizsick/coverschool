@@ -99,8 +99,8 @@ export default function Navbar() {
               <span className={`font-heading text-base font-bold leading-tight transition-colors duration-300 md:text-xl ${scrolled ? 'text-gray-900' : 'text-white'}`}>
                 {SCHOOL_CONFIG.name}
               </span>
-              <span className="bg-gradient-to-r from-emerald-600 to-amber-500 bg-clip-text text-[10px] font-medium uppercase tracking-wide text-transparent transition-colors duration-300 md:text-xs md:tracking-wider">
-                ✦ Alabama Church School
+              <span className={`text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-300 md:text-xs ${scrolled ? 'text-emerald-700/80' : 'text-emerald-100/75'}`}>
+                Alabama Church School · Est. 2024
               </span>
             </Link>
           </div>

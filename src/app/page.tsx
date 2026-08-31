@@ -198,16 +198,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== STATS — quiet credibility band ===== */}
-      <section className="border-y border-emerald-100 bg-white py-12">
-        <div className="mx-auto grid max-w-[90rem] grid-cols-2 gap-x-6 gap-y-10 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
+      {/* ===== STATS — green confidence band with dividers ===== */}
+      <section className="border-y border-emerald-100 bg-gradient-to-r from-emerald-50/60 via-white to-amber-50/40 py-14">
+        <div className="mx-auto grid max-w-[90rem] grid-cols-2 gap-x-6 gap-y-10 px-4 sm:px-6 md:grid-cols-4 md:divide-x md:divide-emerald-100 lg:px-8">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="font-heading text-4xl font-bold tracking-tight text-emerald-800 md:text-5xl">
                 {stat.value}
                 <span className="text-amber-500">{stat.suffix}</span>
               </div>
-              <div className="mt-2 text-[13px] font-medium uppercase tracking-[0.18em] text-gray-500">
+              <div className="mx-auto mt-3 h-px w-10 bg-gradient-to-r from-emerald-500 to-amber-400" />
+              <div className="mt-3 text-[13px] font-medium uppercase tracking-[0.18em] text-emerald-950/50">
                 {stat.label}
               </div>
             </div>
@@ -215,17 +216,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== WHY — editorial two-column with photo ===== */}
+      {/* ===== WHY — feature cards ===== */}
       <section className="bg-emerald-50/40 py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
             {/* Copy side */}
             <div>
-              <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
+              <p className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
+                <span className="h-px w-8 bg-gradient-to-r from-emerald-600 to-amber-400" />
                 Why LCA
               </p>
               <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-emerald-950 sm:text-5xl">
-                The support that makes homeschooling feel simple
+                The support that makes{' '}
+                <span className="bg-gradient-to-r from-emerald-700 to-emerald-500 bg-clip-text text-transparent">
+                  homeschooling feel simple
+                </span>
               </h2>
               <p className="mt-6 max-w-lg text-lg leading-relaxed text-emerald-950/65">
                 Most families don&apos;t leave public school because they want less structure.
@@ -233,10 +238,19 @@ export default function HomePage() {
                 administrative side so you can give your children that.
               </p>
 
-              <div className="mt-10 space-y-8">
+              <div className="mt-10 space-y-4">
                 {features.map((feature, i) => (
-                  <div key={feature.title} className="flex items-start gap-5">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                  <div
+                    key={feature.title}
+                    className="group flex items-start gap-5 rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                  >
+                    <div
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white shadow-md ${
+                        i % 2 === 0
+                          ? 'bg-gradient-to-br from-emerald-600 to-emerald-500 shadow-emerald-900/20'
+                          : 'bg-gradient-to-br from-amber-500 to-amber-400 shadow-amber-900/20'
+                      }`}
+                    >
                       <feature.icon className="h-5 w-5" />
                     </div>
                     <div>
@@ -270,23 +284,35 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== PROCESS — quiet, numbered ===== */}
+      {/* ===== PROCESS — numbered cards ===== */}
       <section className="bg-white py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
+            <p className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
+              <span className="h-px w-8 bg-gradient-to-r from-emerald-600 to-amber-400" />
               Getting started
             </p>
             <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-emerald-950 sm:text-5xl">
-              Three steps to homeschool freedom
+              Three steps to{' '}
+              <span className="bg-gradient-to-r from-emerald-700 to-emerald-500 bg-clip-text text-transparent">
+                homeschool freedom
+              </span>
             </h2>
           </div>
 
-          <div className="mt-16 grid gap-10 md:grid-cols-3 md:gap-8">
+          <div className="mt-16 grid gap-8 md:grid-cols-3">
             {steps.map((step, i) => (
-              <div key={step.step} className="relative border-t-2 border-emerald-100 pt-8">
-                <span className="font-heading text-5xl font-bold text-emerald-900/10">{step.step}</span>
-                <h3 className="mt-4 font-heading text-xl font-bold text-emerald-950">{step.title}</h3>
+              <div
+                key={step.step}
+                className="relative rounded-2xl border border-emerald-100 bg-gradient-to-b from-emerald-50/70 to-white p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+              >
+                {i < steps.length - 1 && (
+                  <div className="absolute top-1/2 -right-4 hidden h-px w-8 bg-gradient-to-r from-emerald-300 to-amber-300 md:block" />
+                )}
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-amber-500 font-heading text-lg font-bold text-white shadow-md shadow-emerald-900/20">
+                  {step.step}
+                </div>
+                <h3 className="mt-6 font-heading text-xl font-bold text-emerald-950">{step.title}</h3>
                 <p className="mt-3 max-w-xs text-[15px] leading-relaxed text-emerald-950/60">
                   {step.description}
                 </p>
@@ -300,25 +326,35 @@ export default function HomePage() {
       <section className="bg-emerald-50/40 py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
+            <p className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
+              <span className="h-px w-8 bg-gradient-to-r from-emerald-600 to-amber-400" />
               From our families
             </p>
             <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.1] tracking-tight text-emerald-950 sm:text-5xl">
-              Peace of mind, in their words
+              Peace of mind,{' '}
+              <span className="bg-gradient-to-r from-emerald-700 to-emerald-500 bg-clip-text text-transparent">
+                in their words
+              </span>
             </h2>
           </div>
 
           <div className="mt-14 max-w-3xl">
             <div key={activeTestimonial} className="animate-[fadeIn_0.5s_ease]">
-              <blockquote className="rounded-3xl border border-emerald-100 bg-white p-10 shadow-[0_24px_60px_-36px_rgba(2,44,34,0.3)]">
-                <Quote className="h-8 w-8 text-amber-400" />
+              <blockquote className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-10 shadow-[0_24px_60px_-36px_rgba(2,44,34,0.3)]">
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-600 via-emerald-400 to-amber-400" />
+                <Quote className="h-8 w-8 text-emerald-600" />
                 <p className="mt-5 font-heading text-xl leading-relaxed text-emerald-950/85 sm:text-2xl">
                   &ldquo;{allTestimonials[activeTestimonial].quote}&rdquo;
                 </p>
                 <footer className="mt-8 flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-emerald-950">{allTestimonials[activeTestimonial].author}</p>
-                    <p className="text-sm text-gray-500">{allTestimonials[activeTestimonial].role}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-500 text-sm font-bold text-white shadow-md shadow-emerald-900/20">
+                      {allTestimonials[activeTestimonial].author.split(' ').map((w) => w[0]).join('').slice(0, 2)}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-emerald-950">{allTestimonials[activeTestimonial].author}</p>
+                      <p className="text-sm text-gray-500">{allTestimonials[activeTestimonial].role}</p>
+                    </div>
                   </div>
                   <div className="flex gap-0.5">
                     {[...Array(allTestimonials[activeTestimonial].rating)].map((_, s) => (
