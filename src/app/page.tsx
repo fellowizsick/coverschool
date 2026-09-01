@@ -200,9 +200,9 @@ export default function HomePage() {
 
       {/* ===== STATS — green confidence band with dividers ===== */}
       <section className="border-y border-emerald-100 bg-gradient-to-r from-emerald-50/60 via-white to-amber-50/40 py-14">
-        <div className="mx-auto grid max-w-[90rem] grid-cols-2 gap-x-6 gap-y-10 px-4 sm:px-6 md:grid-cols-4 md:divide-x md:divide-emerald-100 lg:px-8">
+        <div className="mx-auto grid max-w-[90rem] grid-cols-2 gap-x-6 gap-y-10 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
           {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
+            <div key={stat.label} className="rounded-2xl border border-emerald-100 bg-white px-4 py-6 text-center shadow-sm">
               <div className="font-heading text-4xl font-bold tracking-tight text-emerald-800 md:text-5xl">
                 {stat.value}
                 <span className="text-amber-500">{stat.suffix}</span>
