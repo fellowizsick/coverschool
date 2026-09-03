@@ -189,7 +189,18 @@ export default function Navbar() {
             ✦
           </div>
         </div>
-        <nav className="space-y-1 px-4 pb-28">
+
+        {/* Enroll CTA at the TOP of the menu, above Home */}
+        <div className="px-4 pt-2 pb-2">
+          <Link href="/enroll" onClick={() => setIsOpen(false)} className="block">
+            <Button size="lg" variant="gold" className="w-full text-base shadow-xl shadow-amber-500/25">
+              <Sparkles className="h-4 w-4" />
+              Enroll Now
+            </Button>
+          </Link>
+        </div>
+
+        <nav className="space-y-1 px-4 pb-8">
           {NAV_LINKS.filter((link) => !link.highlight).map((link) => {
             const isActive = pathname === link.href
             return (
@@ -215,17 +226,9 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Enroll CTA pinned at the bottom of the menu */}
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <Link href="/enroll" onClick={() => setIsOpen(false)} className="block">
-            <Button size="lg" variant="gold" className="w-full text-base shadow-xl shadow-amber-500/25">
-              <Sparkles className="h-4 w-4" />
-              Enroll Now
-            </Button>
-          </Link>
-          <p className="pointer-events-none mt-3 text-center text-xs text-gray-400">
-            ✦ {SCHOOL_CONFIG.name} ✦
-          </p>
+        {/* Footer tagline */}
+        <div className="pointer-events-none pb-6 text-center text-xs text-gray-400">
+          ✦ {SCHOOL_CONFIG.name} ✦
         </div>
       </div>
     </header>
