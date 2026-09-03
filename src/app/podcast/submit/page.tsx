@@ -1,12 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { createBrowserClient } from '@supabase/ssr'
 
 const MAX_SECONDS = 300 // 5 min cap for kids' safety + size
 
 export default function PodcastSubmitPage() {
-  const [access, setAccess] = useState<{ canSubmit: boolean; reason?: string; studentName?: string } | null>(null)
+  const [access, setAccess] = useState<{ canSubmit: boolean; reason?: string; studentName?: string; via?: string } | null>(null)
   const [consent, setConsent] = useState(false)
   const [recording, setRecording] = useState(false)
   const [elapsed, setElapsed] = useState(0)
@@ -43,6 +44,11 @@ export default function PodcastSubmitPage() {
     const r = await fetch('/api/podcast/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
     const d = await r.json()
     if (d.ok) { setMine(m => m.filter(x => x.id !== id)) } else { alert(d.error || 'Could not delete.') }
+  }
+
+  async function signOut() {
+    await fetch('/api/student-logout', { method: 'POST' })
+    window.location.href = '/podcast/submit'
   }
 
   async function startRecording() {
@@ -109,7 +115,15 @@ export default function PodcastSubmitPage() {
     return (
       <div className="px-8 pt-20 sm:pt-24 pb-8 max-w-lg mx-auto">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">🎬 Student Podcast</h1>
-        <div className="p-4 rounded-xl border bg-amber-50 text-sm text-gray-700">{access.reason || 'You cannot submit right now.'}</div>
+        <div className="p-4 rounded-xl border bg-amber-50 text-sm text-gray-700 mb-4">{access.reason || 'You cannot submit right now.'}</div>
+        <div className="flex flex-col gap-2">
+          <Link href="/student-login" className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold text-center hover:bg-emerald-700">
+            🎓 Student sign in
+          </Link>
+          <Link href="/login?redirect=/podcast/submit" className="px-4 py-2 rounded-lg border border-emerald-600 text-emerald-700 text-sm font-semibold text-center hover:bg-emerald-50">
+            Parent? Sign in with the family account
+          </Link>
+        </div>
       </div>
     )
   }
@@ -126,6 +140,13 @@ export default function PodcastSubmitPage() {
 
   return (
     <div className="px-6 pt-20 sm:pt-24 pb-6 max-w-xl mx-auto">
+      {/* Who's signed in — students can log out here; families use the portal */}
+      <div className="flex items-center justify-between mb-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm">
+        <span className="text-gray-600">
+          {access.via === 'student' ? '🎓 Student' : '👨‍👩‍👧 Family'} · <span className="font-medium text-gray-800">{access.studentName}</span>
+        </span>
+        <button onClick={signOut} className="text-xs font-semibold text-gray-500 hover:text-gray-700">Sign out</button>
+      </div>
       <h1 className="text-2xl font-bold text-gray-900 mb-1">🎬 Record a podcast {mode === 'audio' ? 'audio' : 'video'}</h1>
       <p className="text-sm text-gray-500 mb-4">Use your {mode === 'audio' ? 'microphone' : 'camera + microphone'} to record a short podcast clip. It stays private until the school reviews and approves it.</p>
 

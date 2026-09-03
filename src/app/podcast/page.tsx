@@ -31,6 +31,11 @@ export default function PodcastPage() {
         </div>
         <Link href="/podcast/submit" className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700">Record a video</Link>
       </div>
+      <div className="mb-6 text-center">
+        <Link href="/student-login" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">
+          🎓 Student? Sign in to record
+        </Link>
+      </div>
 
       {loading ? <p className="text-gray-400">Loading…</p> : items.length === 0 ? (
         <div className="p-8 text-center text-gray-400">No podcast episodes yet. New student videos appear here once approved.</div>

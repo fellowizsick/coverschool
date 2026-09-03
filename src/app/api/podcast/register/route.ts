@@ -1,21 +1,16 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/server'
-import { getEligibleEnrollment, notifyNewSubmission } from '@/lib/podcast'
+import { resolveSubmitter, notifyNewSubmission } from '@/lib/podcast'
 
 // POST /api/podcast/register — after the browser uploaded the video, record the
 // pending submission (HIDDEN until admin reviews) and notify Jonathan+Anne.
-// Gate: authenticated + paid+approved.
+// Gate: signed-in student (cookie) or paid+approved family account.
 export async function POST(request: Request) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user || !user.email) {
-    return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 })
+  const res = await resolveSubmitter(request)
+  if (!res.ok) {
+    return NextResponse.json({ ok: false, error: res.reason }, { status: res.status })
   }
-  const eligible = await getEligibleEnrollment(user.email)
-  if (!eligible.ok) {
-    return NextResponse.json({ ok: false, error: eligible.reason }, { status: 403 })
-  }
+  const eligible = res.eligible
 
   const body = await request.json().catch(() => ({}))
   const path = String(body.path || '')
@@ -30,8 +25,6 @@ export async function POST(request: Request) {
   if (!consent) {
     return NextResponse.json({ ok: false, error: 'Parental consent must be acknowledged.' }, { status: 400 })
   }
-  // Media type is encoded in the storage path; the client may also claim it,
-  // but the path is authoritative. Validate it matches to avoid a mismatch.
   const mediaType = /\/a\//.test(path) ? 'audio' : 'video'
   if (body.media_type && (body.media_type === 'audio' || body.media_type === 'video') && body.media_type !== mediaType) {
     return NextResponse.json({ ok: false, error: 'Media type mismatch.' }, { status: 400 })

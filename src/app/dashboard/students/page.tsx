@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { redirect } from 'next/navigation'
 import AdminStudentsPage from './AdminStudentsPage'
+import StudentPodcastCodes from '@/components/StudentPodcastCodes'
 
 export default async function StudentsPage() {
   const supabase = await createClient()
@@ -65,6 +66,7 @@ export default async function StudentsPage() {
         enrollments={enrollments || []}
         churchFormsByEnrollment={churchByEnrollment}
       />
+      <StudentPodcastCodes />
     </div>
   )
 }

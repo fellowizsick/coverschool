@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import nodemailer from 'nodemailer'
 import { SCHOOL_CONFIG } from '@/lib/constants'
+import { readStudentCookie } from '@/lib/studentAuth'
 
 const BUCKET = 'podcast-videos'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -55,6 +56,77 @@ export async function getEligibleEnrollment(email: string): Promise<Eligible> {
     return { ok: false, reason: 'Only paid, active students can submit. Please contact the school to complete enrollment/payment.' }
   }
   const e = paid[0]
+  return {
+    ok: true,
+    enrollmentId: e.id,
+    studentName: `${e.student_first_name} ${e.student_last_name}`.trim() || 'Student',
+    studentEmail: e.email,
+  }
+}
+
+/** Look up a student by their PIN (school-issued access code). Returns the
+ *  single approved+paid enrollment that matches. */
+export async function getEligibleEnrollmentByPin(pin: string): Promise<Eligible> {
+  const admin = createAdminClient()
+  const { data: enrolls } = await admin
+    .from('enrollments')
+    .select('id, student_first_name, student_last_name, email, status, payment_status, created_at')
+    .eq('student_pin', pin)
+    .order('created_at', { ascending: false })
+  const list = (enrolls || []) as any[]
+  const paid = list.filter((e) => e.status === 'approved' && e.payment_status === 'paid')
+  if (paid.length === 0) {
+    return { ok: false, reason: 'That code did not match a paid, active student. Please contact the school.' }
+  }
+  const e = paid[0]
+  return {
+    ok: true,
+    enrollmentId: e.id,
+    studentName: `${e.student_first_name} ${e.student_last_name}`.trim() || 'Student',
+    studentEmail: e.email,
+  }
+}
+
+/** Resolve WHO is making the request — a student (via signed cookie) OR a
+ *  logged-in family account. Returns the eligible enrollment either way, or a
+ *  failure reason. This is the single gate used by every podcast route. */
+export async function resolveSubmitter(request: Request): Promise<
+  | { ok: true; eligible: Eligible; via: 'student' | 'family' }
+  | { ok: false; reason: string; status: number }
+> {
+  // 1) Student cookie (school-issued PIN session)
+  const student = readStudentCookie(request)
+  if (student) {
+    const eligible = await getEligibleEnrollmentById(student.enrollmentId)
+    if (eligible.ok) return { ok: true, eligible, via: 'student' }
+    return { ok: false, reason: eligible.reason, status: 403 }
+  }
+
+  // 2) Family/parent Supabase account
+  const { createClient } = await import('@/lib/supabase/server')
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user || !user.email) {
+    return { ok: false, reason: 'Please log in with the family account.', status: 401 }
+  }
+  const eligible = await getEligibleEnrollment(user.email)
+  if (!eligible.ok) return { ok: false, reason: eligible.reason, status: 403 }
+  return { ok: true, eligible, via: 'family' }
+}
+
+/** Id-scoped eligibility — resolves the EXACT enrollment in the signed cookie,
+ *  so a multi-child family never grabs the wrong student. */
+export async function getEligibleEnrollmentById(id: string): Promise<Eligible> {
+  const admin = createAdminClient()
+  const { data: e } = await admin
+    .from('enrollments')
+    .select('id, student_first_name, student_last_name, email, status, payment_status')
+    .eq('id', id)
+    .single()
+  if (!e) return { ok: false, reason: 'Enrollment not found.' }
+  if (e.status !== 'approved' || e.payment_status !== 'paid') {
+    return { ok: false, reason: 'Only paid, active students can submit. Please contact the school to complete enrollment/payment.' }
+  }
   return {
     ok: true,
     enrollmentId: e.id,
