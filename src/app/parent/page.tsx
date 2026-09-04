@@ -203,6 +203,33 @@ export default async function ParentPortalPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm">
+                  {/* 🔔 ENROLLMENT FORM GAP (2026-09-03, Jonathan directive):
+                      if THIS child's church/home-school enrollment form is not
+                      fully complete, warn the parent right on their own card —
+                      even for approved/paid students. The parent portal is
+                      pre-scoped to email = user.email, so each parent only ever
+                      sees their OWN children's warnings, never other families'. */}
+                  {e.church_form_status !== 'submitted' && (e.status === 'approved' || e.payment_status === 'paid') && (
+                    <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 flex items-start gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-amber-700">
+                          Enrollment form not complete — required
+                        </p>
+                        <p className="text-xs text-amber-600 mt-0.5">
+                          Please finish the Church / Home School Enrollment Form so
+                          this child's enrollment is legally complete.
+                        </p>
+                        <Link
+                          href={`/enroll/church-form?enrollment_id=${e.id}&student=${encodeURIComponent(`${e.student_first_name} ${e.student_last_name}`)}&already_paid=1`}
+                        >
+                          <Button variant="gold" size="sm" className="mt-2">
+                            📋 Complete Enrollment Form →
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-gray-600">
                     <BookOpen className="h-4 w-4" />
                     Grade: {e.student_grade} · {e.student_grade} years old
