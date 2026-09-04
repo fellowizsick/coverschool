@@ -401,12 +401,7 @@ export default function EnrollPage() {
                 </strong>
               </p>
               <p className="mt-1 text-sm font-semibold text-emerald-700">
-                {`Your total today: ${studentCount === 1
-                    ? (billingMode === 'yearly' ? '$525' : '$120')
-                    : (billingMode === 'yearly'
-                        ? `$${525 * studentCount} (${studentCount} children × $525)`
-                        : `$${120 * studentCount} (${studentCount} children × $120)`)}{' '}
-                {studentCount > 1 ? '— one charge per child' : ''}`}
+                Your total today: {totalDisplay}
               </p>
             </div>
           </CardContent>

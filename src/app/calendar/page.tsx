@@ -41,6 +41,96 @@ const MONTHS = [
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const EMOJI_BANK = ['🎉', '📚', '✏️', '🎨', '🎵', '⚽', '🌳', '🦃', '🎄', '❤️', '✝️', '🎆', '🍎', '🧪', '🌎', '🎓', '🎁', '🚌']
 
+// ── Holiday detection + themes ──────────────────────────────────────────────
+// A day gets a themed background when it's a major US/school holiday, and the
+// theme always MATCHES the holiday (Christmas = green/red, Halloween =
+// purple/orange, Valentine's = pink/red, etc.). Falls back to school-green for
+// generic days.
+type HolidayTheme = {
+  name: string
+  emoji: string
+  // Tailwind gradient classes for the day-cell background (themed to the holiday)
+  bg: string
+  accent: string // a small accent color for the day-number circle
+}
+
+const HOLIDAY_THEMES: Record<string, HolidayTheme> = {
+  "New Year's Day": { name: "New Year's Day", emoji: '🎆', bg: 'from-indigo-100 via-purple-50 to-violet-100', accent: 'text-indigo-700 bg-indigo-100' },
+  'Martin Luther King Jr. Day': { name: 'MLK Day', emoji: '🇺🇸', bg: 'from-red-50 via-white to-blue-50', accent: 'text-blue-700 bg-blue-100' },
+  "Valentine's Day": { name: "Valentine's Day", emoji: '❤️', bg: 'from-pink-100 via-rose-50 to-red-50', accent: 'text-rose-700 bg-rose-100' },
+  'Presidents Day': { name: 'Presidents Day', emoji: '🇺🇸', bg: 'from-red-50 via-white to-blue-50', accent: 'text-blue-700 bg-blue-100' },
+  "St. Patrick's Day": { name: "St. Patrick's Day", emoji: '🍀', bg: 'from-green-100 via-emerald-50 to-lime-50', accent: 'text-green-700 bg-green-100' },
+  Easter: { name: 'Easter', emoji: '🐣', bg: 'from-amber-50 via-pink-50 to-violet-50', accent: 'text-pink-700 bg-pink-100' },
+  'Good Friday': { name: 'Good Friday', emoji: '✝️', bg: 'from-slate-100 via-stone-50 to-amber-50', accent: 'text-stone-600 bg-stone-100' },
+  'Memorial Day': { name: 'Memorial Day', emoji: '🇺🇸', bg: 'from-red-50 via-white to-blue-50', accent: 'text-blue-700 bg-blue-100' },
+  Juneteenth: { name: 'Juneteenth', emoji: '🇺🇸', bg: 'from-red-50 via-white to-blue-50', accent: 'text-blue-700 bg-blue-100' },
+  'Independence Day': { name: 'Independence Day', emoji: '🎆', bg: 'from-red-100 via-white to-blue-100', accent: 'text-red-700 bg-red-100' },
+  'Labor Day': { name: 'Labor Day', emoji: '🇺🇸', bg: 'from-red-50 via-white to-blue-50', accent: 'text-blue-700 bg-blue-100' },
+  Halloween: { name: 'Halloween', emoji: '🎃', bg: 'from-orange-100 via-amber-50 to-purple-100', accent: 'text-purple-700 bg-purple-100' },
+  'Veterans Day': { name: 'Veterans Day', emoji: '🎖️', bg: 'from-red-50 via-white to-blue-50', accent: 'text-blue-700 bg-blue-100' },
+  Thanksgiving: { name: 'Thanksgiving', emoji: '🦃', bg: 'from-orange-100 via-amber-50 to-yellow-50', accent: 'text-amber-700 bg-amber-100' },
+  'Christmas Eve': { name: 'Christmas Eve', emoji: '🎄', bg: 'from-green-100 via-red-50 to-emerald-50', accent: 'text-red-700 bg-red-100' },
+  Christmas: { name: 'Christmas', emoji: '🎄', bg: 'from-green-100 via-red-50 to-emerald-50', accent: 'text-red-700 bg-red-100' },
+}
+
+function nthWeekday(year: number, month: number, weekday: number, n: number): number {
+  const first = new Date(year, month, 1).getDay()
+  return 1 + ((weekday - first + 7) % 7) + (n - 1) * 7
+}
+function lastWeekday(year: number, month: number, weekday: number): number {
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const last = new Date(year, month, daysInMonth).getDay()
+  return daysInMonth - ((last - weekday + 7) % 7)
+}
+function easterMonthDay(year: number): { m: number; d: number } {
+  const a = year % 19
+  const b = Math.floor(year / 100)
+  const c = year % 100
+  const d = Math.floor(b / 4)
+  const e = b % 4
+  const f = Math.floor((b + 8) / 25)
+  const g = Math.floor((b - f + 1) / 3)
+  const h = (19 * a + b - d - g + 15) % 30
+  const i = Math.floor(c / 4)
+  const k = c % 4
+  const l = (32 + 2 * e + 2 * i - h - k) % 7
+  const m = Math.floor((a + 11 * h + 22 * l) / 451)
+  const month = Math.floor((h + l - 7 * m + 114) / 31)
+  const day = ((h + l - 7 * m + 114) % 31) + 1
+  return { m: month, d: day }
+}
+
+/** Returns the themed holiday for a given (year, month 0-indexed, day), or null. */
+function holidayFor(year: number, month: number, day: number): HolidayTheme | null {
+  const md = (m: number, d: number) => m === month && d === day
+  const monday = 1
+  const thursday = 4
+  const easter = easterMonthDay(year)
+
+  const checks: Array<[string, boolean]> = [
+    ["New Year's Day", md(0, 1)],
+    ['Martin Luther King Jr. Day', md(1, nthWeekday(year, 1, monday, 3))],
+    ["Valentine's Day", md(1, 14)],
+    ['Presidents Day', md(1, nthWeekday(year, 1, monday, 3))],
+    ["St. Patrick's Day", md(2, 17)],
+    ['Easter', md(easter.m, easter.d)],
+    ['Good Friday', md(easter.m, easter.d - 2)],
+    ['Memorial Day', md(4, lastWeekday(year, 4, monday))],
+    ['Juneteenth', md(5, 19)],
+    ['Independence Day', md(6, 4)],
+    ['Labor Day', md(8, nthWeekday(year, 8, monday, 1))],
+    ['Halloween', md(9, 31)],
+    ['Veterans Day', md(10, 11)],
+    ['Thanksgiving', md(10, nthWeekday(year, 10, thursday, 4))],
+    ['Christmas Eve', md(11, 24)],
+    ['Christmas', md(11, 25)],
+  ]
+  for (const [name, hit] of checks) {
+    if (hit) return HOLIDAY_THEMES[name]
+  }
+  return null
+}
+
 function emojiFor(title: string): string {
   const t = title.toLowerCase()
   const map: [RegExp, string][] = [
@@ -276,7 +366,7 @@ export default function CalendarPage() {
               <Plus className="mr-2 h-4 w-4" /> Add Event
             </Button>
             <Link href="/parent">
-              <Button size="md" variant="outline" className="border-white/50 bg-transparent text-white hover:bg-white/10">
+              <Button size="md" variant="outline" className="border-white/40 bg-white/90 text-emerald-800 shadow-md hover:bg-white hover:border-white">
                 Back to Parent Portal
               </Button>
             </Link>
@@ -334,34 +424,48 @@ export default function CalendarPage() {
             if (day === null) return <div key={`e${i}`} className="min-h-0 rounded-xl bg-gray-50/50" />
             const key = dateStr(viewYear, viewMonth, day)
             const dayEvents = eventsByDay[key] || []
+            const holiday = holidayFor(viewYear, viewMonth, day)
             return (
               <div
                 key={key}
                 className={`flex min-h-0 flex-col overflow-hidden rounded-xl border p-1 transition-all sm:p-1.5 ${
-                  isToday(day)
-                    ? 'border-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50 ring-2 ring-emerald-300'
-                    : 'border-gray-100 bg-white hover:shadow-md'
+                  holiday
+                    ? `border-amber-200 bg-gradient-to-br ${holiday.bg}`
+                    : isToday(day)
+                      ? 'border-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50 ring-2 ring-emerald-300'
+                      : 'border-gray-100 bg-white hover:shadow-md'
                 }`}
               >
-                <div className="mb-0.5 flex items-center justify-between">
+                <div className="mb-0.5 flex items-center justify-between gap-1">
                   <span
-                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                      isToday(day) ? 'bg-gradient-to-br from-emerald-600 to-teal-600 text-white' : 'text-gray-600'
+                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold sm:h-7 sm:w-7 sm:text-sm ${
+                      holiday
+                        ? holiday.accent
+                        : isToday(day)
+                          ? 'bg-gradient-to-br from-emerald-600 to-teal-600 text-white'
+                          : 'text-gray-600'
                     }`}
                   >
                     {day}
                   </span>
-                  {dayEvents.length > 0 && (
+                  {holiday ? (
+                    <span
+                      className="truncate rounded-full bg-white/70 px-1.5 text-[9px] font-bold text-gray-700 sm:text-[10px]"
+                      title={holiday.name}
+                    >
+                      {holiday.emoji} {holiday.name.split(' ')[0]}
+                    </span>
+                  ) : dayEvents.length > 0 ? (
                     <span className="rounded-full bg-emerald-100 px-1.5 text-[9px] font-bold text-emerald-600 sm:text-[10px]">
                       {dayEvents.length}
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <div className="min-h-0 flex-1 space-y-0.5 overflow-y-auto">
                   {dayEvents.slice(0, maxShown).map((e) => (
                     <div
                       key={e.id}
-                      className={`group relative rounded-md px-1 py-0.5 text-[9px] font-semibold leading-tight text-white sm:text-[10px] ${
+                      className={`group relative rounded-md px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-white sm:text-[11px] ${
                         e.audience === 'school'
                           ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
                           : 'bg-gradient-to-r from-emerald-500 to-teal-500'
@@ -369,7 +473,7 @@ export default function CalendarPage() {
                       title={e.description || e.title}
                     >
                       <span className="mr-0.5">{emojiFor(e.title)}</span>
-                      {e.title.length > 14 ? e.title.slice(0, 13) + '…' : e.title}
+                      {e.title.length > 16 ? e.title.slice(0, 15) + '…' : e.title}
                       {canDelete(e) && (
                         <button
                           onClick={() => deleteEvent(e.id)}
@@ -490,8 +594,8 @@ export default function CalendarPage() {
             <School className="mr-1 inline h-3.5 w-3.5 text-emerald-500" />
             <strong>School events</strong> are added by the academy and visible to every family.
             <Home className="mx-1 inline h-3.5 w-3.5 text-emerald-500" />
-            <strong>Family events</strong> are private — only your family sees them. Holidays are
-            pre-filled; the academy can add or adjust them anytime.
+            <strong>Family events</strong> are private — only your family sees them. Major holidays
+            are auto-themed on the calendar; the academy can add or adjust events anytime.
           </p>
         </div>
       </div>
