@@ -25,9 +25,14 @@ export default async function StudentsPage() {
     redirect('/dashboard')
   }
 
+  // 🔒 RULE (2026-09-03, Jonathan directive): students only appear on the
+  // admin roster AFTER they've PAID. Unpaid/pending applicants are NOT students
+  // yet — they stay in the enrollment-review queue (dashboard "Needs Approval"
+  // / "Unpaid" cards). Only a paid enrollment shows here.
   const { data: enrollments } = await supabase
     .from('enrollments')
     .select('*')
+    .eq('payment_status', 'paid')
     .order('created_at', { ascending: false })
 
   // Also fetch curriculum progress for all students
