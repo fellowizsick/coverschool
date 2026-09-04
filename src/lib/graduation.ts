@@ -193,3 +193,108 @@ export function makeDiplomaNumber(gradYear: number, seq: number): string {
   const padded = String(seq).padStart(4, '0')
   return `LCA-${gradYear}-${padded}`
 }
+
+/** Map a parent's free-text transfer subject onto the school's graduation
+ *  requirement subject names (so credits land in the right bucket). Falls back
+ *  to the raw subject if no match. */
+export function mapTransferSubject(subject: string, requirementSubjects: string[]): string {
+  const s = (subject || '').trim().toLowerCase()
+  if (!s) return 'Electives'
+  const aliases: Record<string, string[]> = {
+    English: ['english', 'language arts', 'language', 'reading', 'literature', 'grammar', 'writing', 'spelling'],
+    Mathematics: ['math', 'mathematics', 'algebra', 'geometry', 'calculus', 'trigonometry', 'arithmetic'],
+    Science: ['science', 'biology', 'chemistry', 'physics', 'earth science', 'anatomy'],
+    'Social Studies': ['social studies', 'history', 'geography', 'government', 'civics', 'economics'],
+    'Foreign Language': ['foreign language', 'spanish', 'french', 'german', 'latin', 'language 2'],
+    'Fine Arts': ['fine arts', 'art', 'music', 'band', 'choir', 'drama', 'theater', 'drawing'],
+    'Health / Physical Education': ['health', 'physical education', 'pe', 'phys ed', 'gym', 'health / physical education'],
+    Electives: ['elective', 'computer', 'typing', 'keyboarding', 'home economics', 'shop', 'bible', 'technology'],
+  }
+  // Prefer a requirement-subject that IS one of the canonical names.
+  const canonical = requirementSubjects.find((r) => r.trim().toLowerCase() === s)
+  if (canonical) return canonical
+  // Then match against the alias table.
+  for (const [req, keys] of Object.entries(aliases)) {
+    if (keys.some((k) => s === k || s.includes(k) || k.includes(s))) return req
+  }
+  return (subject || '').trim() || 'Electives'
+}
+
+/** A transfer grade earns credit if it's a passing mark (A/B/C/D or numeric >=60). */
+export function creditsFromTransferGrade(grade: string): number {
+  const g = (grade || '').trim().toUpperCase()
+  if (/^[A-D][+-]?$/.test(g)) return 1.0
+  const num = parseFloat(g)
+  if (!isNaN(num)) return num >= 60 ? 1.0 : 0.0
+  return 0.0
+}
+
+/**
+ * Auto-pull a family's transfer grades into the graduation credit ledger.
+ * - Creates a pending 'transfer' credit for each passing transfer grade,
+ *   mapped onto a graduation requirement subject.
+ * - IDEMPOTENT: links each credit to its transfer_grades row via
+ *   transfer_grade_id, so re-saving never duplicates.
+ * - RESPECTS SCHOOL EDITS: if the school has already verified or rejected a
+ *   credit, this never overwrites it. If still pending, it re-syncs the
+ *   subject/credits in case the parent corrected a typo.
+ * - Removes auto-credits whose source grade was deleted.
+ */
+export async function syncTransferGradesToCredits(enrollmentId: string): Promise<void> {
+  const supabase = createAdminClient()
+  const [reqs, gradesRes] = await Promise.all([
+    getGraduationRequirements(),
+    supabase.from('transfer_grades').select('*').eq('enrollment_id', enrollmentId),
+  ])
+  const grades = (gradesRes.data || []) as any[]
+  const reqSubjects = reqs.filter((r) => r.active).map((r) => r.subject)
+
+  // Current auto credits (linked to a transfer grade) for this enrollment.
+  const { data: existing } = await supabase
+    .from('student_credits')
+    .select('*')
+    .eq('enrollment_id', enrollmentId)
+    .eq('source', 'transfer')
+    .not('transfer_grade_id', 'is', null)
+  const existingByGrade = new Map<string, any>((existing || []).map((c: any) => [c.transfer_grade_id, c]))
+
+  const liveGradeIds = new Set<string>()
+  for (const g of grades) {
+    liveGradeIds.add(g.id)
+    const credits = creditsFromTransferGrade(g.grade_earned)
+    const subject = mapTransferSubject(g.subject_name, reqSubjects)
+    const courseName = (g.school_name || '').trim() || `${g.subject_name} (transfer)`
+    const row = existingByGrade.get(g.id)
+    if (row) {
+      // Only refresh if the school hasn't made a call on it yet.
+      if (row.verification_status === 'pending') {
+        await supabase.from('student_credits').update({
+          subject,
+          course_name: courseName,
+          credits,
+          earned_date: g.year_completed || null,
+        }).eq('id', row.id)
+      }
+    } else if (credits > 0) {
+      await supabase.from('student_credits').insert({
+        enrollment_id: enrollmentId,
+        subject,
+        course_name: courseName,
+        credits,
+        source: 'transfer',
+        verification_status: 'pending',
+        earned_date: g.year_completed || null,
+        transfer_grade_id: g.id,
+        notes: 'Auto-pulled from previous-school records.',
+      })
+    }
+  }
+
+  // Remove auto credits whose source grade was deleted.
+  const orphans = (existing || []).filter((c: any) => !liveGradeIds.has(c.transfer_grade_id))
+  for (const o of orphans) {
+    await supabase.from('student_credits').delete().eq('id', o.id)
+  }
+
+  await refreshGraduationStatus(enrollmentId)
+}
