@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import {
@@ -6,12 +6,15 @@ import {
   CheckCircle2,
   CreditCard,
   AlertCircle,
+  AlertTriangle,
   Clock,
   Inbox,
   FileText,
   Printer,
   Search,
   ArrowRight,
+  TrendingUp,
+  BadgeDollarSign,
 } from 'lucide-react'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import Link from 'next/link'
@@ -27,6 +30,7 @@ type Enrollment = {
   city: string
   status: string
   payment_status: string
+  church_form_status?: string
   email: string
   created_at: string
 }
@@ -114,16 +118,18 @@ export default async function DashboardPage() {
     )
   }
 
-  // Fetch ALL enrollments (admin sees everything)
-  const { data: enrollmentsRaw } = await supabase
+  // Fetch ALL enrollments + church forms. 🔒 This page is HARD LOCKED to
+  // admin (checked above), so use the admin client (service_role, bypasses RLS)
+  // — otherwise RLS hides other families' rows and the forms section goes empty.
+  const admin = createAdminClient()
+  const { data: enrollmentsRaw } = await admin
     .from('enrollments')
     .select('*')
     .order('created_at', { ascending: false })
 
   const enrollments: Enrollment[] = (enrollmentsRaw as Enrollment[]) ?? []
 
-  // Fetch ALL church enrollment forms (admin sees everything)
-  const { data: churchForms } = await supabase
+  const { data: churchForms } = await admin
     .from('church_enrollment_forms')
     .select('*')
     .order('created_at', { ascending: false })
@@ -135,6 +141,20 @@ export default async function DashboardPage() {
     (e) => e.payment_status === 'unpaid' || e.payment_status === 'pending'
   ).length
   const pendingApproval = enrollments.filter((e) => e.status === 'pending').length
+  // ⚠️ Students who are approved/paid but have NOT completed their legal
+  // church/home-school enrollment form (the compliance gap).
+  const missingForm = enrollments.filter(
+    (e) => e.church_form_status !== 'submitted'
+  )
+  const formsComplete = churchForms?.length ?? 0
+
+  // 💰 Revenue summary — computed from real constants, prorated on data.
+  const MONTHLY_TUITION = 45 // $45/mo
+  const ANNUAL = 540 // $45/mo × 12
+  const REG_FEE = 75 // one-time registration fee
+  const mrr = paid * MONTHLY_TUITION
+  const annualRunRate = paid * ANNUAL
+  const regFeesCollected = paid * REG_FEE
 
   const stats = [
     {
@@ -161,6 +181,43 @@ export default async function DashboardPage() {
       icon: AlertCircle,
       color: 'text-rose-600 bg-rose-100',
     },
+    {
+      label: '⚠️ Missing Form',
+      value: missingForm.length,
+      icon: AlertTriangle,
+      color: missingForm.length > 0 ? 'text-amber-600 bg-amber-100' : 'text-gray-400 bg-gray-100',
+    },
+  ]
+
+  const revenueStats = [
+    {
+      label: 'Monthly Revenue',
+      value: `$${mrr.toLocaleString()}`,
+      sub: `${paid} paying fam${paid === 1 ? 'ily' : 'ilies'} × $${MONTHLY_TUITION}/mo`,
+      icon: CreditCard,
+      color: 'text-emerald-600 bg-emerald-100',
+    },
+    {
+      label: 'Annual Run Rate',
+      value: `$${annualRunRate.toLocaleString()}`,
+      sub: `${paid} paying fam${paid === 1 ? 'ily' : 'ilies'} × $${ANNUAL}/yr`,
+      icon: TrendingUp,
+      color: 'text-blue-600 bg-blue-100',
+    },
+    {
+      label: 'Reg Fees Collected',
+      value: `$${regFeesCollected.toLocaleString()}`,
+      sub: `$${REG_FEE} one-time × ${paid} paid`,
+      icon: BadgeDollarSign,
+      color: 'text-violet-600 bg-violet-100',
+    },
+    {
+      label: 'Forms Complete',
+      value: `${formsComplete}`,
+      sub: `of ${total} enrollment${total === 1 ? '' : 's'}`,
+      icon: FileText,
+      color: formsComplete >= missingForm.length ? 'text-emerald-600 bg-emerald-100' : 'text-amber-600 bg-amber-100',
+    },
   ]
 
   const needsApproval = enrollments.filter((e) => e.status === 'pending')
@@ -171,14 +228,14 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* STAT CARDS */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((stat) => (
           <Card key={stat.label}>
-            <CardContent className="p-6">
+            <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">{stat.label}</p>
-                  <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
                 </div>
                 <div className={`rounded-lg p-3 ${stat.color}`}>
                   <stat.icon className="h-6 w-6" />
@@ -188,6 +245,44 @@ export default async function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      {/* 💰 REVENUE + COMPLIANCE SUMMARY */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {revenueStats.map((stat) => (
+          <Card key={stat.label}>
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500">{stat.label}</p>
+                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="mt-1 text-xs text-gray-400">{stat.sub}</p>
+                </div>
+                <div className={`rounded-lg p-3 ${stat.color}`}>
+                  <stat.icon className="h-6 w-6" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* ⚠️ MISSING FORM BANNER */}
+      {missingForm.length > 0 && (
+        <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 flex items-start gap-3">
+          <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-amber-800">
+              {missingForm.length} enrollment{missingForm.length === 1 ? '' : 's'} missing a required legal form
+            </p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              {missingForm.map((e) => `${e.student_first_name} ${e.student_last_name}`).join(', ')} —{' '}
+              {missingForm.some((e) => e.status === 'approved' || e.payment_status === 'paid')
+                ? 'some are approved/paid. Nudge them to complete the church/home-school enrollment form.'
+                : 'Complete the church/home-school enrollment form to finish signup.'}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* SEARCH + ALL ENROLLMENTS */}
       <Card>
@@ -234,6 +329,7 @@ export default async function DashboardPage() {
                     <th className="pb-2 pr-4 font-medium">Location</th>
                     <th className="pb-2 pr-4 font-medium">Status</th>
                     <th className="pb-2 pr-4 font-medium">Payment</th>
+                    <th className="pb-2 pr-4 font-medium">Form</th>
                     <th className="pb-2 font-medium">Enrolled</th>
                   </tr>
                 </thead>
@@ -258,6 +354,17 @@ export default async function DashboardPage() {
                       </td>
                       <td className="py-2 pr-4">
                         <PaymentBadge payment={e.payment_status} />
+                      </td>
+                      <td className="py-2 pr-4">
+                        {e.church_form_status === 'submitted' ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                            ✓ Complete
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                            ⚠️ {e.status === 'approved' || e.payment_status === 'paid' ? 'Missing' : 'Incomplete'}
+                          </span>
+                        )}
                       </td>
                       <td className="py-2 text-gray-500">
                         {new Date(e.created_at).toLocaleDateString()}
