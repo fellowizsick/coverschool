@@ -131,7 +131,7 @@ export default function HomePage() {
               🙌 Alabama Church School · Est. 2024
             </div>
 
-            <h1 className="mt-6 font-heading text-7xl font-bold leading-[1.02] tracking-tight text-white sm:text-8xl lg:text-[4.5rem]">
+            <h1 className="mt-6 font-heading text-6xl font-bold leading-[1.05] tracking-tight text-white break-words sm:text-7xl lg:text-[4.5rem]">
               Homeschool with{' '}
               <span className="gradient-text-rainbow">Confidence</span>
             </h1>
