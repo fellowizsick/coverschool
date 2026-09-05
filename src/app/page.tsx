@@ -123,20 +123,20 @@ export default function HomePage() {
     <>
       {/* ===== HERO — editorial, warm cream, one strong line ===== */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950">
-        <div className="mx-auto grid w-full max-w-[90rem] gap-12 px-4 pb-20 pt-28 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:pb-28 lg:pt-36">
+        <div className="mx-auto grid w-full min-w-0 max-w-[90rem] gap-12 px-4 pb-20 pt-28 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:pb-28 lg:pt-36">
           {/* Left — copy */}
-          <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
+          <div className="mx-auto min-w-0 max-w-xl text-center lg:mx-0 lg:text-left">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3.5 py-1.5 text-[13px] font-medium tracking-wide text-emerald-200">
               <Shield className="h-3.5 w-3.5" />
               🙌 Alabama Church School · Est. 2024
             </div>
 
-            <h1 className="mt-6 font-heading text-6xl font-bold leading-[1.05] tracking-tight text-white break-words sm:text-7xl lg:text-[4.5rem]">
+            <h1 className="mt-6 font-heading text-[clamp(2.5rem,10vw,4rem)] font-bold leading-[1.05] tracking-tight text-white break-words">
               Homeschool with{' '}
               <span className="gradient-text-rainbow">Confidence</span>
             </h1>
 
-            <p className="mt-7 max-w-lg text-xl leading-relaxed text-emerald-100/85 sm:text-2xl">
+            <p className="mt-7 max-w-lg text-[clamp(1.05rem,3.5vw,1.4rem)] leading-relaxed text-emerald-100/85">
               We provide the legal oversight, record-keeping, and support your family needs
               to homeschool with peace of mind. You teach — we handle the rest.
             </p>
@@ -176,7 +176,7 @@ export default function HomePage() {
           </div>
 
           {/* Right — one warm editorial photo, framed */}
-          <div className="relative">
+          <div className="relative min-w-0">
             <div className="overflow-hidden rounded-3xl shadow-[0_40px_90px_-40px_rgba(2,44,34,0.5)]">
               <Image
                 src={IMAGES.hero}
