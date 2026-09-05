@@ -131,12 +131,12 @@ export default function HomePage() {
               🙌 Alabama Church School · Est. 2024
             </div>
 
-            <h1 className="mt-6 font-heading text-6xl font-bold leading-[1.02] tracking-tight text-white sm:text-7xl lg:text-[4.5rem]">
+            <h1 className="mt-6 font-heading text-7xl font-bold leading-[1.02] tracking-tight text-white sm:text-8xl lg:text-[4.5rem]">
               Homeschool with{' '}
               <span className="gradient-text-rainbow">Confidence</span>
             </h1>
 
-            <p className="mt-7 max-w-lg text-lg leading-relaxed text-emerald-100/85 sm:text-xl">
+            <p className="mt-7 max-w-lg text-xl leading-relaxed text-emerald-100/85 sm:text-2xl">
               We provide the legal oversight, record-keeping, and support your family needs
               to homeschool with peace of mind. You teach — we handle the rest.
             </p>
