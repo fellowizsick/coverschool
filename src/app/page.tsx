@@ -131,7 +131,7 @@ export default function HomePage() {
               🙌 Alabama Church School · Est. 2024
             </div>
 
-            <h1 className="mt-6 font-heading text-5xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[4.5rem]">
+            <h1 className="mt-6 font-heading text-6xl font-bold leading-[1.02] tracking-tight text-white sm:text-7xl lg:text-[4.5rem]">
               Homeschool with{' '}
               <span className="gradient-text-rainbow">Confidence</span>
             </h1>
@@ -141,9 +141,9 @@ export default function HomePage() {
               to homeschool with peace of mind. You teach — we handle the rest.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
+            <div className="mt-10 flex flex-col gap-4 lg:flex-row lg:gap-6">
               <Link href="/enroll">
-                <Button size="lg" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full lg:w-auto">
                   Enroll Your Student
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
@@ -152,7 +152,7 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full border-emerald-400/30 text-emerald-100 hover:border-emerald-400/60 hover:bg-emerald-500/10 sm:w-auto"
+                  className="w-full border-emerald-400/30 text-emerald-100 hover:border-emerald-400/60 hover:bg-emerald-500/10 lg:w-auto"
                 >
                   How it works
                 </Button>

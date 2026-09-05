@@ -99,7 +99,7 @@ export default function Navbar() {
               <span className={`font-heading whitespace-nowrap text-base font-bold leading-tight transition-colors duration-300 md:text-lg ${scrolled ? 'text-gray-900' : 'text-white'}`}>
                 Larose Christian Academy
               </span>
-              <span className={`max-[480px]:hidden whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.18em] transition-colors duration-300 md:text-xs ${scrolled ? 'text-amber-700/90' : 'text-amber-200/90'}`}>
+              <span className={`hidden whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.18em] transition-colors duration-300 md:text-xs lg:block ${scrolled ? 'text-amber-700/90' : 'text-amber-200/90'}`}>
                 Alabama Church School · Est. 2024
               </span>
             </Link>
