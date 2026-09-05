@@ -49,7 +49,7 @@ const features = [
 ]
 
 const stats = [
-  { value: '9', label: 'States served', suffix: '+' },
+  { value: '9', label: 'States served', suffix: '' },
   { value: '500', label: 'Families supported', suffix: '+' },
   { value: '99', label: 'Satisfaction', suffix: '%' },
   { value: '10', label: 'Years of service', suffix: '+' },
@@ -63,7 +63,7 @@ const testimonials = [
     rating: 5,
   },
   {
-    quote: "As a first-time homeschooler, I was overwhelmed by the legal requirements. Sister Anne walked me through everything. I couldn't have done this without them.",
+    quote: "As a first-time homeschooler, I was overwhelmed by the legal requirements. Anne walked me through everything. I couldn't have done this without them.",
     author: 'Jennifer R.',
     role: 'Homeschool Parent, Florida',
     rating: 5,
@@ -125,7 +125,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-gray-950">
         <div className="mx-auto grid w-full max-w-[90rem] gap-12 px-4 pb-20 pt-28 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:pb-28 lg:pt-36">
           {/* Left — copy */}
-          <div className="max-w-xl">
+          <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3.5 py-1.5 text-[13px] font-medium tracking-wide text-emerald-200">
               <Shield className="h-3.5 w-3.5" />
               🙌 Alabama Church School · Est. 2024
@@ -141,7 +141,7 @@ export default function HomePage() {
               to homeschool with peace of mind. You teach — we handle the rest.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
               <Link href="/enroll">
                 <Button size="lg" className="w-full sm:w-auto">
                   Enroll Your Student
@@ -159,7 +159,7 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-emerald-400/15 pt-7 text-sm text-emerald-100/70">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 border-t border-emerald-400/15 pt-7 text-sm text-emerald-100/70 lg:justify-start">
               <span className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-emerald-400" />
                 {COVERED_STATES.length} states covered
@@ -222,6 +222,7 @@ export default function HomePage() {
           <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
             {/* Copy side */}
             <div>
+              <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
               <p className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
                 <span className="h-px w-8 bg-gradient-to-r from-emerald-600 to-amber-400" />
                 Why LCA
@@ -236,9 +237,10 @@ export default function HomePage() {
                 Most families don&apos;t leave public school because they want less structure.
                 They leave because they want more of what matters. We handle the legal and
                 administrative side so you can give your children that.
-              </p>
+                </p>
+                </div>
 
-              <div className="mt-10 space-y-4">
+                <div className="mt-10 space-y-4">
                 {features.map((feature, i) => (
                   <div
                     key={feature.title}
@@ -287,7 +289,7 @@ export default function HomePage() {
       {/* ===== PROCESS — numbered cards ===== */}
       <section className="bg-white py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
             <p className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-800">
               <span className="h-px w-8 bg-gradient-to-r from-emerald-600 to-amber-400" />
               Getting started
@@ -325,7 +327,7 @@ export default function HomePage() {
       {/* ===== TESTIMONIALS ===== */}
       <section className="bg-emerald-50/40 py-24 md:py-32">
         <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
             <p className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
               <span className="h-px w-8 bg-gradient-to-r from-emerald-600 to-amber-400" />
               From our families
