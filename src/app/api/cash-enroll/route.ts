@@ -36,6 +36,19 @@ export async function POST(request: Request) {
       if (!/^\d{4}$/.test(String(s.ssn_last_four))) {
         return NextResponse.json({ error: 'Each student’s SSN last 4 must be exactly 4 digits' }, { status: 400 })
       }
+      // A birth date must be a real past date in a plausible age range. The phone date
+      // picker opens on TODAY, so an untouched field silently saves today's date — that
+      // already put a wrong birthday on a child's state records once.
+      const dobMs = Date.parse(String(s.student_dob))
+      if (Number.isNaN(dobMs)) {
+        return NextResponse.json({ error: 'Each student needs a valid date of birth' }, { status: 400 })
+      }
+      const ageYears = (Date.now() - dobMs) / 31557600000 // 365.25 days, in ms
+      if (ageYears < 3 || ageYears > 100) {
+        return NextResponse.json(
+          { error: 'Please check each student’s date of birth — it must be their real birthday.' },
+          { status: 400 })
+      }
     }
 
     const supabase = createAdminClient()

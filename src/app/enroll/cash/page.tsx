@@ -33,8 +33,11 @@ export default function CashEnrollPage() {
   const [submitted, setSubmitted] = useState(false)
   const [parent, setParent] = useState({ first: '', last: '', email: '', phone: '', line1: '', city: '', state: '', zip: '' })
   const [students, setStudents] = useState<StudentForm[]>([emptyStudent()])
+  // Client-only "today" — used to block future birth dates at the picker level.
+  const [todayISO, setTodayISO] = useState('')
 
   useEffect(() => {
+    setTodayISO(new Date().toISOString().slice(0, 10))
     const params = new URLSearchParams(window.location.search)
     const t = params.get('token') || ''
     setToken(t)
@@ -66,7 +69,22 @@ export default function CashEnrollPage() {
       setError('Please fill in all parent fields.'); return
     }
     if (students.some((s) => !s.first || !s.last || !s.grade || !s.dob || !/^\d{4}$/.test(s.ssn))) {
-      setError('Please complete each student and the SSN last-4 (4 digits).'); return
+      setError('Please complete every student field, including the SSN last-4 (4 digits).'); return
+    }
+    // Date-of-birth sanity check. The phone date picker opens on TODAY, so an untouched
+    // field silently saves today's date — that already happened once and put the wrong
+    // birthday on a child's state records. Catch it here, loudly.
+    const nowMs = Date.now()
+    for (const s of students) {
+      const who = s.first || 'this student'
+      const t = Date.parse(s.dob)
+      if (Number.isNaN(t)) { setError(`Please enter a valid date of birth for ${who}.`); return }
+      if (t > nowMs) { setError(`The date of birth can’t be in the future — please check ${who}.`); return }
+      const ageYears = (nowMs - t) / 31557600000 // 365.25 days, in ms
+      if (ageYears < 3) {
+        setError(`That birthday would make ${who} under 3 years old. Please pick the real date of birth.`); return
+      }
+      if (ageYears > 100) { setError(`That birth date doesn’t look right — please check ${who}.`); return }
     }
     setLoading(true)
     try {
@@ -165,20 +183,22 @@ export default function CashEnrollPage() {
           <CardHeader><CardTitle>Parent / Guardian</CardTitle></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Input placeholder="First name" value={parent.first} onChange={(e) => setParent({ ...parent, first: e.target.value })} />
-              <Input placeholder="Last name" value={parent.last} onChange={(e) => setParent({ ...parent, last: e.target.value })} />
-              <Input type="email" placeholder="Email (for receipt)" value={parent.email} onChange={(e) => setParent({ ...parent, email: e.target.value })} />
-              <Input placeholder="Phone" value={parent.phone} onChange={(e) => setParent({ ...parent, phone: e.target.value })} />
-              <div className="sm:col-span-2"><Input placeholder="Street address" value={parent.line1} onChange={(e) => setParent({ ...parent, line1: e.target.value })} /></div>
-              <Input placeholder="City" value={parent.city} onChange={(e) => setParent({ ...parent, city: e.target.value })} />
+              <Input id="parent_first" label="First Name" placeholder="e.g. Maria" value={parent.first} onChange={(e) => setParent({ ...parent, first: e.target.value })} />
+              <Input id="parent_last" label="Last Name" placeholder="e.g. Garcia" value={parent.last} onChange={(e) => setParent({ ...parent, last: e.target.value })} />
+              <Input id="parent_email" type="email" label="Email (your receipt is sent here)" placeholder="you@example.com" value={parent.email} onChange={(e) => setParent({ ...parent, email: e.target.value })} />
+              <Input id="parent_phone" label="Phone Number" placeholder="(251) 555-0123" value={parent.phone} onChange={(e) => setParent({ ...parent, phone: e.target.value })} />
+              <div className="sm:col-span-2"><Input id="parent_line1" label="Street Address" placeholder="123 Main St" value={parent.line1} onChange={(e) => setParent({ ...parent, line1: e.target.value })} /></div>
+              <Input id="parent_city" label="City" placeholder="Mobile" value={parent.city} onChange={(e) => setParent({ ...parent, city: e.target.value })} />
               <div className="grid grid-cols-2 gap-4">
                 <Select
+                  id="parent_state"
+                  label="State"
                   value={parent.state}
                   onChange={(e) => setParent({ ...parent, state: e.target.value })}
                   options={stateOptions}
-                  placeholder="State"
+                  placeholder="Select state"
                 />
-                <Input placeholder="ZIP" value={parent.zip} onChange={(e) => setParent({ ...parent, zip: e.target.value })} />
+                <Input id="parent_zip" label="ZIP Code" placeholder="36601" value={parent.zip} onChange={(e) => setParent({ ...parent, zip: e.target.value })} />
               </div>
             </div>
           </CardContent>
@@ -194,6 +214,10 @@ export default function CashEnrollPage() {
                 </Button>
               )}
             </div>
+            <p className="mt-1 text-sm text-gray-500">
+              Please enter each child’s <strong className="font-semibold text-gray-700">real date of birth</strong> — it is
+              printed on their official state records. Don’t leave it on today’s date.
+            </p>
           </CardHeader>
           <CardContent className="space-y-6">
             {students.map((s, i) => (
@@ -207,16 +231,18 @@ export default function CashEnrollPage() {
                   )}
                 </div>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <Input placeholder="Student first name" value={s.first} onChange={(e) => setStudent(i, { first: e.target.value })} />
-                  <Input placeholder="Student last name" value={s.last} onChange={(e) => setStudent(i, { last: e.target.value })} />
+                  <Input id={`student_first_${i}`} label="Student First Name" placeholder="e.g. Ana" value={s.first} onChange={(e) => setStudent(i, { first: e.target.value })} />
+                  <Input id={`student_last_${i}`} label="Student Last Name" placeholder="e.g. Garcia" value={s.last} onChange={(e) => setStudent(i, { last: e.target.value })} />
                   <Select
+                    id={`student_grade_${i}`}
+                    label="Grade Level"
                     value={s.grade}
                     onChange={(e) => setStudent(i, { grade: e.target.value })}
                     options={gradeOptions}
-                    placeholder="Grade"
+                    placeholder="Select grade"
                   />
-                  <Input type="date" placeholder="Date of birth" value={s.dob} onChange={(e) => setStudent(i, { dob: e.target.value })} />
-                  <Input placeholder="SSN last 4" maxLength={4} value={s.ssn} onChange={(e) => setStudent(i, { ssn: e.target.value.replace(/\D/g, '') })} />
+                  <Input id={`student_dob_${i}`} type="date" label="Date of Birth" max={todayISO || undefined} value={s.dob} onChange={(e) => setStudent(i, { dob: e.target.value })} />
+                  <Input id={`student_ssn_${i}`} label="SSN — Last 4 Digits" placeholder="1234" maxLength={4} inputMode="numeric" value={s.ssn} onChange={(e) => setStudent(i, { ssn: e.target.value.replace(/\D/g, '') })} />
                 </div>
               </div>
             ))}
