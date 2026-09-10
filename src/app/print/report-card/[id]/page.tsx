@@ -35,9 +35,13 @@ export default async function PrintReportCardPage({
   const target = getAttendanceTarget(e.state || 'AL')
 
   return (
-    <html>
-      <head>
+    <div className="lca-print-page">
         <style>{`
+
+          /* Standalone print page: cover the site nav/footer while this page is mounted. */
+          .lca-print-page { position: fixed; inset: 0; overflow: auto; z-index: 50; background: #f5f5f5; padding: 24px 16px 60px; }
+          body > header, body > footer { display: none !important; }
+          @media print { .lca-print-page { position: static; inset: auto; padding: 0; overflow: visible; background: #fff; } }
           @page { margin: 0.5in; size: letter; }
           body { font-family: 'Times New Roman', Georgia, serif; font-size: 12pt; color: #000; max-width: 7.5in; margin: 0 auto; padding: 0.5in; }
           .school-name { text-align: center; font-size: 20pt; font-weight: bold; }
@@ -61,31 +65,29 @@ export default async function PrintReportCardPage({
           @media screen { body { background: #f5f5f5; } .page { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 0.5in; max-width: 7.5in; margin: 0 auto; } }
           tr, .school-block { break-inside: avoid; }
         `}</style>
-      </head>
-      <body>
         <button onclick="window.print()">🖨️ Print Report Card</button>
-        <div class="page">
-          <div class="school-name">Larose Christian Academy</div>
-          <div class="school-sub">✦ Alabama Church School • Mobile, AL ✦</div>
+        <div className="page">
+          <div className="school-name">Larose Christian Academy</div>
+          <div className="school-sub">✦ Alabama Church School • Mobile, AL ✦</div>
 
           <h1>📄 Student Report Card</h1>
 
-          <div class="student-info">
-            <div><span class="info-label">Student:</span> {e.student_first_name} {e.student_last_name}</div>
-            <div><span class="info-label">Grade:</span> {e.student_grade}</div>
-            <div><span class="info-label">School Year:</span> {att.schoolYear}</div>
-            <div><span class="info-label">Date:</span> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+          <div className="student-info">
+            <div><span className="info-label">Student:</span> {e.student_first_name} {e.student_last_name}</div>
+            <div><span className="info-label">Grade:</span> {e.student_grade}</div>
+            <div><span className="info-label">School Year:</span> {att.schoolYear}</div>
+            <div><span className="info-label">Date:</span> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
           </div>
 
           {/* 🏫 Attendance — real logged days */}
-          <div class="section-title">Attendance</div>
-          <div class="attendance-line">
+          <div className="section-title">Attendance</div>
+          <div className="attendance-line">
             <strong>{att.days}</strong> school day{att.days === 1 ? '' : 's'} logged · <strong>{att.hours}</strong> hours
             {target ? <span> · State target: {target.label}</span> : null}
           </div>
 
           {/* 🏫 LCA Gradebook — real coursework grades */}
-          <div class="section-title">Current Coursework — Larose Christian Academy</div>
+          <div className="section-title">Current Coursework — Larose Christian Academy</div>
           {gbSummaries.length > 0 ? (
             <>
               <table>
@@ -109,13 +111,13 @@ export default async function PrintReportCardPage({
                 </tbody>
               </table>
               {gbGpa !== null && (
-                <div class="gpa-note">
+                <div className="gpa-note">
                   LCA Coursework GPA: <strong>{formatGpa(gbGpa)}</strong>
                 </div>
               )}
             </>
           ) : (
-            <p class="empty-note">
+            <p className="empty-note">
               No coursework grades entered yet. Parents can add grades in the Student Records portal.
             </p>
           )}
@@ -123,10 +125,10 @@ export default async function PrintReportCardPage({
           {hasTransfer ? (
             <>
               {/* 📚 Previous School Records — transferred from other schools */}
-              <div class="section-title">Previous School Records</div>
+              <div className="section-title">Previous School Records</div>
               {schoolGroups.map((group) => (
-                <div key={group.school} class="school-block">
-                  <div class="school-heading">{group.school}</div>
+                <div key={group.school} className="school-block">
+                  <div className="school-heading">{group.school}</div>
                   <table>
                     <thead>
                       <tr>
@@ -149,23 +151,22 @@ export default async function PrintReportCardPage({
               ))}
 
               {gpa !== null && (
-                <div class="gpa-note">
+                <div className="gpa-note">
                   Cumulative GPA (all records): <strong>{formatGpa(gpa)}</strong>
                 </div>
               )}
             </>
           ) : null}
 
-          <div class="signature-line">
+          <div className="signature-line">
             <div>Administrator</div>
             <div>Date</div>
           </div>
 
-          <div class="footer">
+          <div className="footer">
             Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 201-9991
           </div>
         </div>
-      </body>
-    </html>
+    </div>
   )
 }

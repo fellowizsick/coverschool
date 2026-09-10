@@ -32,9 +32,13 @@ export default async function PrintTranscriptPage({
   const att = summarizeAttendance(await getAttendance(id))
 
   return (
-    <html>
-      <head>
+    <div className="lca-print-page">
         <style>{`
+
+          /* Standalone print page: cover the site nav/footer while this page is mounted. */
+          .lca-print-page { position: fixed; inset: 0; overflow: auto; z-index: 50; background: #f5f5f5; padding: 24px 16px 60px; }
+          body > header, body > footer { display: none !important; }
+          @media print { .lca-print-page { position: static; inset: auto; padding: 0; overflow: visible; background: #fff; } }
           @page { margin: 0.5in; size: letter; }
           body { font-family: 'Times New Roman', Georgia, serif; font-size: 12pt; color: #000; max-width: 7.5in; margin: 0 auto; padding: 0.5in; }
           .school-name { text-align: center; font-size: 20pt; font-weight: bold; letter-spacing: 1px; }
@@ -63,27 +67,25 @@ export default async function PrintTranscriptPage({
           tr { break-inside: avoid; }
           .school-block { break-inside: avoid; }
         `}</style>
-      </head>
-      <body>
         <button onclick="window.print()">🖨️ Print Transcript</button>
-        <div class="page">
-          <div class="school-name">Larose Christian Academy</div>
-          <div class="school-sub">✦ An Alabama Church School ✦</div>
-          <div class="school-address">Mobile, Alabama | larosechristianacademy@gmail.com | (251) 201-9991</div>
+        <div className="page">
+          <div className="school-name">Larose Christian Academy</div>
+          <div className="school-sub">✦ An Alabama Church School ✦</div>
+          <div className="school-address">Mobile, Alabama | larosechristianacademy@gmail.com | (251) 201-9991</div>
 
-          <div class="seal">🎓</div>
+          <div className="seal">🎓</div>
           <h1>OFFICIAL STUDENT TRANSCRIPT</h1>
 
-          <div class="student-info">
-            <div class="info-row"><span class="info-label">Student Name:</span> <span>{enrollment.student_first_name} {enrollment.student_last_name}</span></div>
-            <div class="info-row"><span class="info-label">Grade Level:</span> <span>{enrollment.student_grade}</span></div>
-            <div class="info-row"><span class="info-label">Date of Birth:</span> <span>{enrollment.student_dob || '—'}</span></div>
-            <div class="info-row"><span class="info-label">Enrollment Date:</span> <span>{new Date(enrollment.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span></div>
-            <div class="info-row"><span class="info-label">Student ID:</span> <span>{enrollment.id.substring(0, 8).toUpperCase()}</span></div>
+          <div className="student-info">
+            <div className="info-row"><span className="info-label">Student Name:</span> <span>{enrollment.student_first_name} {enrollment.student_last_name}</span></div>
+            <div className="info-row"><span className="info-label">Grade Level:</span> <span>{enrollment.student_grade}</span></div>
+            <div className="info-row"><span className="info-label">Date of Birth:</span> <span>{enrollment.student_dob || '—'}</span></div>
+            <div className="info-row"><span className="info-label">Enrollment Date:</span> <span>{new Date(enrollment.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span></div>
+            <div className="info-row"><span className="info-label">Student ID:</span> <span>{enrollment.id.substring(0, 8).toUpperCase()}</span></div>
           </div>
 
           {/* 🏫 LCA coursework — real gradebook data (always shows) */}
-          <div class="section-title">Larose Christian Academy — Current Coursework</div>
+          <div className="section-title">Larose Christian Academy — Current Coursework</div>
           {gbSummaries.length > 0 ? (
             <>
               <table>
@@ -112,7 +114,7 @@ export default async function PrintTranscriptPage({
                 </tbody>
               </table>
               {gbGpa !== null && (
-                <div class="gpa-box">
+                <div className="gpa-box">
                   <span>LCA Coursework GPA: {formatGpa(gbGpa)}</span>
                 </div>
               )}
@@ -121,7 +123,7 @@ export default async function PrintTranscriptPage({
               </div>
             </>
           ) : (
-            <p class="empty-note">
+            <p className="empty-note">
               No LCA coursework grades entered yet. Parents add grades in the Student Records portal.
             </p>
           )}
@@ -129,10 +131,10 @@ export default async function PrintTranscriptPage({
           {hasTransfer ? (
             <>
               {/* 📚 Transfer Credits — grouped by academic year (newest first) */}
-              <div class="section-title">Transfer Credits — Previous Schools</div>
+              <div className="section-title">Transfer Credits — Previous Schools</div>
               {yearGroups.map((group) => (
-                <div key={group.year} class="school-block">
-                  <div class="school-heading">
+                <div key={group.year} className="school-block">
+                  <div className="school-heading">
                     {group.year}{group.school && group.school !== 'Previous School' ? ` — ${group.school}` : ''}
                   </div>
                   <table>
@@ -167,7 +169,7 @@ export default async function PrintTranscriptPage({
               ))}
 
               {gpa !== null && (
-                <div class="gpa-box">
+                <div className="gpa-box">
                   <span>Cumulative GPA: {formatGpa(gpa)}</span>
                 </div>
               )}
@@ -184,17 +186,16 @@ export default async function PrintTranscriptPage({
             parent/guardian and verified by the academy upon request.
           </div>
 
-          <div class="signature-line">
+          <div className="signature-line">
             <div>Administrator</div>
             <div>Date</div>
           </div>
 
-          <div class="footer">
+          <div className="footer">
             Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 201-9991<br/>
             This is an official document. Issued upon request.
           </div>
         </div>
-      </body>
-    </html>
+    </div>
   )
 }
