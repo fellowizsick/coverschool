@@ -28,7 +28,6 @@ const RECORD_TYPES = [
 const deliveryOptions = [
   { value: 'email', label: 'Email (fastest)' },
   { value: 'mail', label: 'Postal mail' },
-  { value: 'fax', label: 'Fax' },
   { value: 'pickup', label: 'Pick up in person' },
 ]
 
@@ -356,7 +355,7 @@ export default function RecordsRequestPage() {
                 <Input
                   id="r_delivery_detail"
                   label={delivery === 'email' ? 'Send to this email (leave blank to use the one above)' : 'Where exactly should we send them'}
-                  placeholder={delivery === 'email' ? 'records@example.com' : 'Address, fax number, or pickup details'}
+                  placeholder={delivery === 'email' ? 'records@example.com' : 'Address or pickup details'}
                   value={deliveryDetail}
                   onChange={(e) => setDeliveryDetail(e.target.value)}
                 />

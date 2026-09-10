@@ -3,7 +3,7 @@ export const metadata = {
 }
 
 /**
- * PRINTABLE Student Record Release Form — blank, for fax / mail / hand-delivery.
+ * PRINTABLE Student Record Release Form — blank, for email / mail / hand-delivery.
  *
  * 🎨 LETTERHEAD MATCHES the school's existing official documents (transcript, enrollment
  * letter, completion certificate) so this looks like it came from the same school:
@@ -141,9 +141,11 @@ export default function RecordReleasePrintPage() {
         <h1>STUDENT RECORD RELEASE FORM</h1>
         <div className="subtitle">Authorization to Release Student Records</div>
 
+        {/* No fax line — Jonathan, 2026-09-10: "There should not be a fax number,
+            only mom's school number." The school's contact is its phone. */}
         <div className="field right">
-          <span>Return fax to:</span>
-          <input aria-label="Return fax number" />
+          <span>Return to:</span>
+          <strong style={{ marginLeft: 6 }}>Larose Christian Academy · (251) 201-9991</strong>
         </div>
 
         {/* ── REQUESTING PARTY ── */}
@@ -244,7 +246,6 @@ export default function RecordReleasePrintPage() {
             <span style={{ whiteSpace: 'nowrap' }}>
               <span className="box" /> Email&nbsp;&nbsp;
               <span className="box" /> Mail&nbsp;&nbsp;
-              <span className="box" /> Fax&nbsp;&nbsp;
               <span className="box" /> Picked up
             </span>
           </div>

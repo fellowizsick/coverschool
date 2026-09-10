@@ -420,7 +420,6 @@ export default function RecordsRequestsView({
                             options={[
                               { value: 'email', label: 'Email' },
                               { value: 'mail', label: 'Postal mail' },
-                              { value: 'fax', label: 'Fax' },
                               { value: 'pickup', label: 'Pick up in person' },
                             ]}
                             onChange={(e) => patch(r.id, { delivery_method: e.target.value })}
@@ -432,7 +431,7 @@ export default function RecordsRequestsView({
                         <label className="mb-1 block text-sm font-medium text-gray-700">Send to</label>
                         <Input
                           value={r.delivery_detail || ''}
-                          placeholder={r.delivery_method === 'email' ? (r.requester_email || 'email address') : 'address / fax / pickup note'}
+                          placeholder={r.delivery_method === 'email' ? (r.requester_email || 'email address') : 'address or pickup note'}
                           onChange={(e) => setRequests((prev) => prev.map((x) => x.id === r.id ? { ...x, delivery_detail: e.target.value } : x))}
                           onBlur={(e) => patch(r.id, { delivery_detail: e.target.value })}
                         />
