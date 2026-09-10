@@ -10,6 +10,7 @@ import {
   Clock, AlertCircle, FileText, Download
 } from 'lucide-react'
 import { hasPaid } from '@/lib/enrollment-status'
+import PaidToggle from '@/components/PaidToggle'
 
 type Enrollment = {
   id: string
@@ -22,6 +23,7 @@ type Enrollment = {
   city: string
   status: string
   payment_status: string
+  payment_method?: string | null
   email: string
   phone?: string
   created_at: string
@@ -88,9 +90,11 @@ export default function AdminStudentsPage({
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  // Local copy so the PAID toggle updates a row instantly without a full reload.
+  const [enrollments, setEnrollments] = useState<Enrollment[]>(initialEnrollments)
 
   const filtered = useMemo(() => {
-    return initialEnrollments.filter((e) => {
+    return enrollments.filter((e) => {
       // Text search
       if (search) {
         const q = search.toLowerCase()
@@ -109,7 +113,7 @@ export default function AdminStudentsPage({
       if (statusFilter !== 'all' && e.status !== statusFilter) return false
       return true
     })
-  }, [initialEnrollments, search, statusFilter])
+  }, [enrollments, search, statusFilter])
 
   const stats = useMemo(() => ({
     total: initialEnrollments.length,
@@ -240,14 +244,28 @@ export default function AdminStudentsPage({
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      hasPaid(e.payment_status) ? 'bg-emerald-100 text-emerald-700' :
-                      e.payment_status === 'unpaid' ? 'bg-red-100 text-red-700' :
-                      'bg-amber-100 text-amber-700'
-                    }`}>
-                      {e.payment_status || 'unknown'}
-                    </span>
+                  {/* Clicking the pill flips PAID / NOT PAID — stopPropagation so it doesn't
+                      also expand/collapse the row underneath. */}
+                  <div className="flex items-center gap-2" onClick={(ev) => ev.stopPropagation()}>
+                    <PaidToggle
+                      enrollmentId={e.id}
+                      paid={hasPaid(e.payment_status)}
+                      paymentMethod={e.payment_method}
+                      size="sm"
+                      onChanged={(nowPaid) =>
+                        setEnrollments((prev) =>
+                          prev.map((x) =>
+                            x.id === e.id
+                              ? {
+                                  ...x,
+                                  payment_status: nowPaid ? 'cash' : 'pending',
+                                  payment_method: nowPaid ? 'cash' : x.payment_method,
+                                }
+                              : x
+                          )
+                        )
+                      }
+                    />
                     {expandedId === e.id ? (
                       <ChevronUp className="h-4 w-4 text-gray-400" />
                     ) : (
