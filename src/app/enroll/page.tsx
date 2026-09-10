@@ -587,7 +587,7 @@ export default function EnrollPage() {
                 size="sm"
                 variant="outline"
                 onClick={addStudent}
-                disabled={studentCount >= 15}
+                disabled={studentCount >= 20}
                 className="flex items-center gap-1"
               >
                 <Plus className="h-4 w-4" /> Add Child
@@ -721,7 +721,7 @@ export default function EnrollPage() {
               </Card>
             ))}
 
-            {studentCount < 6 && (
+            {studentCount < 20 && (
               <Button
                 type="button"
                 variant="outline"

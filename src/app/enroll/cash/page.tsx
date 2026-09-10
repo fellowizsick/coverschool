@@ -15,6 +15,7 @@ const stateOptions = ALL_STATES.filter((s) => s.status === 'available').map(
 const gradeOptions = GRADE_OPTIONS.map((g) => ({ value: g, label: g }))
 
 type StudentForm = {
+  id: string
   first: string
   last: string
   grade: string
@@ -22,7 +23,11 @@ type StudentForm = {
   ssn: string
 }
 
-const emptyStudent = (): StudentForm => ({ first: '', last: '', grade: '', dob: '', ssn: '' })
+// A stable per-row id. Keying rows by array INDEX makes React reuse the wrong DOM nodes
+// after a removal, so the values on screen stop matching the real state. Always key by id.
+let rowSeq = 0
+const newRowId = () => `st-${Date.now().toString(36)}-${++rowSeq}`
+const emptyStudent = (): StudentForm => ({ id: newRowId(), first: '', last: '', grade: '', dob: '', ssn: '' })
 
 export default function CashEnrollPage() {
   const [token, setToken] = useState('')
@@ -221,13 +226,15 @@ export default function CashEnrollPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             {students.map((s, i) => (
-              <div key={i} className="rounded-lg border border-gray-200 p-4 space-y-3">
+              <div key={s.id} className="rounded-lg border border-gray-200 p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-gray-700">
                     <UserPlus className="h-4 w-4 inline mr-1 text-emerald-600" /> Student {i + 1}
                   </span>
                   {students.length > 1 && (
-                    <button type="button" onClick={() => setStudents(students.filter((_, x) => x !== i))} className="text-xs text-red-500">Remove</button>
+                    <button type="button" onClick={() => setStudents((prev) => prev.filter((x) => x.id !== s.id))} className="inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-600">
+                      <Trash2 className="h-3 w-3" /> Remove
+                    </button>
                   )}
                 </div>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

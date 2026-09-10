@@ -103,6 +103,12 @@ export default async function DashboardLayout({
             >
               Cash Ledger
             </Link>
+            <Link
+              href="/dashboard/records-requests"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Records Requests
+            </Link>
           </>
         ) : (
           <>

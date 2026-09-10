@@ -7,7 +7,7 @@ export default async function PrintEnrollmentPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: enrollment } = await supabase
     .from('enrollments')
