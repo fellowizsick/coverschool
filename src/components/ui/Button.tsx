@@ -39,14 +39,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'group relative inline-flex items-center justify-center rounded-xl font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+          'group relative inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-xl font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
           variantStyles[variant],
           sizeStyles[size],
           className
         )}
         {...props}
       >
-        <span className="relative z-10 inline-flex items-center gap-1.5">
+        <span className="relative z-10 inline-flex items-center gap-1.5 whitespace-nowrap">
           {children}
         </span>
         {/* Shimmer effect for primary/gold/fun */}

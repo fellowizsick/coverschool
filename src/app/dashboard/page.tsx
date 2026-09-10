@@ -408,7 +408,7 @@ export default async function DashboardPage() {
                       <td className="py-2 pr-4 text-gray-600">{f.grade}</td>
                       <td className="py-2 pr-4 text-gray-600">{f.parent_email || '—'}</td>
                       <td className="py-2">
-                        <div className="flex gap-1">
+                        <div className="flex flex-wrap gap-1">
                           <Link href={`/enroll/church-form/${f.id}`}>
                             <Button size="sm" variant="outline">
                               <Printer className="mr-1 h-3 w-3" /> View

@@ -308,7 +308,7 @@ export default function ProblemCenter({ approvedStudents }: ProblemCenterProps) 
               )}
 
               {/* Footer */}
-              <div className="flex items-center justify-end gap-2 border-t border-gray-100 pt-4">
+              <div className="flex flex-wrap items-center justify-end gap-2 border-t border-gray-100 pt-4">
                 <Button variant="ghost" size="sm" onClick={close} disabled={status === 'sending'}>
                   Cancel
                 </Button>

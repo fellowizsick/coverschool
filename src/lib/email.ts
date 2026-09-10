@@ -348,3 +348,104 @@ export async function sendCancellationEmail({
     return { sent: false, reason: 'Email send failed' }
   }
 }
+
+type SendCashReceiptEmailParams = {
+  to: string
+  parentName: string
+  studentNames: string[]
+  amountCents: number
+  receiptNumber: string
+  method?: string
+}
+
+export async function sendCashReceiptEmail({
+  to,
+  parentName,
+  studentNames,
+  amountCents,
+  receiptNumber,
+  method = 'cash',
+}: SendCashReceiptEmailParams) {
+  const smtpHost = process.env.SMTP_HOST
+  const smtpPort = process.env.SMTP_PORT
+  const smtpUser = process.env.SMTP_USER
+  const smtpPass = process.env.SMTP_PASS
+  const fromEmail = process.env.SMTP_FROM || SCHOOL_CONFIG.email
+  const methodLabel = method === 'cash' ? 'Cash' : 'Payment'
+  const studentsLabel = studentNames.length === 1 ? studentNames[0] : studentNames.join(', ')
+  const amount = (amountCents / 100).toFixed(2)
+
+  const subject = `Your ${methodLabel} Receipt — ${SCHOOL_CONFIG.name}`
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: linear-gradient(135deg, #065f46, #047857); padding: 28px; border-radius: 12px 12px 0 0; text-align: center;">
+        <h1 style="color: #fff; margin: 0; font-size: 22px;">Payment Receipt</h1>
+        <p style="color: #a7f3d0; margin: 6px 0 0; font-size: 14px;">${SCHOOL_CONFIG.name}</p>
+      </div>
+      <div style="background: #fff; padding: 28px; border: 1px solid #e5e7eb;">
+        <p style="color: #374151; font-size: 15px;">Dear ${parentName},</p>
+        <p style="color: #374151; font-size: 15px;">
+          Thank you for your payment. This is your receipt for the enrollment of
+          <strong>${studentsLabel}</strong>.
+        </p>
+        <div style="background: #f9fafb; border-radius: 8px; padding: 18px; margin: 20px 0;">
+          <p style="color: #6b7280; font-size: 13px; margin: 0 0 6px;">Receipt # ${receiptNumber}</p>
+          <p style="color: #374151; font-size: 13px; margin: 0 0 6px;">Payment method: ${methodLabel}</p>
+          <p style="color: #065f46; font-size: 24px; font-weight: bold; margin: 10px 0 0;">$${amount}</p>
+        </div>
+        <p style="color: #374151; font-size: 14px;">
+          We are honored you've trusted ${SCHOOL_CONFIG.name} with your family's education.
+          If you have any questions, simply reply to this email.
+        </p>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 14px;">
+          With gratitude,<br/>
+          <strong>The ${SCHOOL_CONFIG.name} Team</strong><br/>
+          <a href="mailto:${SCHOOL_CONFIG.email}" style="color: #059669;">${SCHOOL_CONFIG.email}</a><br/>
+          ${SCHOOL_CONFIG.phone}
+        </p>
+      </div>
+      <div style="background: #f9fafb; padding: 14px 28px; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb; border-top: none;">
+        <p style="color: #9ca3af; font-size: 11px; margin: 0; text-align: center;">
+          ${SCHOOL_CONFIG.name} · ${SCHOOL_CONFIG.address} · Operating as a church school under Alabama law.
+        </p>
+      </div>
+    </div>
+  `
+
+  if (!smtpHost || !smtpUser || !smtpPass) {
+    console.log('SMTP not configured. Would have sent cash receipt to:', to)
+    return { sent: false, reason: 'SMTP not configured' }
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: Number(smtpPort) || 587,
+    secure: Number(smtpPort) === 465,
+    auth: { user: smtpUser, pass: smtpPass },
+  })
+
+  const plainText = `Dear ${parentName},
+
+Thank you for your payment. This is your receipt for the enrollment of ${studentsLabel}.
+
+RECEIPT #${receiptNumber}
+Payment method: ${methodLabel}
+AMOUNT: $${amount}
+
+We are honored you've trusted ${SCHOOL_CONFIG.name} with your family's education.
+If you have any questions, reply to ${SCHOOL_CONFIG.email}.
+
+With gratitude,
+The ${SCHOOL_CONFIG.name} Team
+${SCHOOL_CONFIG.phone}`
+
+  try {
+    await transporter.sendMail({ from: fromEmail, to, subject, html, text: plainText })
+    console.log('Cash receipt email sent to', to)
+    return { sent: true }
+  } catch (error) {
+    console.error('Failed to send cash receipt email:', error)
+    return { sent: false, reason: 'Email send failed' }
+  }
+}

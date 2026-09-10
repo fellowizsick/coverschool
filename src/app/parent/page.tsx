@@ -9,6 +9,8 @@ import ManagePaymentButton from '@/components/ManagePaymentButton'
 import FinishPaymentButton from '@/components/FinishPaymentButton'
 import ReferralCard from '@/components/ReferralCard'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
+import { getBillingInfo } from '@/lib/billing'
+import NextPaymentCard from '@/components/NextPaymentCard'
 import { getTransferGrades, computeGpa, formatGpa } from '@/lib/transfer-grades'
 import ReportCardUploader from '@/components/ReportCardUploader'
 import ProblemCenter from '@/components/ProblemCenter'
@@ -74,6 +76,31 @@ export default async function ParentPortalPage() {
   const creditsApplied =
     referralCredits?.filter((c) => c.status === 'applied').length ?? 0
 
+  // 💳 ACCURATE next-payment info. Stripe is the single source of truth (it knows
+  // about referral credits, which show up as $0 invoices). Parents only — the
+  // admin view is a roster, not a billing page.
+  let billing: Awaited<ReturnType<typeof getBillingInfo>> | null = null
+  if (!isAdmin) {
+    const withSub = enrollments?.find((e) => e.stripe_subscription_id) ?? null
+    const withCust = enrollments?.find((e) => e.stripe_customer_id) ?? null
+    const allCash =
+      !!enrollments?.length &&
+      enrollments.every((e) => e.payment_method === 'cash' || e.payment_status === 'cash')
+    if (allCash && !withSub) {
+      // Paid in person — there is no recurring charge to show.
+      billing = {
+        kind: 'cash', nextPaymentDate: null, amountCents: null, freeMonths: 0,
+        freeUntil: null, freeForever: false, endsOn: null, interval: null,
+      }
+    } else {
+      billing = await getBillingInfo({
+        email: user.email,
+        customerId: withCust?.stripe_customer_id ?? null,
+        subscriptionId: withSub?.stripe_subscription_id ?? null,
+      })
+    }
+  }
+
   // Canonical domain — always laroseca.org, never the vercel.app URL (user rule).
   const siteUrl = 'https://laroseca.org'
 
@@ -93,11 +120,11 @@ export default async function ParentPortalPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-semibold text-gray-900">
           {isAdmin ? 'All Students' : 'My Children\'s Dashboard'}
         </h2>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <ProblemCenter
             approvedStudents={(enrollments || [])
               .filter((e) => e.status === 'approved')
@@ -144,6 +171,9 @@ export default async function ParentPortalPage() {
           </Link>
         </div>
       </div>
+
+      {/* 💳 Next Payment Due — accurate, credit-aware (parents only) */}
+      <NextPaymentCard billing={billing} />
 
       {/* 🏫 Report Card Snapshots — auto-targets the single student, or picker when multiple */}
       <div className="mt-6">

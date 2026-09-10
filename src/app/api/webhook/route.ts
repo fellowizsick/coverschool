@@ -377,12 +377,33 @@ async function awardReferralCredit(supabase, stripe, referredEnrollment) {
           .eq('id', creditRow.id)
 
         try {
-          await stripe.subscriptions.update(referrer.stripe_subscription_id, {
-            coupon: coupon.id,
-          })
-          console.log(`🎁 Coupon (${remaining} free month${remaining > 1 ? 's' : ''}) attached to subscription ${referrer.stripe_subscription_id} (${consumedMonths} already consumed)`)
+          // 🔧 FIX 2026-09-09 (referral bug): Subscriptions with `billing_mode: flexible`
+          // REJECT the `coupon` param (`subscriptions.update({coupon})` → 400), so the
+          // referral reward silently never applied and the card got charged. Modern Stripe
+          // uses the `discounts` array. Read the real billing mode and use the right form;
+          // fall back to `coupon` for legacy subscriptions.
+          const subDetail = await stripe.subscriptions.retrieve(referrer.stripe_subscription_id)
+          const billingMode = subDetail.billing_mode?.type || subDetail.billing?.type
+          if (billingMode === 'flexible') {
+            await stripe.subscriptions.update(referrer.stripe_subscription_id, {
+              discounts: [{ coupon: coupon.id }],
+            })
+          } else {
+            await stripe.subscriptions.update(referrer.stripe_subscription_id, {
+              coupon: coupon.id,
+            })
+          }
+          console.log(`🎁 Coupon (${remaining} free month${remaining > 1 ? 's' : ''}) attached to subscription ${referrer.stripe_subscription_id} via ${billingMode === 'flexible' ? 'discounts[]' : 'coupon'} (${consumedMonths} already consumed)`)
         } catch (subErr) {
-          console.error('Referral: failed to attach coupon to subscription', subErr)
+          // Retry once with the discounts[] form — covers any mode-detection miss.
+          try {
+            await stripe.subscriptions.update(referrer.stripe_subscription_id, {
+              discounts: [{ coupon: coupon.id }],
+            })
+            console.log(`🎁 Coupon retried via discounts[] on ${referrer.stripe_subscription_id}`)
+          } catch (retryErr) {
+            console.error('Referral: failed to attach coupon to subscription', subErr, retryErr)
+          }
         }
       } else {
         console.log(`Referral: all ${totalCredits} credits already consumed — no new coupon`)

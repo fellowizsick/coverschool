@@ -157,7 +157,7 @@ export default async function StudentProfilePage({
                   <p className="text-sm font-medium">{churchForm.school_year}</p>
                 </div>
               </div>
-              <div className="flex gap-2 pt-2">
+              <div className="flex flex-wrap gap-2 pt-2">
                 <Link href={`/enroll/church-form/${churchForm.id}`}>
                   <Button size="sm" variant="outline">
                     <Printer className="mr-1 h-4 w-4" /> View / Print

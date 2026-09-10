@@ -52,7 +52,7 @@ export default async function DashboardLayout({
         </form>
       </div>
 
-      <nav className="mt-6 flex gap-4 border-b border-gray-200 pb-4">
+      <nav className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-gray-200 pb-4">
         {isAdmin ? (
           <>
             <Link
@@ -84,6 +84,24 @@ export default async function DashboardLayout({
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
               Podcast
+            </Link>
+            <Link
+              href="/dashboard/cash-enroll"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Cash Enroll
+            </Link>
+            <Link
+              href="/dashboard/cash-payments"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Cash Links
+            </Link>
+            <Link
+              href="/dashboard/cash-ledger"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Cash Ledger
             </Link>
           </>
         ) : (
