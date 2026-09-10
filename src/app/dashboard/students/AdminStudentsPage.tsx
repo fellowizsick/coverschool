@@ -7,10 +7,11 @@ import { Input } from '@/components/ui/Input'
 import {
   GraduationCap, Search, ChevronDown, ChevronUp,
   Mail, MapPin, User, BookOpen, CheckCircle,
-  Clock, AlertCircle, FileText, Download
+  Clock, AlertCircle, FileText, Download, Pencil
 } from 'lucide-react'
 import { hasPaid } from '@/lib/enrollment-status'
 import PaidToggle from '@/components/PaidToggle'
+import EditStudentPanel, { type EditableStudent } from '@/components/EditStudentPanel'
 
 type Enrollment = {
   id: string
@@ -92,6 +93,8 @@ export default function AdminStudentsPage({
   const [expandedId, setExpandedId] = useState<string | null>(null)
   // Local copy so the PAID toggle updates a row instantly without a full reload.
   const [enrollments, setEnrollments] = useState<Enrollment[]>(initialEnrollments)
+  // Which student's edit panel is open (null = closed)
+  const [editing, setEditing] = useState<EditableStudent | null>(null)
 
   const filtered = useMemo(() => {
     return enrollments.filter((e) => {
@@ -266,6 +269,17 @@ export default function AdminStudentsPage({
                         )
                       }
                     />
+                    {/* Correct the student's details (name, birthday, grade, contact…).
+                        There was no way to edit an enrollment before this. */}
+                    <button
+                      type="button"
+                      onClick={() => setEditing(e as EditableStudent)}
+                      title="Edit this student's details"
+                      aria-label={`Edit ${e.student_first_name} ${e.student_last_name}`}
+                      className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-emerald-600"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
                     {expandedId === e.id ? (
                       <ChevronUp className="h-4 w-4 text-gray-400" />
                     ) : (
@@ -391,6 +405,19 @@ export default function AdminStudentsPage({
           ))
         )}
       </div>
+
+      {/* Correct a student's details (name, birthday, grade, contacts…). */}
+      {editing && (
+        <EditStudentPanel
+          student={editing}
+          onClose={() => setEditing(null)}
+          onSaved={(updated) =>
+            setEnrollments((prev) =>
+              prev.map((x) => (x.id === editing.id ? { ...x, ...updated } : x))
+            )
+          }
+        />
+      )}
     </div>
   )
 }
