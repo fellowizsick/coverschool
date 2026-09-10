@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
+import { PAID_STATUSES } from '@/lib/enrollment-status'
 import { redirect } from 'next/navigation'
 import AdminStudentsPage from './AdminStudentsPage'
 import StudentPodcastCodes from '@/components/StudentPodcastCodes'
@@ -29,10 +30,14 @@ export default async function StudentsPage() {
   // admin roster AFTER they've PAID. Unpaid/pending applicants are NOT students
   // yet — they stay in the enrollment-review queue (dashboard "Needs Approval"
   // / "Unpaid" cards). Only a paid enrollment shows here.
+  //
+  // ⚠️ 2026-09-10 FIX: "paid" means card OR cash. The cash feature stores
+  // payment_status = 'cash', so filtering on 'paid' alone hid every cash student
+  // from the roster. Use PAID_STATUSES so it can never drift again.
   const { data: enrollments } = await supabase
     .from('enrollments')
     .select('*')
-    .eq('payment_status', 'paid')
+    .in('payment_status', PAID_STATUSES as unknown as string[])
     .order('created_at', { ascending: false })
 
   // Also fetch curriculum progress for all students

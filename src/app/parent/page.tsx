@@ -16,6 +16,7 @@ import ReportCardUploader from '@/components/ReportCardUploader'
 import ProblemCenter from '@/components/ProblemCenter'
 import LeaveReview from '@/components/LeaveReview'
 import { CalendarDays } from 'lucide-react'
+import { hasPaid } from '@/lib/enrollment-status'
 
 export default async function ParentPortalPage() {
   const supabase = await createClient()
@@ -239,7 +240,7 @@ export default async function ParentPortalPage() {
                       even for approved/paid students. The parent portal is
                       pre-scoped to email = user.email, so each parent only ever
                       sees their OWN children's warnings, never other families'. */}
-                  {e.church_form_status !== 'submitted' && (e.status === 'approved' || e.payment_status === 'paid') && (
+                  {e.church_form_status !== 'submitted' && (e.status === 'approved' || hasPaid(e.payment_status)) && (
                     <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 flex items-start gap-2">
                       <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5" />
                       <div className="flex-1">
@@ -325,7 +326,7 @@ export default async function ParentPortalPage() {
                           filled the forms but never paid can finish right here,
                           no agent-issued links. Church form not done → they
                           get sent back to finish it first. */}
-                      {e.status !== 'cancelled' && e.payment_status !== 'paid' && (
+                      {e.status !== 'cancelled' && !hasPaid(e.payment_status) && (
                         <div className="mt-3">
                           {e.church_form_status === 'submitted' ? (
                             <FinishPaymentButton enrollmentId={e.id} email={e.email} />

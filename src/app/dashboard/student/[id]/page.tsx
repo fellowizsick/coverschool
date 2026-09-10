@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { hasPaid } from '@/lib/enrollment-status'
 
 export default async function StudentProfilePage({
   params,
@@ -92,7 +93,7 @@ export default async function StudentProfilePage({
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase">Payment Status</p>
               <p className={`text-base font-medium ${
-                enrollment.payment_status === 'paid' ? 'text-emerald-600' :
+                hasPaid(enrollment.payment_status) ? 'text-emerald-600' :
                 enrollment.payment_status === 'unpaid' ? 'text-red-600' : 'text-amber-600'
               }`}>{enrollment.payment_status}</p>
             </div>

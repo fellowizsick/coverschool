@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { hasPaid } from '@/lib/enrollment-status'
 
 /**
  * POST /api/remove-child
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
 
     // Active siblings = everyone in the group still approved (not this child)
     const activeSiblings = siblings.filter(
-      (s) => s.id !== child.id && s.status === 'approved' && s.payment_status === 'paid'
+      (s) => s.id !== child.id && s.status === 'approved' && hasPaid(s.payment_status)
     )
 
     const Stripe = require('stripe')

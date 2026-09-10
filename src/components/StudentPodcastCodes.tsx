@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { hasPaid } from '@/lib/enrollment-status'
 
 type Student = {
   id: string
@@ -57,7 +58,7 @@ export default function StudentPodcastCodes() {
     } catch {}
   }
 
-  const eligible = students.filter((s) => s.status === 'approved' && s.payment_status === 'paid')
+  const eligible = students.filter((s) => s.status === 'approved' && hasPaid(s.payment_status))
 
   return (
     <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5">

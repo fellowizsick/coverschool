@@ -17,6 +17,7 @@ import {
   BadgeDollarSign,
 } from 'lucide-react'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
+import { hasPaid, isUnpaid } from '@/lib/enrollment-status'
 import Link from 'next/link'
 
 type Enrollment = {
@@ -53,13 +54,17 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function PaymentBadge({ payment }: { payment: string }) {
+  // Cash is money received, exactly like a card payment — colour it the same way and say so,
+  // otherwise a cash-enrolled student reads as "unknown" on the dashboard.
   const map: Record<string, string> = {
     paid: 'bg-emerald-100 text-emerald-700',
+    cash: 'bg-emerald-100 text-emerald-700',
     unpaid: 'bg-red-100 text-red-700',
     pending: 'bg-amber-100 text-amber-700',
   }
   const label: Record<string, string> = {
     paid: 'PAID',
+    cash: 'PAID · CASH',
     unpaid: 'UNPAID',
     pending: 'PENDING',
   }
@@ -136,10 +141,10 @@ export default async function DashboardPage() {
 
   const total = enrollments.length
   const active = enrollments.filter((e) => e.status === 'approved').length
-  const paid = enrollments.filter((e) => e.payment_status === 'paid').length
-  const unpaid = enrollments.filter(
-    (e) => e.payment_status === 'unpaid' || e.payment_status === 'pending'
-  ).length
+  // ⚠️ hasPaid() counts card ('paid') AND cash ('cash'). Comparing to 'paid' by hand
+  // undercounted every cash-enrolled student on the dashboard.
+  const paid = enrollments.filter((e) => hasPaid(e.payment_status)).length
+  const unpaid = enrollments.filter((e) => isUnpaid(e.payment_status)).length
   const pendingApproval = enrollments.filter((e) => e.status === 'pending').length
   // ⚠️ Students who are approved/paid but have NOT completed their legal
   // church/home-school enrollment form (the compliance gap).
@@ -152,8 +157,13 @@ export default async function DashboardPage() {
   const MONTHLY_TUITION = 45 // $45/mo
   const ANNUAL = 540 // $45/mo × 12
   const REG_FEE = 75 // one-time registration fee
-  const mrr = paid * MONTHLY_TUITION
-  const annualRunRate = paid * ANNUAL
+  // ⚠️ Recurring revenue comes ONLY from CARD subscribers. A cash family pays once in
+  // person and has no monthly charge, so counting them here overstated MRR/ARR.
+  // (`paid` — card + cash — is still the right number for the Paid tile above.)
+  const recurring = enrollments.filter((e) => e.payment_status === 'paid').length
+  const cashPaid = enrollments.filter((e) => e.payment_status === 'cash').length
+  const mrr = recurring * MONTHLY_TUITION
+  const annualRunRate = recurring * ANNUAL
   const regFeesCollected = paid * REG_FEE
 
   const stats = [
@@ -193,14 +203,15 @@ export default async function DashboardPage() {
     {
       label: 'Monthly Revenue',
       value: `$${mrr.toLocaleString()}`,
-      sub: `${paid} paying fam${paid === 1 ? 'ily' : 'ilies'} × $${MONTHLY_TUITION}/mo`,
+      sub: `${recurring} monthly plan${recurring === 1 ? '' : 's'} × $${MONTHLY_TUITION}/mo`
+        + (cashPaid ? ` · ${cashPaid} cash (paid in full)` : ''),
       icon: CreditCard,
       color: 'text-emerald-600 bg-emerald-100',
     },
     {
       label: 'Annual Run Rate',
       value: `$${annualRunRate.toLocaleString()}`,
-      sub: `${paid} paying fam${paid === 1 ? 'ily' : 'ilies'} × $${ANNUAL}/yr`,
+      sub: `${recurring} monthly plan${recurring === 1 ? '' : 's'} × $${ANNUAL}/yr`,
       icon: TrendingUp,
       color: 'text-blue-600 bg-blue-100',
     },
@@ -276,7 +287,7 @@ export default async function DashboardPage() {
             </p>
             <p className="text-xs text-amber-700 mt-0.5">
               {missingForm.map((e) => `${e.student_first_name} ${e.student_last_name}`).join(', ')} —{' '}
-              {missingForm.some((e) => e.status === 'approved' || e.payment_status === 'paid')
+              {missingForm.some((e) => e.status === 'approved' || hasPaid(e.payment_status))
                 ? 'some are approved/paid. Nudge them to complete the church/home-school enrollment form.'
                 : 'Complete the church/home-school enrollment form to finish signup.'}
             </p>
@@ -362,7 +373,7 @@ export default async function DashboardPage() {
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
-                            ⚠️ {e.status === 'approved' || e.payment_status === 'paid' ? 'Missing' : 'Incomplete'}
+                            ⚠️ {e.status === 'approved' || hasPaid(e.payment_status) ? 'Missing' : 'Incomplete'}
                           </span>
                         )}
                       </td>

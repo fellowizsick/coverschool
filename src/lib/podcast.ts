@@ -6,6 +6,7 @@ import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import nodemailer from 'nodemailer'
 import { SCHOOL_CONFIG } from '@/lib/constants'
 import { readStudentCookie } from '@/lib/studentAuth'
+import { hasPaid } from '@/lib/enrollment-status'
 
 const BUCKET = 'podcast-videos'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -51,7 +52,7 @@ export async function getEligibleEnrollment(email: string): Promise<Eligible> {
     .eq('email', (email || '').toLowerCase().trim())
     .order('created_at', { ascending: false })
   const list = (enrolls || []) as any[]
-  const paid = list.filter((e) => e.status === 'approved' && e.payment_status === 'paid')
+  const paid = list.filter((e) => e.status === 'approved' && hasPaid(e.payment_status))
   if (paid.length === 0) {
     return { ok: false, reason: 'Only paid, active students can submit. Please contact the school to complete enrollment/payment.' }
   }
@@ -74,7 +75,7 @@ export async function getEligibleEnrollmentByPin(pin: string): Promise<Eligible>
     .eq('student_pin', pin)
     .order('created_at', { ascending: false })
   const list = (enrolls || []) as any[]
-  const paid = list.filter((e) => e.status === 'approved' && e.payment_status === 'paid')
+  const paid = list.filter((e) => e.status === 'approved' && hasPaid(e.payment_status))
   if (paid.length === 0) {
     return { ok: false, reason: 'That code did not match a paid, active student. Please contact the school.' }
   }
@@ -124,7 +125,7 @@ export async function getEligibleEnrollmentById(id: string): Promise<Eligible> {
     .eq('id', id)
     .single()
   if (!e) return { ok: false, reason: 'Enrollment not found.' }
-  if (e.status !== 'approved' || e.payment_status !== 'paid') {
+  if (e.status !== 'approved' || !hasPaid(e.payment_status)) {
     return { ok: false, reason: 'Only paid, active students can submit. Please contact the school to complete enrollment/payment.' }
   }
   return {

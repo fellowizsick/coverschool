@@ -9,6 +9,7 @@ import {
   Mail, MapPin, User, BookOpen, CheckCircle,
   Clock, AlertCircle, FileText, Download
 } from 'lucide-react'
+import { hasPaid } from '@/lib/enrollment-status'
 
 type Enrollment = {
   id: string
@@ -241,7 +242,7 @@ export default function AdminStudentsPage({
                   </div>
                   <div className="flex items-center gap-2">
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      e.payment_status === 'paid' ? 'bg-emerald-100 text-emerald-700' :
+                      hasPaid(e.payment_status) ? 'bg-emerald-100 text-emerald-700' :
                       e.payment_status === 'unpaid' ? 'bg-red-100 text-red-700' :
                       'bg-amber-100 text-amber-700'
                     }`}>

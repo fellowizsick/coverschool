@@ -4,6 +4,7 @@ import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { redirect } from 'next/navigation'
+import { hasPaid } from '@/lib/enrollment-status'
 
 export default async function EnrollmentsPage() {
   const supabase = await createClient()
@@ -93,7 +94,7 @@ export default async function EnrollmentsPage() {
                       <td className="px-4 py-3">
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                            e.payment_status === 'paid'
+                            hasPaid(e.payment_status)
                               ? 'bg-emerald-100 text-emerald-700'
                               : 'bg-gray-100 text-gray-600'
                           }`}
