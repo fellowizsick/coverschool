@@ -137,6 +137,40 @@ export default function AdminStudentsPage({
   // Paid / not-paid view. The roster now includes EVERY enrollment (Jonathan, 2026-09-11), so
   // this lets Mom narrow to one group without the other disappearing from the page entirely.
   const [payFilter, setPayFilter] = useState<'all' | 'paid' | 'unpaid'>('all')
+  // Which enrollments we just emailed the church form to, and any error, so the button can
+  // report honestly instead of silently doing nothing.
+  const [formSending, setFormSending] = useState<string | null>(null)
+  const [formDone, setFormDone] = useState<Record<string, string>>({})
+  const [formErr, setFormErr] = useState<Record<string, string>>({})
+
+  /** Email this family their Church / Home School Enrollment Form link. */
+  async function sendChurchForm(enrollmentId: string) {
+    setFormSending(enrollmentId)
+    setFormErr((p) => { const n = { ...p }; delete n[enrollmentId]; return n })
+    try {
+      const res = await fetch('/api/admin-send-church-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enrollmentId }),
+      })
+      const data = await res.json()
+      if (data?.sent?.length) {
+        setFormDone((p) => ({ ...p, [enrollmentId]: 'Sent ✓' }))
+      } else {
+        // Most common real case: no parent email on file. Fall back to the link so Mom can
+        // text it instead — she should never be left with a dead end.
+        const why = data?.failed?.[0]?.reason || data?.error || 'could not send'
+        setFormErr((p) => ({ ...p, [enrollmentId]: why }))
+        if (data?.link) {
+          try { await navigator.clipboard.writeText(data.link) } catch { /* clipboard blocked */ }
+        }
+      }
+    } catch (err) {
+      setFormErr((p) => ({ ...p, [enrollmentId]: err instanceof Error ? err.message : 'failed' }))
+    } finally {
+      setFormSending(null)
+    }
+  }
 
   const filtered = useMemo(() => {
     return enrollments.filter((e) => {
@@ -355,6 +389,15 @@ export default function AdminStudentsPage({
                             </span>
                           )
                         })()}
+                        {/* Missing church form, right on the row. It is the legal paperwork for
+                            an Alabama church-school enrollment, and it used to be visible only
+                            inside the expanded detail — so nobody noticed 4 of 5 families had
+                            none. (2026-09-11) */}
+                        {!churchFormsByEnrollment?.[e.id] && (
+                          <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
+                            <FileText className="h-3 w-3" /> Church form needed
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -508,6 +551,37 @@ export default function AdminStudentsPage({
                           <span className="text-amber-600 font-medium">⚠️ Pending</span>
                         )}
                       </div>
+                      {/* The form is what makes the enrollment legal in Alabama, and it used to
+                          only be handed out IN FLOW on the website — so cash families (entered
+                          here) never saw it at all. 4 of 5 enrollments had none. Send it from
+                          right here, one click. (2026-09-11) */}
+                      {!churchFormsByEnrollment?.[e.id] && (
+                        <div className="flex items-center gap-2">
+                          {formDone[e.id] ? (
+                            <span className="text-xs font-semibold text-emerald-600">
+                              {formDone[e.id]}
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={(ev) => { ev.stopPropagation(); sendChurchForm(e.id) }}
+                              disabled={formSending === e.id}
+                              title="Email this family their Church / Home School Enrollment Form"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-800 hover:bg-amber-100 disabled:opacity-60"
+                            >
+                              <Mail className="h-3.5 w-3.5" />
+                              {formSending === e.id ? 'Sending…' : 'Send form'}
+                            </button>
+                          )}
+                          {formErr[e.id] && (
+                            <span className="text-xs text-red-600">
+                              {formErr[e.id] === 'no parent email on file'
+                                ? 'No email — link copied to clipboard'
+                                : formErr[e.id]}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Full profile (includes the full church form card) */}

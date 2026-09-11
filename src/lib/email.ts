@@ -66,7 +66,7 @@ export async function sendPasswordResetEmail({ to, parentName, link }: SendPassw
 
       <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
       <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">
-        ${SCHOOL_CONFIG.name} · ${SCHOOL_CONFIG.city} · ${SCHOOL_CONFIG.email}
+        ${SCHOOL_CONFIG.name} · ${SCHOOL_CONFIG.address} · ${SCHOOL_CONFIG.email}
       </p>
     </div>
   `
@@ -446,6 +446,142 @@ ${SCHOOL_CONFIG.phone}`
     return { sent: true }
   } catch (error) {
     console.error('Failed to send cash receipt email:', error)
+    return { sent: false, reason: 'Email send failed' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Church / Home School Enrollment Form request
+// ---------------------------------------------------------------------------
+
+export type SendChurchFormRequestParams = {
+  to: string
+  parentName: string
+  studentNames: string[]
+  /** Absolute URL of the form, pre-filled for this family (see src/lib/churchFormLink.ts). */
+  link: string
+  /** True when the family has already paid (cash in person, or card) — changes the wording. */
+  alreadyPaid?: boolean
+}
+
+/**
+ * Ask a family to complete their Church / Home School Enrollment Form.
+ *
+ * WHY (2026-09-11). Jonathan: "the people who pay cash still need to fill those forms out its a
+ * must." The form is the document that makes an Alabama church-school enrollment valid, and the
+ * data showed 4 of 5 families had none — because it was only ever handed out IN FLOW on the
+ * website, so cash families (entered by Mom offline) never saw it at all.
+ *
+ * This is the delivery mechanism: Mom clicks a button, the parent gets a link, they fill it at
+ * home, and /api/church-form marks it submitted. `alreadyPaid` keeps the copy warm rather than
+ * dunning someone who has already handed over money.
+ */
+export async function sendChurchFormRequestEmail({
+  to,
+  parentName,
+  studentNames,
+  link,
+  alreadyPaid = false,
+}: SendChurchFormRequestParams) {
+  const smtpHost = process.env.SMTP_HOST
+  const smtpPort = process.env.SMTP_PORT
+  const smtpUser = process.env.SMTP_USER
+  const smtpPass = process.env.SMTP_PASS
+  const fromEmail = process.env.SMTP_FROM || SCHOOL_CONFIG.email
+  const studentsLabel = studentNames.length === 1 ? studentNames[0] : studentNames.join(', ')
+
+  const subject = `One form left for ${studentsLabel} — ${SCHOOL_CONFIG.name}`
+
+  const intro = alreadyPaid
+    ? `Thank you again for your payment. We have one piece of paperwork left before
+       <strong>${studentsLabel}</strong>'s enrollment is complete.`
+    : `We have one piece of paperwork left before <strong>${studentsLabel}</strong>'s enrollment
+       is complete.`
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: linear-gradient(135deg, #065f46, #047857); padding: 28px; border-radius: 12px 12px 0 0; text-align: center;">
+        <h1 style="color: #fff; margin: 0; font-size: 22px;">Church Enrollment Form</h1>
+        <p style="color: #a7f3d0; margin: 6px 0 0; font-size: 14px;">${SCHOOL_CONFIG.name}</p>
+      </div>
+      <div style="background: #fff; padding: 28px; border: 1px solid #e5e7eb;">
+        <p style="color: #374151; font-size: 15px;">Dear ${parentName},</p>
+        <p style="color: #374151; font-size: 15px;">${intro}</p>
+        <p style="color: #374151; font-size: 15px;">
+          Alabama law requires a completed Church / Home School Enrollment Form for every
+          student. It is what gives your family legal cover — so it does need to be on file.
+        </p>
+        <p style="text-align: center; margin: 26px 0;">
+          <a href="${link}"
+             style="background: #059669; color: #fff; text-decoration: none; font-weight: bold;
+                    padding: 14px 26px; border-radius: 10px; display: inline-block; font-size: 15px;">
+            Fill out the form &rarr;
+          </a>
+        </p>
+        <p style="color: #6b7280; font-size: 13px;">
+          It takes a few minutes and can be done on a phone. Both signatures are required.
+        </p>
+        ${alreadyPaid
+          ? `<p style="color: #6b7280; font-size: 13px;">
+               You have already paid, so there is nothing more to pay — this is only the form.
+             </p>`
+          : ''}
+        <p style="color: #6b7280; font-size: 13px; margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 14px;">
+          If the button does not work, paste this into your browser:<br/>
+          <span style="color: #059669; word-break: break-all;">${link}</span>
+        </p>
+        <p style="color: #6b7280; font-size: 13px;">
+          With gratitude,<br/>
+          <strong>The ${SCHOOL_CONFIG.name} Team</strong><br/>
+          <a href="mailto:${SCHOOL_CONFIG.email}" style="color: #059669;">${SCHOOL_CONFIG.email}</a><br/>
+          ${SCHOOL_CONFIG.phone}
+        </p>
+      </div>
+      <div style="background: #f9fafb; padding: 14px 28px; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb; border-top: none;">
+        <p style="color: #9ca3af; font-size: 11px; margin: 0; text-align: center;">
+          ${SCHOOL_CONFIG.name} · ${SCHOOL_CONFIG.address} · Operating as a church school under Alabama law.
+        </p>
+      </div>
+    </div>
+  `
+
+  if (!smtpHost || !smtpUser || !smtpPass) {
+    console.log('SMTP not configured. Would have sent church form request to:', to)
+    return { sent: false, reason: 'SMTP not configured' }
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: Number(smtpPort) || 587,
+    secure: Number(smtpPort) === 465,
+    auth: { user: smtpUser, pass: smtpPass },
+  })
+
+  const plainText = `Dear ${parentName},
+
+${alreadyPaid
+  ? `Thank you again for your payment. We have one piece of paperwork left before ${studentsLabel}'s enrollment is complete.`
+  : `We have one piece of paperwork left before ${studentsLabel}'s enrollment is complete.`}
+
+Alabama law requires a completed Church / Home School Enrollment Form for every student. It is
+what gives your family legal cover, so it does need to be on file.
+
+Fill it out here (takes a few minutes, works on a phone):
+${link}
+
+Both signatures are required.${alreadyPaid ? '\nYou have already paid — there is nothing more to pay, this is only the form.' : ''}
+
+With gratitude,
+The ${SCHOOL_CONFIG.name} Team
+${SCHOOL_CONFIG.email}
+${SCHOOL_CONFIG.phone}`
+
+  try {
+    await transporter.sendMail({ from: fromEmail, to, subject, html, text: plainText })
+    console.log('Church form request email sent to', to)
+    return { sent: true }
+  } catch (error) {
+    console.error('Failed to send church form request email:', error)
     return { sent: false, reason: 'Email send failed' }
   }
 }
