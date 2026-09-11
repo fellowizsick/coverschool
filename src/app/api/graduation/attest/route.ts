@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { getGraduationRequirements, getCreditLedger, computeGraduation, makeDiplomaNumber } from '@/lib/graduation'
+import { highSchoolGradeNumber } from '@/lib/credit-sync'
 import nodemailer from 'nodemailer'
 import { SCHOOL_CONFIG } from '@/lib/constants'
 
@@ -24,6 +25,24 @@ export async function POST(request: Request) {
 
   const { data: enroll } = await admin.from('enrollments').select('*').eq('id', enrollmentId).single()
   if (!enroll) return NextResponse.json({ ok: false, error: 'Enrollment not found.' }, { status: 404 })
+
+  // ── THE DIPLOMA COMES AT THE END ────────────────────────────────────────────
+  // Credits alone must never be enough. A student must be a SENIOR — the program finished.
+  // Jonathan, 2026-09-11: "the diploma doesn't come until the 12th grade when you finished."
+  // Two of the five students enrolled today are in 5th and 6th grade, so without this check
+  // a younger student could in principle be attested the moment the credit maths lined up.
+  const gradeNum = highSchoolGradeNumber(enroll.student_grade)
+  if (gradeNum !== 12) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: `A diploma is issued in 12th grade, on completion. This student is in ${
+          enroll.student_grade || 'an unrecorded grade'
+        }.`,
+      },
+      { status: 400 },
+    )
+  }
 
   const [reqs, ledger] = await Promise.all([getGraduationRequirements(), getCreditLedger(enrollmentId)])
   const computed = computeGraduation(reqs, ledger)
@@ -107,9 +126,13 @@ async function sendDiplomaEmail(to: string, studentName: string, gradDate: strin
             <strong>Diploma format:</strong> ${format === 'digital_plus_paper' ? 'Digital + Paper' : 'Digital'}
           </p>
           <p style="color:#374151;font-size:15px;line-height:1.6">
-            Click below to view and print your diploma.
+            A diploma document alone is not what a college or employer checks — your official
+            transcript is. You can print that any time from your parent records page.
           </p>
-          <p style="margin:24px 0"><a href="https://laroseca.org/print/diploma/${enrollmentId}" style="background:#059669;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">View &amp; Print Diploma</a></p>
+          <p style="color:#374151;font-size:15px;line-height:1.6">
+            ${SCHOOL_CONFIG.name} holds the signed original of your diploma. Reply to this email
+            or call ${SCHOOL_CONFIG.phone} and we will send you your copy.
+          </p>
           <p style="color:#6b7280;font-size:13px;margin-top:24px">— The ${SCHOOL_CONFIG.name} team</p>
         </div>`,
     })

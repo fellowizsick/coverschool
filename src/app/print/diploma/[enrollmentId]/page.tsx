@@ -1,5 +1,6 @@
-import { createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient, createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { SCHOOL_CONFIG } from '@/lib/constants'
 import { Cinzel, EB_Garamond } from 'next/font/google'
 import type { CSSProperties } from 'react'
@@ -34,6 +35,20 @@ export default async function DiplomaPrintPage({
   params: Promise<{ enrollmentId: string }>
 }) {
   const { enrollmentId } = await params
+
+  // ── ACCESS CONTROL ──────────────────────────────────────────────────────────
+  // This page uses the service-role client, which bypasses RLS, so it MUST gate itself.
+  // It did not. Any person holding the link could view and print a real diploma carrying a
+  // real student's name and diploma number — and the link is emailed to families, so it
+  // forward easily. A credential anyone can print is not a credential.
+  // Jonathan, 2026-09-11: "People cant see that diploma can they?"
+  //
+  // Admin-only for now. A family-facing token link is the next step; until that exists,
+  // families get their diploma from the school rather than by URL.
+  const auth = await createClient()
+  const { data: { user } } = await auth.auth.getUser()
+  if (!user || !isAuthorizedAdmin(user.email)) notFound()
+
   const admin = createAdminClient()
 
   const { data: diploma } = await admin

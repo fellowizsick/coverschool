@@ -42,6 +42,25 @@ const MIN_ENTRIES = 3
 /** Passing average (D). Mirrors creditsFromTransferGrade's standard. */
 const PASS_MARK = 60
 
+/**
+ * High school is grades 9-12, and ONLY high school coursework earns diploma credits.
+ *
+ * This guard exists because without it a 5th grader's math grades would accrue high-school
+ * Mathematics credits toward a diploma. Jonathan, 2026-09-11: "the diploma doesn't come until
+ * the 12th grade when you finished." Blake is in 5th grade and Richard is in 6th — both are
+ * enrolled today, so this is not hypothetical.
+ */
+export function highSchoolGradeNumber(studentGrade: string | null | undefined): number | null {
+  const m = /(\d{1,2})/.exec(String(studentGrade || ''))
+  if (!m) return null
+  const n = parseInt(m[1], 10)
+  return n >= 9 && n <= 12 ? n : null
+}
+
+export function isHighSchooler(studentGrade: string | null | undefined): boolean {
+  return highSchoolGradeNumber(studentGrade) !== null
+}
+
 /** Derive the school year a grade belongs to, e.g. 2026-08-14 -> "2026-27". */
 function schoolYear(dateStr: string): string {
   const d = new Date(`${dateStr}T00:00:00`)
@@ -73,11 +92,23 @@ export async function syncGradebookToCredits(enrollmentId: string): Promise<Sync
   const supabase = createAdminClient()
   const result: SyncResult = { added: 0, updated: 0, removed: 0, subjects: [], skipped: [] }
 
-  const [rows, reqs, existingResp] = await Promise.all([
+  const [rows, reqs, existingResp, enrollResp] = await Promise.all([
     getGradebook(enrollmentId),
     getGraduationRequirements(),
     supabase.from('student_credits').select('*').eq('enrollment_id', enrollmentId).eq('source', 'lca'),
+    supabase.from('enrollments').select('student_grade').eq('id', enrollmentId).single(),
   ])
+
+  // ONLY high school coursework can earn diploma credits. Without this a 5th grader's math
+  // grades would accrue high-school Mathematics credits toward a diploma.
+  const studentGrade = enrollResp.data?.student_grade || ''
+  if (!isHighSchooler(studentGrade)) {
+    result.skipped.push({
+      subject: '(all)',
+      reason: `${studentGrade || 'grade unknown'} is not grades 9-12 — diploma credits do not accrue yet`,
+    })
+    return result
+  }
 
   const existing = (existingResp.data || []) as { id: string; course_name: string }[]
   const existingByName = new Map(existing.map((c) => [c.course_name, c.id]))
