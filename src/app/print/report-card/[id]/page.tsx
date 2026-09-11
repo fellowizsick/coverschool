@@ -164,7 +164,7 @@ export default async function PrintReportCardPage({
           </div>
 
           <div className="footer">
-            Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 201-9991
+            Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 295-7688
           </div>
         </div>
     </div>

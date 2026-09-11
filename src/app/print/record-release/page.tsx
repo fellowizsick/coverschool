@@ -133,7 +133,7 @@ export default function RecordReleasePrintPage() {
         <div className="school-name">Larose Christian Academy</div>
         <div className="school-sub">✦ An Alabama Church School ✦</div>
         <div className="school-address">
-          Mobile, Alabama | larosechristianacademy@gmail.com | (251) 201-9991
+          Mobile, Alabama | larosechristianacademy@gmail.com | (251) 295-7688
         </div>
         <div className="rule" />
         <div className="rule-thin" />
@@ -145,7 +145,7 @@ export default function RecordReleasePrintPage() {
             only mom's school number." The school's contact is its phone. */}
         <div className="field right">
           <span>Return to:</span>
-          <strong style={{ marginLeft: 6 }}>Larose Christian Academy · (251) 201-9991</strong>
+          <strong style={{ marginLeft: 6 }}>Larose Christian Academy · (251) 295-7688</strong>
         </div>
 
         {/* ── REQUESTING PARTY ── */}
@@ -262,7 +262,7 @@ export default function RecordReleasePrintPage() {
         </div>
 
         <div className="footer">
-          Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 201-9991<br />
+          Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 295-7688<br />
           An Alabama church school — covering homeschool families since 2024
         </div>
       </div>

@@ -121,7 +121,7 @@ export async function GET(
     y -= 25
     text('Church School Name:  Larose Christian Academy', leftMargin, y, { size: 10 })
     y -= 18
-    text('School Phone:  251-201-9991', leftMargin, y, { size: 10 })
+    text('School Phone:  251-295-7688', leftMargin, y, { size: 10 })
     y -= 18
     text('Address:  Mobile, AL', leftMargin, y, { size: 10 })
     y -= 25

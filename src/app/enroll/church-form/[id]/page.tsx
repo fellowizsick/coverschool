@@ -173,7 +173,7 @@ function ChurchFormViewContent() {
               </div>
               <div>
                 <span className="text-xs font-semibold text-gray-500 uppercase">School Phone</span>
-                <p className="text-base font-medium border-b border-gray-300 pb-1">251-201-9991</p>
+                <p className="text-base font-medium border-b border-gray-300 pb-1">251-295-7688</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 mt-3">

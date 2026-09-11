@@ -99,7 +99,7 @@ export default async function PrintEnrollmentPage({
           </div>
 
           <div className="footer">
-            Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 201-9991<br/>
+            Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 295-7688<br/>
             This is an official enrollment record. Keep for your records.
           </div>
         </div>

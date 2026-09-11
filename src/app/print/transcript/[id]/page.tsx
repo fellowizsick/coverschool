@@ -71,7 +71,7 @@ export default async function PrintTranscriptPage({
         <div className="page">
           <div className="school-name">Larose Christian Academy</div>
           <div className="school-sub">✦ An Alabama Church School ✦</div>
-          <div className="school-address">Mobile, Alabama | larosechristianacademy@gmail.com | (251) 201-9991</div>
+          <div className="school-address">Mobile, Alabama | larosechristianacademy@gmail.com | (251) 295-7688</div>
 
           <div className="seal">🎓</div>
           <h1>OFFICIAL STUDENT TRANSCRIPT</h1>
@@ -192,7 +192,7 @@ export default async function PrintTranscriptPage({
           </div>
 
           <div className="footer">
-            Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 201-9991<br/>
+            Larose Christian Academy • Mobile, AL • larosechristianacademy@gmail.com • (251) 295-7688<br/>
             This is an official document. Issued upon request.
           </div>
         </div>
