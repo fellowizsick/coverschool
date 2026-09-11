@@ -12,11 +12,22 @@ import type {
 
 type Mode = 'verify' | 'loading' | 'ready' | 'error'
 
+/** Per-subject credit standing vs the school's graduation requirements. */
+export interface GraduationProgress {
+  earned: number
+  totalRequired: number
+  met: boolean
+  completeBySubject: { subject: string; required: number; earned: number; met: boolean }[]
+}
+
 interface AttendanceResponse {
   ok: boolean
   rows?: AttendanceRow[]
   summary?: { days: number; hours: number; schoolYear: string }
   target?: { label: string; days?: number; hours?: number } | null
+  // The attendance API returns the student's display name; the type was missing it, so this
+  // line carried a standing type error before today's work.
+  student?: string
   error?: string
 }
 
@@ -25,6 +36,7 @@ interface GradebookResponse {
   rows?: GradebookRow[]
   summaries?: SubjectSummary[]
   gpa?: number | null
+  progress?: GraduationProgress | null
   error?: string
 }
 
@@ -58,6 +70,10 @@ export default function AcademicRecords() {
   const [gbRows, setGbRows] = useState<GradebookRow[]>([])
   const [gbSummaries, setGbSummaries] = useState<SubjectSummary[]>([])
   const [gbGpa, setGbGpa] = useState<number | null>(null)
+  // What the grades are actually worth — credits earned toward the 24 needed to graduate.
+  // Shown to the family so entering a grade has a visible consequence.
+  const [progress, setProgress] = useState<GraduationProgress | null>(null)
+  const [justSaved, setJustSaved] = useState('')
   const [gradeSubject, setGradeSubject] = useState('')
   const [gradeAssignment, setGradeAssignment] = useState('')
   const [gradeValue, setGradeValue] = useState('')
@@ -105,6 +121,7 @@ export default function AcademicRecords() {
         setGbRows(gdata.rows || [])
         setGbSummaries(gdata.summaries || [])
         setGbGpa(gdata.gpa ?? null)
+        setProgress(gdata.progress ?? null)
       }
       setMode('ready')
     } catch {
@@ -132,6 +149,7 @@ export default function AcademicRecords() {
       setGbRows(data.rows || [])
       setGbSummaries(data.summaries || [])
       setGbGpa(data.gpa ?? null)
+      setProgress(data.progress ?? null)
     }
   }, [email, studentFirst, studentLast, pin])
 
@@ -205,6 +223,10 @@ export default function AcademicRecords() {
         return
       }
       setNotice(`Added ${gradeAssignment} (${gradeValue}%)`)
+      setJustSaved(
+        `Saved — ${gradeSubject}: ${gradeAssignment} (${gradeValue}%). ` +
+        `Your credits above update automatically as you add grades.`,
+      )
       setGradeSubject('')
       setGradeAssignment('')
       setGradeValue('')
@@ -417,7 +439,7 @@ export default function AcademicRecords() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-emerald-600" />
-            <h3 className="text-lg font-bold text-gray-900">Gradebook</h3>
+            <h3 className="text-lg font-bold text-gray-900">Grades</h3>
           </div>
           {gbGpa !== null && (
             <div className="rounded-xl bg-emerald-50 px-4 py-1.5 text-sm font-bold text-emerald-800">
@@ -426,33 +448,117 @@ export default function AcademicRecords() {
           )}
         </div>
 
-        <form onSubmit={addGrade} className="mt-4 grid gap-3 sm:grid-cols-6">
-          <select
-            value={gradeSubject} onChange={(e) => setGradeSubject(e.target.value)} required
-            className="rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-emerald-500 focus:outline-none sm:col-span-2"
-          >
-            <option value="">Subject…</option>
-            {allSubjects.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-          <input
-            value={gradeAssignment} onChange={(e) => setGradeAssignment(e.target.value)}
-            placeholder="Assignment (e.g. Ch 4 Test)" required
-            className="rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-emerald-500 focus:outline-none sm:col-span-2"
-          />
-          <input
-            type="number" min="0" max="100" step="0.5" value={gradeValue}
-            onChange={(e) => setGradeValue(e.target.value)} placeholder="Grade %" required
-            className="rounded-xl border border-gray-300 px-3 py-2 text-gray-900 focus:border-emerald-500 focus:outline-none"
-          />
+        {/* ===== WHAT YOUR GRADES ARE WORTH =====
+             A parent used to type grades in and have no way to know any of it counted.
+             This is the whole point of the page: it shows the diploma being earned. */}
+        {progress && (
+          <div className="mt-5 rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <h4 className="text-base font-bold text-gray-900">Credits toward graduation</h4>
+              <div className="text-3xl font-black leading-none text-emerald-700">
+                {progress.earned}
+                <span className="text-base font-bold text-emerald-600/70"> / {progress.totalRequired}</span>
+              </div>
+            </div>
+
+            {/* one big bar for the whole diploma */}
+            <div className="mt-3 h-4 w-full overflow-hidden rounded-full bg-emerald-100">
+              <div
+                className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                style={{ width: `${progress.totalRequired > 0 ? Math.min(100, (progress.earned / progress.totalRequired) * 100) : 0}%` }}
+              />
+            </div>
+
+            <p className="mt-3 text-sm text-gray-600">
+              {progress.met
+                ? '🎓 Every requirement is complete. Your student is ready to graduate.'
+                : `Keep going — ${Math.max(0, Math.round((progress.totalRequired - progress.earned) * 100) / 100)} more credits to go. Grades turn into credits automatically as you enter them.`}
+            </p>
+
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              {progress.completeBySubject.map((s) => (
+                <div key={s.subject} className={`rounded-xl border px-3 py-2.5 ${s.met ? 'border-emerald-200 bg-white' : 'border-gray-200 bg-white'}`}>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1.5 text-sm font-semibold text-gray-800">
+                      {s.met && <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />}
+                      {s.subject}
+                    </span>
+                    <span className={`text-sm font-bold ${s.met ? 'text-emerald-700' : 'text-gray-500'}`}>
+                      {s.earned} / {s.required}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div
+                      className={`h-full rounded-full ${s.met ? 'bg-emerald-500' : 'bg-amber-400'}`}
+                      style={{ width: `${s.required > 0 ? Math.min(100, (s.earned / s.required) * 100) : 0}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ===== ADD A GRADE — three plain steps, big targets ===== */}
+        <form onSubmit={addGrade} className="mt-6 space-y-4">
+          <p className="text-sm font-semibold text-gray-500">Add a grade — three steps:</p>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <label className="block">
+              <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-gray-800">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[11px] font-bold text-white">1</span>
+                Which subject?
+              </span>
+              <select
+                value={gradeSubject} onChange={(e) => setGradeSubject(e.target.value)} required
+                className="w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-3 text-base text-gray-900 focus:border-emerald-500 focus:outline-none"
+              >
+                <option value="">Choose a subject…</option>
+                {allSubjects.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-gray-800">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[11px] font-bold text-white">2</span>
+                What was it?
+              </span>
+              <input
+                value={gradeAssignment} onChange={(e) => setGradeAssignment(e.target.value)}
+                placeholder="Ch 4 Test" required
+                className="w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-3 text-base text-gray-900 focus:border-emerald-500 focus:outline-none"
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-gray-800">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[11px] font-bold text-white">3</span>
+                What grade?
+              </span>
+              <input
+                type="number" min="0" max="100" step="0.5" value={gradeValue}
+                onChange={(e) => setGradeValue(e.target.value)} placeholder="88" required
+                className="w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-3 text-base text-gray-900 focus:border-emerald-500 focus:outline-none"
+              />
+              <span className="mt-1 block text-xs text-gray-400">A number out of 100 — 88, 92, 100.</span>
+            </label>
+          </div>
+
           <button
             type="submit" disabled={savingGrade}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-base font-bold text-white hover:bg-emerald-700 disabled:opacity-60 sm:w-auto"
           >
-            {savingGrade ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-            Add
+            {savingGrade ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />}
+            {savingGrade ? 'Saving…' : 'Save this grade'}
           </button>
+
+          {justSaved && (
+            <p className="flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-800">
+              <CheckCircle2 className="h-4 w-4 shrink-0" /> {justSaved}
+            </p>
+          )}
         </form>
 
         {gbSummaries.length > 0 ? (

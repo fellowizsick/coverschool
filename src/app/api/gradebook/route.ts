@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { verifyFamilyAccess } from '@/lib/academic-verify'
 import { getGradebook, summarizeGradebook, computeGradebookGpa } from '@/lib/academic'
+import { syncGradebookToCredits } from '@/lib/credit-sync'
+import { refreshGraduationStatus, getGraduationRequirements, getCreditLedger, computeGraduation } from '@/lib/graduation'
 
 const RATE_WINDOW_MS = 60 * 60 * 1000
 const RATE_LIMIT = 40
@@ -47,6 +49,14 @@ export async function GET(request: Request) {
     const summaries = summarizeGradebook(rows)
     const gpa = computeGradebookGpa(summaries)
 
+    // Show the family what their grades are actually WORTH. Before this the parent typed in
+    // grades and had no way to see that any of it counted toward a diploma.
+    const [reqs, ledger] = await Promise.all([
+      getGraduationRequirements(),
+      getCreditLedger(verified.enrollment.id),
+    ])
+    const progress = computeGraduation(reqs, ledger)
+
     return NextResponse.json({
       ok: true,
       enrollmentId: verified.enrollment.id,
@@ -54,6 +64,7 @@ export async function GET(request: Request) {
       rows,
       summaries,
       gpa,
+      progress,
     })
   } catch (e) {
     console.error('gradebook GET error:', e)
@@ -112,6 +123,18 @@ export async function POST(request: Request) {
       console.error('gradebook POST error:', error.message)
       return NextResponse.json({ ok: false, error: 'Could not save the grade.' }, { status: 500 })
     }
+
+    // Keep the credit ledger in step with the gradebook. Without this the transcript and the
+    // graduation check read two different worlds: a student could have four years of grades
+    // and still show zero credits toward a diploma. Never allowed to fail the save — a grade
+    // that was recorded must stay recorded even if the sync hiccups.
+    try {
+      await syncGradebookToCredits(verified.enrollment.id)
+      await refreshGraduationStatus(verified.enrollment.id)
+    } catch (syncErr) {
+      console.error('credit sync after grade save failed:', syncErr)
+    }
+
     return NextResponse.json({ ok: true, id: data.id })
   } catch (e) {
     console.error('gradebook POST error:', e)
@@ -142,8 +165,18 @@ export async function DELETE(request: Request) {
       .eq('enrollment_id', verified.enrollment.id)
     if (error) {
       console.error('gradebook DELETE error:', error.message)
-      return NextResponse.json({ ok: false, error: 'Could not delete.' }, { status: 500 })
+      return NextResponse.json({ ok: false, error: 'Could not remove the grade.' }, { status: 500 })
     }
+
+    // Deleting grades can drop a subject-year below the threshold for credit, so the derived
+    // ledger entry has to come back out too. Only [auto] rows are ever touched.
+    try {
+      await syncGradebookToCredits(verified.enrollment.id)
+      await refreshGraduationStatus(verified.enrollment.id)
+    } catch (syncErr) {
+      console.error('credit sync after grade delete failed:', syncErr)
+    }
+
     return NextResponse.json({ ok: true })
   } catch (e) {
     console.error('gradebook DELETE error:', e)
