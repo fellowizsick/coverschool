@@ -4,6 +4,10 @@ export interface SchoolConfig {
   description: string
   email: string
   phone: string
+  // Signatories printed on a diploma. Declared here because SCHOOL_CONFIG is typed by this
+  // interface — adding keys to the object alone is a type error, not a new field.
+  president: string
+  headmaster: string
   address: string
   logo_url?: string
   formspreeId?: string

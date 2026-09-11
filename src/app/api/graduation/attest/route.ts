@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   let emailSent = false
   const familyEmail = String(enroll.email || '').trim()
   if (familyEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(familyEmail)) {
-    emailSent = await sendDiplomaEmail(familyEmail, studentName, gradDate, format)
+    emailSent = await sendDiplomaEmail(familyEmail, studentName, gradDate, format, enrollmentId)
     await admin.from('diplomas').update({ email_sent_at: new Date().toISOString() }).eq('id', diploma.id)
   }
 
@@ -76,7 +76,11 @@ export async function POST(request: Request) {
 }
 
 // Reuse the SMTP setup pattern from signup-error.
-async function sendDiplomaEmail(to: string, studentName: string, gradDate: string, format: string) {
+// FIX (2026-09-11): this built the diploma link from `${diploma.enrollment_id}`, but `diploma`
+// was never a parameter of this function — the route had a live `Cannot find name 'diploma'`
+// type error, so every graduation email would have linked to /print/diploma/undefined.
+// No diploma had ever been issued, so nobody had hit it. The id is now passed explicitly.
+async function sendDiplomaEmail(to: string, studentName: string, gradDate: string, format: string, enrollmentId: string) {
   try {
     const smtpHost = process.env.SMTP_HOST
     const smtpPort = process.env.SMTP_PORT
@@ -105,7 +109,7 @@ async function sendDiplomaEmail(to: string, studentName: string, gradDate: strin
           <p style="color:#374151;font-size:15px;line-height:1.6">
             Click below to view and print your diploma.
           </p>
-          <p style="margin:24px 0"><a href="https://laroseca.org/print/diploma/${diploma.enrollment_id}" style="background:#059669;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">View &amp; Print Diploma</a></p>
+          <p style="margin:24px 0"><a href="https://laroseca.org/print/diploma/${enrollmentId}" style="background:#059669;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">View &amp; Print Diploma</a></p>
           <p style="color:#6b7280;font-size:13px;margin-top:24px">— The ${SCHOOL_CONFIG.name} team</p>
         </div>`,
     })

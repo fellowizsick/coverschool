@@ -6,18 +6,25 @@ import type { CSSProperties } from 'react'
 export const dynamic = 'force-dynamic'
 
 /**
- * Printable graduation diploma.
+ * Printable diploma.
  *
- * TYPOGRAPHY PASS (2026-09-11). Jonathan sent a photo of his OWN 2014 high-school diploma as
- * the reference and said: "I also want to make this better if we can like the words bigger
- * more like a real diploma".
+ * ⚠️ THIS IS A CREDENTIAL. It is only rendered for a student who has completed the school's
+ * program. Do not add a path that issues one for payment alone. (Jonathan, 2026-09-11:
+ * "not actually just selling the damn diploma they must test and school first".)
  *
- * The old version was laid out like a web page: 13-16px body text on a 900px-wide certificate,
- * which reads as small print rather than a certificate. Real diplomas are set LARGE, with the
- * recipient's name dominating and generous spacing everywhere. Every size below has been
- * scaled up roughly 40-60%, and the letter-spacing on the formal lines widened to match.
+ * STRUCTURE follows the template Jonathan designed and asked to be the basis for the school:
  *
- * The layout, colours and wording are deliberately unchanged — only the scale.
+ *     Mobile Alabama
+ *     This Certifies That
+ *     [student name]
+ *     having satisfactorily completed the course of study in conformity with the standards and
+ *     requirements set forth for High Schools in the State of Alabama and having complied with
+ *     all requirements of this Institution is hereby awarded this
+ *     High School Diploma
+ *     In Testimony Whereof we have affixed our signatures.
+ *     [date of award]        [president]      [headmaster]
+ *
+ * Set LARGE — a certificate, not a web page. Body 16px on a 1000px sheet reads as small print.
  */
 export default async function DiplomaPrintPage({
   params,
@@ -42,49 +49,115 @@ export default async function DiplomaPrintPage({
     .eq('id', enrollmentId)
     .single()
 
-  const name = diploma.student_name || `${enroll?.student_first_name || ''} ${enroll?.student_last_name || ''}`.trim()
-  const gradDate = new Date((diploma.graduation_date || enroll?.graduation_date || Date.now()) + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  const name =
+    diploma.student_name ||
+    `${enroll?.student_first_name || ''} ${enroll?.student_last_name || ''}`.trim()
+  const rawDate = diploma.graduation_date || enroll?.graduation_date
+  const gradDate = rawDate
+    ? new Date(rawDate + 'T00:00:00').toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric',
+      })
+    : ''
+
+  // Both signatories come from config — the two names Jonathan authorized. `attested_by` on the
+  // diplomas table remains the AUDIT record of which admin issued it; it is not the printed name.
+  const sigLeft = SCHOOL_CONFIG.president
+  const sigRight = SCHOOL_CONFIG.headmaster
+
+  const serif = 'Georgia, "Times New Roman", serif'
+  const ink = '#1c2437'
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#0f172a,#1e1b4b,#312e81)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', fontFamily: 'Georgia, "Times New Roman", serif' }}>
-      <div id="cert" style={{ width: '100%', maxWidth: '1000px', aspectRatio: '11/8.5', background: '#fdf9f0', color: '#1e293b', position: 'relative', borderRadius: '18px', overflow: 'hidden', padding: '44px 62px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 24px 60px rgba(0,0,0,.5)' }}>
-        {/* double border */}
-        <div style={{ border: '3px solid #b45309', borderRadius: '10px', position: 'absolute', inset: '18px' }} />
-        <div style={{ border: '1.5px solid #d97706', borderRadius: '8px', position: 'absolute', inset: '26px' }} />
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#0f172a,#1e1b4b,#312e81)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', fontFamily: serif }}>
+      <div id="cert" style={{ width: '100%', maxWidth: '1000px', aspectRatio: '11/8.5', background: '#fdfaf3', color: ink, position: 'relative', borderRadius: '16px', overflow: 'hidden', padding: '52px 68px', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 60px rgba(0,0,0,.5)' }}>
 
+        {/* double rule border */}
+        <div style={{ border: '3px double #9a7b2e', borderRadius: '8px', position: 'absolute', inset: '16px' }} />
+        <div style={{ border: '1px solid #c2a34e', borderRadius: '6px', position: 'absolute', inset: '24px' }} />
+
+        {/* ── header: place, then the certifying line ── */}
+        <div style={{ position: 'relative', textAlign: 'center', marginTop: '10px' }}>
+          <div style={{ fontSize: '20px', letterSpacing: '8px', textTransform: 'uppercase', color: '#8a6d24', fontWeight: 600 }}>
+            Mobile, Alabama
+          </div>
+          <div style={{ fontSize: '24px', letterSpacing: '2px', color: '#4a5568', marginTop: '16px' }}>
+            This Certifies That
+          </div>
+        </div>
+
+        {/* ── the name: the largest thing on the page ── */}
+        <div style={{ position: 'relative', textAlign: 'center', margin: '18px 0 8px' }}>
+          <div style={{ fontSize: '64px', fontWeight: 700, color: '#12263f', lineHeight: 1.15, letterSpacing: '1px' }}>
+            {name}
+          </div>
+          <div style={{ width: '58%', height: '2px', background: 'linear-gradient(90deg,transparent,#c2a34e,transparent)', margin: '14px auto 0' }} />
+        </div>
+
+        {/* ── the formal paragraph ── */}
+        <div style={{ position: 'relative', textAlign: 'center', fontSize: '21px', lineHeight: 1.85, color: '#2d3748', padding: '0 30px', margin: '14px 0 0' }}>
+          having satisfactorily completed the course of study in conformity with the standards
+          and requirements set forth for High Schools in the State of Alabama, and having
+          complied with all requirements of this Institution, is hereby awarded this
+        </div>
+
+        {/* ── the award ── */}
+        <div style={{ position: 'relative', textAlign: 'center', margin: '22px 0 0' }}>
+          <div style={{ fontSize: '42px', fontWeight: 700, letterSpacing: '4px', textTransform: 'uppercase', color: '#8a6d24', fontFamily: serif }}>
+            High School Diploma
+          </div>
+          <div style={{ fontSize: '19px', fontStyle: 'italic', color: '#5a6478', marginTop: '14px' }}>
+            In Testimony Whereof we have affixed our signatures
+          </div>
+        </div>
+
+        {/* ── the school seal. Real diplomas carry one, and it belongs in exactly this space —
+             without it the middle reads as an awkward hole. mixBlendMode:multiply drops the
+             logo's white background into the cream paper instead of showing a white box. ── */}
         <div style={{ position: 'relative', textAlign: 'center', marginTop: '6px' }}>
-          <div style={{ fontSize: '21px', letterSpacing: '5px', textTransform: 'uppercase', color: '#7c3aed', fontWeight: 700 }}>✦ {SCHOOL_CONFIG.name} ✦</div>
-          <div style={{ fontSize: '46px', fontWeight: 900, margin: '12px 0 6px', letterSpacing: '1px', background: 'linear-gradient(90deg,#4f46e5,#0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>Graduation Diploma</div>
-          <div style={{ fontSize: '18px', color: '#64748b', letterSpacing: '1px' }}>of Completion of the School Program</div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/lca-logo.png"
+            alt=""
+            width={205}
+            height={205}
+            style={{ mixBlendMode: 'multiply', opacity: 0.95 }}
+          />
         </div>
 
-        <div style={{ position: 'relative', textAlign: 'center', margin: '4px 0' }}>
-          <div style={{ fontSize: '22px', color: '#334155', marginBottom: '10px', letterSpacing: '2px' }}>This certifies that</div>
-          <div style={{ fontSize: '62px', fontWeight: 900, color: '#1e3a5f', borderBottom: '3px solid #c4b5fd', display: 'inline-block', padding: '0 48px 10px', margin: '0 0 18px', lineHeight: 1.1 }}>{name}</div>
-          <div style={{ fontSize: '22px', color: '#475569', lineHeight: 1.75 }}>
-            having satisfactorily completed the required course of study,<br/>
-            is hereby awarded this Diploma by {SCHOOL_CONFIG.name}.
-          </div>
-        </div>
-
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '0 18px', marginBottom: '4px' }}>
-          <div style={{ textAlign: 'center', fontSize: '18px', color: '#334155' }}>
-            <div style={{ borderTop: '1.5px solid #475569', paddingTop: '8px', minWidth: '210px' }}>Date: {gradDate}</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ width: '92px', height: '92px', borderRadius: '50%', border: '4px dashed #d97706', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }}>
-              <span style={{ fontSize: '36px' }}>🎓</span>
+        {/* ── signatures ──
+             Each block needs real horizontal separation. Set flush, the three borderTop rules
+             form one continuous line across the sheet, which is what makes a certificate look
+             printed-at-home rather than issued. The gap is the fix. ── */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '0 26px', marginTop: 'auto', paddingBottom: '18px', gap: '52px' }}>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div style={{ fontSize: '18px', color: ink, paddingBottom: '7px', minHeight: '30px' }}>{gradDate}</div>
+            <div style={{ borderTop: '1px solid #4a5568', paddingTop: '7px', fontSize: '16px', color: '#4a5568', letterSpacing: '1px' }}>
+              Date of Award
             </div>
           </div>
-          <div style={{ textAlign: 'center', fontSize: '18px', color: '#334155' }}>
-            <div style={{ borderTop: '1.5px solid #475569', paddingTop: '8px', minWidth: '210px' }}>Anne Brown, Administrator</div>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div style={{ fontSize: '18px', color: ink, paddingBottom: '7px', minHeight: '30px' }}>{sigLeft}</div>
+            <div style={{ borderTop: '1px solid #4a5568', paddingTop: '7px', fontSize: '16px', color: '#4a5568', letterSpacing: '1px' }}>
+              President
+            </div>
+          </div>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div style={{ fontSize: '18px', color: ink, paddingBottom: '7px', minHeight: '30px' }}>{sigRight}</div>
+            <div style={{ borderTop: '1px solid #4a5568', paddingTop: '7px', fontSize: '16px', color: '#4a5568', letterSpacing: '1px' }}>
+              Headmaster
+            </div>
           </div>
         </div>
 
-        <div style={{ position: 'relative', textAlign: 'center', fontSize: '13px', color: '#94a3b8', letterSpacing: '1px' }}>Diploma #{diploma.diploma_number}</div>
+        <div style={{ position: 'relative', textAlign: 'center', fontSize: '12px', color: '#9aa2b1', letterSpacing: '1.5px' }}>
+          {SCHOOL_CONFIG.name} · Diploma {diploma.diploma_number}
+        </div>
       </div>
 
-      <button onClick={() => window.print()} style={{ position: 'fixed', bottom: '24px', right: '24px', background: '#059669', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '10px', fontSize: '15px', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(0,0,0,.3)' } as CSSProperties}>
+      <button
+        onClick={() => window.print()}
+        style={{ position: 'fixed', bottom: '24px', right: '24px', background: '#059669', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '10px', fontSize: '15px', cursor: 'pointer', fontFamily: serif, boxShadow: '0 8px 24px rgba(0,0,0,.3)' } as CSSProperties}
+      >
         🖨️ Print Diploma
       </button>
     </div>

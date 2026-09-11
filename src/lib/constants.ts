@@ -7,6 +7,12 @@ export const SCHOOL_CONFIG: SchoolConfig = {
     'Larose Christian Academy is an Alabama-based church school providing cover school services for homeschooling families. Founded by an ordained minister, we provide the legal oversight, record-keeping, and support families need to homeschool with confidence.',
   email: 'larosechristianacademy@gmail.com',
   phone: '251-295-7688',
+  // The two people who sign a Larose diploma. Jonathan authorized both signatures
+  // 2026-09-11 ("Mom gave me permission and I give you permission to sign mine and her names").
+  // Kept here, not inline in the template, so a change of signatory is one edit in one place —
+  // the same drift that put a wrong phone number in nine files.
+  president: 'Anne Brown',
+  headmaster: 'Jonathan Brown',
   address: 'Mobile, AL',
   formspreeId: 'mykqplgw',
 }
