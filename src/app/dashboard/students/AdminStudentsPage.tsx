@@ -7,9 +7,10 @@ import { Input } from '@/components/ui/Input'
 import {
   GraduationCap, Search, ChevronDown, ChevronUp,
   Mail, MapPin, User, BookOpen, CheckCircle,
-  Clock, AlertCircle, FileText, Download, Pencil
+  Clock, AlertCircle, FileText, Download, Pencil,
+  CalendarDays, AlertTriangle
 } from 'lucide-react'
-import { hasPaid } from '@/lib/enrollment-status'
+import { hasPaid, isUnpaid } from '@/lib/enrollment-status'
 import PaidToggle from '@/components/PaidToggle'
 import EditStudentPanel, { type EditableStudent } from '@/components/EditStudentPanel'
 
@@ -28,6 +29,44 @@ type Enrollment = {
   email: string
   phone?: string
   created_at: string
+  // Was missing, so the roster could not show it even though `select('*')` fetches it.
+  // Mom's whole reason for coming here is to fix/add birthdays — she has to be able to
+  // SEE which ones are wrong without opening every row.
+  student_dob?: string | null
+}
+
+/**
+ * How a student's date of birth looks to an admin.
+ *
+ * 'missing'  - no birthday on file.
+ * 'wrong'    - looks like a placeholder rather than a real birthday. Cash enrollments taken
+ *              before the form got real <label>s captured TODAY'S date as the DOB, so those
+ *              rows hold the enrollment date. A school-age child cannot be under 3, and a
+ *              birthday that equals the enrollment date is the signature of that bug.
+ */
+function dobStatus(e: Enrollment): 'ok' | 'missing' | 'wrong' {
+  const raw = (e.student_dob ?? '').slice(0, 10)
+  if (!raw) return 'missing'
+  const d = new Date(raw + 'T00:00:00')
+  if (isNaN(d.getTime())) return 'wrong'
+  // birthday identical to the day they enrolled => almost certainly the old placeholder
+  const created = (e.created_at ?? '').slice(0, 10)
+  if (created && raw === created) return 'wrong'
+  const now = new Date()
+  let age = now.getFullYear() - d.getFullYear()
+  const m = now.getMonth() - d.getMonth()
+  if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--
+  if (age < 3 || age > 100 || d > now) return 'wrong'
+  return 'ok'
+}
+
+/** Show a plain, readable birthday (never a raw ISO string). */
+function prettyDob(raw?: string | null): string {
+  const s = (raw ?? '').slice(0, 10)
+  if (!s) return '—'
+  const d = new Date(s + 'T00:00:00')
+  if (isNaN(d.getTime())) return s
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
 type ProgressRow = {
@@ -95,6 +134,9 @@ export default function AdminStudentsPage({
   const [enrollments, setEnrollments] = useState<Enrollment[]>(initialEnrollments)
   // Which student's edit panel is open (null = closed)
   const [editing, setEditing] = useState<EditableStudent | null>(null)
+  // Paid / not-paid view. The roster now includes EVERY enrollment (Jonathan, 2026-09-11), so
+  // this lets Mom narrow to one group without the other disappearing from the page entirely.
+  const [payFilter, setPayFilter] = useState<'all' | 'paid' | 'unpaid'>('all')
 
   const filtered = useMemo(() => {
     return enrollments.filter((e) => {
@@ -114,16 +156,30 @@ export default function AdminStudentsPage({
       }
       // Status filter
       if (statusFilter !== 'all' && e.status !== statusFilter) return false
+      // Payment filter — hasPaid() counts card ('paid') AND cash ('cash').
+      if (payFilter === 'paid' && !hasPaid(e.payment_status)) return false
+      if (payFilter === 'unpaid' && hasPaid(e.payment_status)) return false
       return true
     })
-  }, [enrollments, search, statusFilter])
+  }, [enrollments, search, statusFilter, payFilter])
 
   const stats = useMemo(() => ({
     total: initialEnrollments.length,
     approved: initialEnrollments.filter(e => e.status === 'approved').length,
     pending: initialEnrollments.filter(e => e.status === 'pending').length,
-    unpaid: initialEnrollments.filter(e => e.payment_status === 'unpaid').length,
+    // BUG FIX (2026-09-11): this read payment_status === 'unpaid'. That value is ILLEGAL —
+    // the DB check constraint allows only pending | paid | refunded | cancelled | cash — so
+    // the tile was permanently 0. "Not paid" means 'pending'. Use the shared helper so this
+    // can never drift again (same class of bug as the roster hiding every cash student).
+    unpaid: initialEnrollments.filter(e => isUnpaid(e.payment_status)).length,
   }), [initialEnrollments])
+
+  // How many students are missing a usable birthday. Drives the amber banner so Mom can see
+  // there is work waiting without reading every row.
+  const needsDobCount = useMemo(
+    () => enrollments.filter((e) => dobStatus(e) !== 'ok').length,
+    [enrollments]
+  )
 
   return (
     <div className="space-y-6">
@@ -182,6 +238,15 @@ export default function AdminStudentsPage({
               />
             </div>
             <select
+              value={payFilter}
+              onChange={(e) => setPayFilter(e.target.value as 'all' | 'paid' | 'unpaid')}
+              className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="all">Paid &amp; not paid</option>
+              <option value="paid">Paid only</option>
+              <option value="unpaid">Not paid yet</option>
+            </select>
+            <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -197,6 +262,24 @@ export default function AdminStudentsPage({
             {filtered.length} of {initialEnrollments.length} students
             {search && ` matching "${search}"`}
           </p>
+
+          {/* Plain-language help. Mom went looking for "how do I edit a student / add their
+              date" and could not find it, so the page now says it outright instead of
+              relying on her recognising a pencil icon. */}
+          <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-emerald-50 p-3 text-xs text-emerald-900">
+            <Pencil className="h-3.5 w-3.5 shrink-0" />
+            <span>
+              To change any student&apos;s information — including their{' '}
+              <strong>date of birth</strong> — click the{' '}
+              <strong>Edit</strong> button on their row.
+            </span>
+            {needsDobCount > 0 && (
+              <span className="ml-auto flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
+                <AlertTriangle className="h-3 w-3" />
+                {needsDobCount} student{needsDobCount === 1 ? '' : 's'} need a birthday
+              </span>
+            )}
+          </div>
         </CardContent>
       </Card>
 
@@ -244,6 +327,34 @@ export default function AdminStudentsPage({
                         <span className="flex items-center gap-1">
                           <MapPin className="h-3 w-3" /> {e.city}, {e.state}
                         </span>
+                        {/* Birthday right on the row: Mom needs to see at a glance whose date
+                            is missing or wrong, not open every student to find out. */}
+                        {(() => {
+                          const s = dobStatus(e)
+                          if (s === 'ok') {
+                            return (
+                              <span className="flex items-center gap-1" title="Date of birth">
+                                <CalendarDays className="h-3 w-3" /> {prettyDob(e.student_dob)}
+                              </span>
+                            )
+                          }
+                          if (s === 'missing') {
+                            return (
+                              <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
+                                <AlertTriangle className="h-3 w-3" /> No birthday on file
+                              </span>
+                            )
+                          }
+                          return (
+                            <span
+                              className="flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 font-semibold text-red-700"
+                              title={`Saved as ${prettyDob(e.student_dob)} — looks like a placeholder, not a real birthday`}
+                            >
+                              <AlertTriangle className="h-3 w-3" /> Birthday looks wrong
+                              ({prettyDob(e.student_dob)})
+                            </span>
+                          )
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -270,15 +381,25 @@ export default function AdminStudentsPage({
                       }
                     />
                     {/* Correct the student's details (name, birthday, grade, contact…).
-                        There was no way to edit an enrollment before this. */}
+                        KNOWN PROBLEM this fixes (2026-09-11): this used to be a bare 16px
+                        grey pencil icon (text-gray-400) with no label, so Mom could not find
+                        how to edit a student at all — she said so directly. A tooltip was the
+                        only hint, and tooltips need hovering (useless on a touchscreen).
+                        Now: a real labelled button in a visible colour, and it spells out
+                        that you can fix the birthday here. */}
                     <button
                       type="button"
                       onClick={() => setEditing(e as EditableStudent)}
-                      title="Edit this student's details"
+                      title="Edit this student's details, including their date of birth"
                       aria-label={`Edit ${e.student_first_name} ${e.student_last_name}`}
-                      className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-emerald-600"
+                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                        dobStatus(e) === 'ok'
+                          ? 'border-gray-300 text-gray-700 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700'
+                          : 'border-emerald-500 bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                      }`}
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Pencil className="h-3.5 w-3.5" />
+                      {dobStatus(e) === 'ok' ? 'Edit' : 'Edit / add birthday'}
                     </button>
                     {expandedId === e.id ? (
                       <ChevronUp className="h-4 w-4 text-gray-400" />
@@ -411,11 +532,34 @@ export default function AdminStudentsPage({
         <EditStudentPanel
           student={editing}
           onClose={() => setEditing(null)}
-          onSaved={(updated) =>
+          onSaved={(updated) => {
+            // Copy the fields the roster actually renders, one by one.
+            // Spreading `{...x, ...updated}` widened the row's types (the panel's
+            // EditableStudent allows `student_grade: string | null` where the roster
+            // requires a non-null string), which tsc rejected. Being explicit keeps the
+            // row type honest and makes it obvious what a save can change here.
             setEnrollments((prev) =>
-              prev.map((x) => (x.id === editing.id ? { ...x, ...updated } : x))
+              prev.map((x) => {
+                if (x.id !== editing.id) return x
+                const str = (v: string | null | undefined, fallback: string) =>
+                  typeof v === 'string' && v.length > 0 ? v : fallback
+                return {
+                  ...x,
+                  student_first_name: str(updated.student_first_name, x.student_first_name),
+                  student_last_name: str(updated.student_last_name, x.student_last_name),
+                  student_grade: str(updated.student_grade, x.student_grade),
+                  parent_first_name: str(updated.parent_first_name, x.parent_first_name),
+                  parent_last_name: str(updated.parent_last_name, x.parent_last_name),
+                  email: str(updated.email, x.email),
+                  phone: str(updated.phone, x.phone ?? ''),
+                  city: str(updated.city, x.city),
+                  state: str(updated.state, x.state),
+                  // the one Mom actually came here for
+                  student_dob: updated.student_dob ?? x.student_dob ?? null,
+                }
+              })
             )
-          }
+          }}
         />
       )}
     </div>

@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
-import { PAID_STATUSES } from '@/lib/enrollment-status'
 import { redirect } from 'next/navigation'
 import AdminStudentsPage from './AdminStudentsPage'
 import StudentPodcastCodes from '@/components/StudentPodcastCodes'
@@ -26,18 +25,19 @@ export default async function StudentsPage() {
     redirect('/dashboard')
   }
 
-  // 🔒 RULE (2026-09-03, Jonathan directive): students only appear on the
-  // admin roster AFTER they've PAID. Unpaid/pending applicants are NOT students
-  // yet — they stay in the enrollment-review queue (dashboard "Needs Approval"
-  // / "Unpaid" cards). Only a paid enrollment shows here.
+  // ✅ CHANGE 2026-09-11 (Jonathan directive): show EVERY enrollment, paid or not.
   //
-  // ⚠️ 2026-09-10 FIX: "paid" means card OR cash. The cash feature stores
-  // payment_status = 'cash', so filtering on 'paid' alone hid every cash student
-  // from the roster. Use PAID_STATUSES so it can never drift again.
+  // This page previously filtered to PAID_STATUSES so only paying students appeared on the
+  // roster. Jonathan: "fix the non-paid enrollments problem to where they show up on her
+  // dashboard as well, the non-paid people." Mom needs one place that lists every student,
+  // including applicants who have not paid yet, with the payment state visible per row
+  // (the green/red pill still flips them to paid in one click).
+  //
+  // Paid vs unpaid is now a FILTER on the page, not a hard exclusion, so she can narrow to
+  // either group without losing sight of the rest.
   const { data: enrollments } = await supabase
     .from('enrollments')
     .select('*')
-    .in('payment_status', PAID_STATUSES as unknown as string[])
     .order('created_at', { ascending: false })
 
   // Also fetch curriculum progress for all students
@@ -52,7 +52,9 @@ export default async function StudentsPage() {
     .select('*')
     .order('created_at', { ascending: false })
 
-  const churchByEnrollment: Record<string, (typeof churchForms)[number]> = {}
+  // `churchForms` is `any[] | null`, so `(typeof churchForms)[number]` is not indexable —
+  // NonNullable unwraps the null first. Pre-existing type error, fixed while here.
+  const churchByEnrollment: Record<string, NonNullable<typeof churchForms>[number]> = {}
   churchForms?.forEach((f) => {
     if (f.enrollment_id && !churchByEnrollment[f.enrollment_id]) {
       churchByEnrollment[f.enrollment_id] = f
@@ -65,7 +67,9 @@ export default async function StudentsPage() {
         <div>
           <h1 className="text-xl font-bold text-gray-900">👩‍🏫 All Students</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Search, view, and manage every student enrolled at Larose Christian Academy.
+            Every enrollment at Larose Christian Academy — including families who have not
+            paid yet. Use the filters to narrow the list, or click <strong>Edit</strong> on a
+            row to change a student&apos;s details.
           </p>
         </div>
         <span className="text-xs text-gray-400 bg-gray-50 px-3 py-1.5 rounded-full">

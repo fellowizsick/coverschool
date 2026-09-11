@@ -8,6 +8,8 @@ import {
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { hasPaid } from '@/lib/enrollment-status'
+import EditStudentButton from '@/components/EditStudentButton'
+import type { EditableStudent } from '@/components/EditStudentPanel'
 
 export default async function StudentProfilePage({
   params,
@@ -48,7 +50,7 @@ export default async function StudentProfilePage({
   return (
     <div className="space-y-6">
       {/* Back + Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Link href="/dashboard">
             <Button variant="outline" size="sm">
@@ -62,6 +64,10 @@ export default async function StudentProfilePage({
             'bg-red-100 text-red-700'
           }`}>{enrollment.status}</span>
         </div>
+        {/* Mom reached this page by clicking a student on the Overview and found no way to
+            change anything. The edit feature only lived on the roster page, which she never
+            got to. It is now here too. */}
+        <EditStudentButton student={enrollment as EditableStudent} />
       </div>
 
       {/* Main Info Card */}

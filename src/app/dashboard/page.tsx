@@ -238,6 +238,25 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* QUICK ACTION — Mom had no obvious route from this page to the full student list; the
+          only link lived in the top nav. She landed here, saw "All Enrollments", clicked a
+          student, and found no way to edit anything. This puts the destination in front of
+          her. (2026-09-11) */}
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+        <Users className="h-5 w-5 shrink-0 text-emerald-700" />
+        <p className="text-sm text-emerald-900">
+          Looking for a student? Open <strong>All Students</strong> to see everyone —{' '}
+          <strong>including families who have not paid yet</strong> — and to edit a
+          student&apos;s details or add their birthday.
+        </p>
+        <Link href="/dashboard/students" className="ml-auto shrink-0">
+          <Button size="sm">
+            Open All Students
+            <ArrowRight className="ml-1 h-3.5 w-3.5" />
+          </Button>
+        </Link>
+      </div>
+
       {/* STAT CARDS */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((stat) => (
