@@ -175,21 +175,49 @@ export async function buildDiplomaPdf(
   const gradDate = formatDiplomaDate(input.graduationDate)
 
   // ---- fonts -------------------------------------------------------------
-  const blackletterPath = path.join(process.cwd(), 'public', 'fonts', 'OldEnglishTextMT.ttf')
-  const blackletter = fs.existsSync(blackletterPath)
-    ? await doc.embedFont(fs.readFileSync(blackletterPath), { subset: true })
+  // MUST match what the web page renders, or the emailed certificate looks like a different
+  // document from the one Mom previewed and approved. The web page uses:
+  //   Old English Text MT  - all blackletter
+  //   EB Garamond          - the standards paragraph and the flanking words
+  //   Mrs Saint Delafield  - the signature script
+  // A first version fell back to Times for the last two (they were not on disk), which is exactly
+  // the "it changed the signatures and looks different" the user spotted.
+  const fontDir = path.join(process.cwd(), 'public', 'fonts')
+  const load = (file: string) => {
+    try {
+      const p = path.join(fontDir, file)
+      return fs.existsSync(p) ? fs.readFileSync(p) : null
+    } catch { return null }
+  }
+
+  const blBytes = load('OldEnglishTextMT.ttf')
+  const scriptBytes = load('MrsSaintDelafield-Regular.ttf')
+  const bodyBytes = load('EBGaramond[wght].ttf') || load('EBGaramond-Regular.ttf')
+
+  const blackletter = blBytes
+    ? await doc.embedFont(blBytes, { subset: true })
     : await doc.embedFont(StandardFonts.TimesRoman)
-  const serif = await doc.embedFont(StandardFonts.TimesRoman)
-  const serifItalic = await doc.embedFont(StandardFonts.TimesRomanItalic)
+  const script = scriptBytes
+    ? await doc.embedFont(scriptBytes, { subset: true })
+    : await doc.embedFont(StandardFonts.TimesRomanItalic)
+  const serif = bodyBytes
+    ? await doc.embedFont(bodyBytes, { subset: false })
+    : await doc.embedFont(StandardFonts.TimesRoman)
+  const serifItalic = script   // the signature script, matching the web page
 
   // ---- paper + frame -----------------------------------------------------
   page.drawRectangle({ x: 0, y: 0, width: SHEET_W_PT, height: SHEET_H_PT, color: rgb(0.957, 0.937, 0.886) })
+  // Height must be a POSITIVE length. Computing it as dy(top) - dy(bottom) inverted it — dy() flips
+  // the axis, so the subtraction came out negative and the frame collapsed (visible only along the
+  // bottom edge). Equal insets on all sides means height = the same span as the width.
   page.drawRectangle({
-    x: dx(20), y: dy(DESIGN_H - 20), width: dx(DESIGN_W - 40), height: dy(DESIGN_H - 40) - dy(20),
+    x: dx(20), y: dy(DESIGN_H - 20),
+    width: dx(DESIGN_W - 40), height: dx(DESIGN_H - 40),
     borderColor: rgb(0.42, 0.384, 0.314), borderWidth: 0.7,
   })
   page.drawRectangle({
-    x: dx(24), y: dy(DESIGN_H - 24), width: dx(DESIGN_W - 48), height: dy(DESIGN_H - 24) - dy(24),
+    x: dx(24), y: dy(DESIGN_H - 24),
+    width: dx(DESIGN_W - 48), height: dx(DESIGN_H - 48),
     borderColor: rgb(0.541, 0.51, 0.447), borderWidth: 0.4,
   })
 
