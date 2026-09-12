@@ -101,6 +101,16 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
       })
     : ''
 
+  // The emblem, raised and enlarged. Only the file's transparent padding is wasted, so a bigger
+  // box means a visibly bigger mark: the artwork occupies 83.4% of the file's height. TOP is
+  // negative because the extra size goes UPWARD, away from the words below.
+  const EMBLEM_BOX_PX = 126        // was 110
+  // The row is 110px tall (the image's old height) plus a 4px margin — the exact block height it had
+  // before, so nothing below moves. It is centred on the words' own centre (221.3 design px). The file's artwork sits 49.32% down its box, so with a 126px box its centre within the
+  // row is top + 62.14. -11px puts that centre at 215.2 design px — 5.1 above the words, the same
+  // figure the PDF uses.
+  const EMBLEM_TOP_PX = '-11px'
+
   const bl = '"LCA Old English", "Old English Text MT", "Cloister Black", Georgia, serif'
   const sig = 'var(--font-signature), "Segoe Script", cursive'
   const serif = 'var(--font-garamond), Georgia, serif'
@@ -165,9 +175,16 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
             </text>
           </svg>
 
-          {/* ── CITY — SEAL — STATE. The seal is centred on this line, as in the reference. ── */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '42px', marginTop: '4px' }}>
+          {/* ── CITY — SEAL — STATE. The seal is centred on this line, as in the reference. ──
+              The row's height is PINNED at the old value and the words keep their exact spacing, so
+              the emblem can be made larger and lifted without moving the words by a single pixel —
+              the logo is positioned out of flow and a 110px spacer holds the gap the image used to.
+              Jonathan, 2026-09-12: "the logo needs to come up a little bit and make it a little bit
+              bigger to fill that area just a little bit more ... the words do not need to move at
+              all anymore, they're perfect with that." */}
+          <div style={{ position: 'relative', height: '110px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '42px', marginTop: '4px', flexShrink: 0 }}>
             <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '34px', color: '#1a1a1a' }}>Mobile</div>
+            <div style={{ width: '110px', flexShrink: 0 }} aria-hidden />
             {/* our own seal, not the Alabama state seal — see the note in the project reference.
                 mixBlendMode: multiply drops the PNG's white background into the cream paper, so it
                 reads as printed on the sheet instead of pasted on. Without it there is a visible
@@ -176,9 +193,11 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
             <img
               src="/lca-logo-transparent.png"
               alt={`${SCHOOL_CONFIG.name} seal`}
-              width={110}
-              height={110}
-              style={{ objectFit: 'contain' }}
+              style={{
+                position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+                top: EMBLEM_TOP_PX, width: EMBLEM_BOX_PX, height: EMBLEM_BOX_PX,
+                objectFit: 'contain',
+              }}
             />
             <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '34px', color: '#1a1a1a' }}>Alabama</div>
           </div>

@@ -197,7 +197,13 @@ export async function buildDiplomaPdf(
   // so the baseline to draw at is:  TARGET_CENTRE + FACTOR * size.
   // ---------------------------------------------------------------------------------------------
   const CENTRE = {
-    emblemRow: 221.3,          // Mobile - emblem - Alabama all share this centre on the page
+    emblemRow: 221.3,          // where the WORDS sit (Mobile / Alabama) — unchanged
+    // The emblem's visible artwork is lifted above the words' line so it centres on them and fills
+    // the gap above; the box is bigger so the mark itself reads larger.
+    // Calibrated by measurement, not guesswork: told 212 the artwork's ink centred at 209.6, so
+    // 217.6 lands it at 215.0 — 5.1 design px above the words' centre (220.1), which is the
+    // subtle lift Jonathan asked for. The page's -11px produces the same 215.2.
+    emblemArtwork: 217.6,
     certifiesThat: 300.6,
     name: 361.2,
     paragraph: 408.6,          // first line; the rest step by STANDARDS_LINE_HEIGHT
@@ -210,6 +216,8 @@ export async function buildDiplomaPdf(
     title: 743.4,
     number: 776.2,
   }
+  const EMBLEM_BOX = 126        // design px — the page uses the same figure
+
   const F_BLACK = 0.362
   const F_SERIF = 0.355
   const F_SCRIPT = 0.143
@@ -253,12 +261,13 @@ export async function buildDiplomaPdf(
     if (emblemBytes) {
       try {
         const png = await doc.embedPng(emblemBytes)
-        const box = 110                                   // approved emblem size, design px
-        const s = Math.min(dx(box) / png.width, dx(box) / png.height)
+        // Bigger and lifted. The file is mostly transparent padding — the artwork is 83.4% of its
+        // height — so enlarging the box enlarges the visible mark. The lift is measured from the
+        // page: the artwork centres on the words' own centre, and the extra size goes UPWARD.
+        const s = Math.min(dx(EMBLEM_BOX) / png.width, dx(EMBLEM_BOX) / png.height)
         const w = png.width * s
         const h = png.height * s
-        // centred on the row's CENTRE, exactly as the page does — this was the 'emblem moved down'
-        page.drawImage(png, { x: (SHEET_W_PT - w) / 2, y: dy(CENTRE.emblemRow) - h / 2, width: w, height: h })
+        page.drawImage(png, { x: (SHEET_W_PT - w) / 2, y: dy(CENTRE.emblemArtwork) - h / 2, width: w, height: h })
       } catch { /* emblem is decoration — never fail a diploma over it */ }
     }
     // The page sets these in BLACKLETTER at 34px with a 42px flex gap either side of a 110px

@@ -39,6 +39,10 @@ EXPECT = {
     'Headmaster': 743.4,
 }
 
+# The emblem is deliberately NOT on the words' centre line: Jonathan asked for it raised and enlarged
+# (2026-09-12). This is its box centre on the page, and the email must match THIS.
+EMBLEM_EXPECT = 216.3
+
 JS = r"""
 () => {
   const sheet = [...document.querySelectorAll('div')].filter(e => {
@@ -134,10 +138,14 @@ def main():
         print(f'  {label[:52]:<52} {expect:8.1f} {best:10.1f} {d:+8.1f}  {"ok" if ok else "EMAIL OFF"}')
     em = pdf.get('__EMBLEM__')
     if em:
-        d = em[0] - 221.3
+        d = em[0] - EMBLEM_EXPECT
         ok = abs(d) <= TOL
         bad += 0 if ok else 1
-        print(f'  {"__EMBLEM__":<52} {221.3:8.1f} {em[0]:10.1f} {d:+8.1f}  {"ok" if ok else "EMAIL OFF"}')
+        print(f'  {"__EMBLEM__ (raised by design)":<52} {EMBLEM_EXPECT:8.1f} {em[0]:10.1f} {d:+8.1f}  {"ok" if ok else "EMAIL OFF"}')
+    scr = web.get('__EMBLEM__')
+    if scr is not None and abs(scr - EMBLEM_EXPECT) > TOL:
+        print(f'  {"__EMBLEM__ on the page":<52} {EMBLEM_EXPECT:8.1f} {scr:10.1f} {scr-EMBLEM_EXPECT:+8.1f}  PAGE MOVED')
+        bad += 1
     print()
     if bad:
         print(f'  FAIL — {bad} problem(s)')
