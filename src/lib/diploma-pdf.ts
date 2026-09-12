@@ -288,9 +288,11 @@ export async function buildDiplomaPdf(
 
   // ---- rule + date -------------------------------------------------------
   {
-    const y = dy(566)
+    // The date first, then its rule BELOW it — the reference reads as an underlined date, not a
+    // date under a heading. (Jonathan asked: "Is the line above the date supposed to be under it?")
+    if (gradDate) centredText(page, gradDate, blackletter, 30, 580, INK)
+    const y = dy(596)
     page.drawLine({ start: { x: SHEET_W_PT / 2 - dx(190), y }, end: { x: SHEET_W_PT / 2 + dx(190), y }, thickness: 1.4 * K, color: RULE })
-    if (gradDate) centredText(page, gradDate, blackletter, 30, 596, INK)
   }
 
   // ---- signatures --------------------------------------------------------

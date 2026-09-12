@@ -233,8 +233,10 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
 
           {/* ── DATE OF AWARD ── */}
           <div style={{ textAlign: 'center', marginTop: '4px' }}>
-            <div style={{ borderTop: '1.4px solid #2b2b2b', width: '380px', margin: '0 auto' }} />
-            <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '30px', marginTop: '4px', color: '#111' }}>{gradDate}</div>
+            {/* The date sits immediately ABOVE its rule, as in Jonathan's 2014 reference — the line
+                reads as the underline for the date, not as a header above it. */}
+            <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '30px', color: '#111' }}>{gradDate}</div>
+            <div style={{ borderTop: '1.4px solid #2b2b2b', width: '380px', margin: '6px auto 0' }} />
           </div>
 
           {/* ── SIGNATURES: President (left) and Headmaster (right) ── */}
