@@ -1,5 +1,6 @@
 'use client'
 
+import { SCHOOL_CONFIG } from '@/lib/constants'
 import { Button } from '@/components/ui/Button'
 
 // Grade-aware theme: younger = playful/bright/cartoon, older = formal/graduation.
@@ -165,7 +166,7 @@ export default function CompletionCertificate({
     <div class="seal"><img src="/lca-logo.png" alt="Larose Christian Academy crest"/></div>
     <div class="foot">
       <div class="sig">Date: ${date}</div>
-      <div class="sig">Anne Brown, Administrator</div>
+      <div class="sig">{SCHOOL_CONFIG.president}, Administrator</div>
     </div>
   </div>
 </div>

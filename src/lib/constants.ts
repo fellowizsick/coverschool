@@ -11,7 +11,10 @@ export const SCHOOL_CONFIG: SchoolConfig = {
   // 2026-09-11 ("Mom gave me permission and I give you permission to sign mine and her names").
   // Kept here, not inline in the template, so a change of signatory is one edit in one place —
   // the same drift that put a wrong phone number in nine files.
-  president: 'Anne Brown',
+  // Mom's LEGAL name. Changed from 'Anne Brown' 2026-09-12 on her word: "she is legally
+  // married and that's her last name" — it must match on the signature script AND the printed
+  // name. One edit here flows to the diploma page, the wallet card and the emailed PDF.
+  president: 'Anne Palmer',
   headmaster: 'Jonathan Brown',
   address: 'Mobile, AL',
   formspreeId: 'mykqplgw',

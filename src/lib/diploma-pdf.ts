@@ -352,12 +352,15 @@ export async function buildDiplomaPdf(
 
       // printed name and title, each centred in THIS column
       const nameSize = 25 * K
-      const nw = serif.widthOfTextAtSize(c.who, nameSize)
-      page.drawText(c.who, { x: centrePt - nw / 2, y: dy(at(CENTRE.printedName, 25, F_SERIF)), size: nameSize, font: serif, color: INK })
+      const nw = blackletter.widthOfTextAtSize(c.who, nameSize)
+      // BLACKLETTER, like the page — serif here made the printed name measurably narrower
+      // than the one Mom previewed (Anne Palmer 125.8 vs 137.4 design px).
+      page.drawText(c.who, { x: centrePt - nw / 2, y: dy(at(CENTRE.printedName, 25, F_BLACK)), size: nameSize, font: blackletter, color: INK })
 
       const titleSize = 17 * K
-      const tw = serif.widthOfTextAtSize(c.title, titleSize)
-      page.drawText(c.title, { x: centrePt - tw / 2, y: dy(at(CENTRE.title, 17, F_SERIF)), size: titleSize, font: serif, color: INK })
+      const tw = blackletter.widthOfTextAtSize(c.title, titleSize)
+      // likewise the title — the page uses the blackletter face for 'President'/'Headmaster'
+      page.drawText(c.title, { x: centrePt - tw / 2, y: dy(at(CENTRE.title, 17, F_BLACK)), size: titleSize, font: blackletter, color: INK })
     }
   }
 
