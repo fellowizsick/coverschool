@@ -3,6 +3,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { SCHOOL_CONFIG } from '@/lib/constants'
 import { mailFrom } from '@/lib/email'
+import { normalizeName } from '@/lib/diploma-name'
 import { buildDiplomaPdf } from '@/lib/diploma-pdf'
 import nodemailer from 'nodemailer'
 import fs from 'fs'
@@ -106,6 +107,11 @@ export async function POST(request: Request) {
     const { data: dip } = await admin.from('diplomas').select('*').eq('id', id).single()
     if (!dip) return NextResponse.json({ ok: false, error: 'Diploma not found.' }, { status: 404 })
 
+    // ONE normalised name for the subject, the filename and the certificate. Using the raw
+    // stored value put 'EMILY   rose CARTER' in a real subject line while the attached PDF
+    // said 'Emily Rose Carter' — the same name two different ways in one email.
+    const printName = normalizeName(dip.student_name)
+
     const host = process.env.SMTP_HOST
     const port = process.env.SMTP_PORT
     const smtpUser = process.env.SMTP_USER
@@ -138,7 +144,7 @@ export async function POST(request: Request) {
 
         const pdf = await buildDiplomaPdf(
           {
-            studentName: dip.student_name || '',
+            studentName: printName || dip.student_name || '',
             graduationDate: dip.graduation_date || null,
             diplomaNumber: dip.diploma_number || '',
           },
@@ -147,7 +153,7 @@ export async function POST(request: Request) {
           { president: SCHOOL_CONFIG.president, headmaster: SCHOOL_CONFIG.headmaster },
           emblem
         )
-        const safeName = String(dip.student_name || 'diploma').replace(/[^A-Za-z0-9 _-]/g, '').replace(/\s+/g, '_')
+        const safeName = (printName || 'diploma').replace(/[^A-Za-z0-9 _-]/g, '').replace(/\s+/g, '_')
         attachment = {
           filename: `Diploma_${safeName}_${dip.diploma_number || ''}.pdf`.replace(/__+/g, '_'),
           content: Buffer.from(pdf),
@@ -162,15 +168,15 @@ export async function POST(request: Request) {
       await transporter.sendMail({
         from: mailFrom(),
         to,
-        subject: `🎓 Diploma — ${dip.student_name}`,
+        subject: `🎓 Diploma — ${printName || dip.student_name}`,
         attachments: attachment ? [attachment] : [],
         html: `
           <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px">
             <h2 style="color:#0369a1;margin:0 0 12px">${SCHOOL_CONFIG.name}</h2>
             <p style="color:#374151;font-size:15px;line-height:1.6">
               ${attachment
-                ? `Attached is the graduation diploma awarded to <strong>${dip.student_name}</strong>.`
-                : `This is notice of the graduation diploma awarded to <strong>${dip.student_name}</strong>.`}
+                ? `Attached is the graduation diploma awarded to <strong>${printName}</strong>.`
+                : `This is notice of the graduation diploma awarded to <strong>${printName}</strong>.`}
             </p>
             <p style="color:#374151;font-size:15px;line-height:1.6">
               <strong>Graduation date:</strong> ${gradDate}<br/>
