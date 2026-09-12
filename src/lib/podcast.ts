@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import nodemailer from 'nodemailer'
 import { SCHOOL_CONFIG } from '@/lib/constants'
+import { mailFrom } from '@/lib/email'
 import { readStudentCookie } from '@/lib/studentAuth'
 import { hasPaid } from '@/lib/enrollment-status'
 
@@ -206,7 +207,7 @@ export async function notifyNewSubmission(sub: {
         auth: { user: smtpUser, pass: smtpPass },
       })
       await transporter.sendMail({
-        from: `"${SCHOOL_CONFIG.name}" <${process.env.SMTP_FROM || SCHOOL_CONFIG.email}>`,
+        from: mailFrom(),
         to: process.env.SMTP_USER, // Anne's school mailbox
         subject: `🎬 New podcast submission — ${sub.student_name}`,
         html: `<p>A student submitted a new podcast video or audio.</p><p><b>Student:</b> ${sub.student_name}<br/><b>Title:</b> ${sub.title || '(untitled)'}</p><p><a href="${reviewUrl}">Review it here</a></p>`,

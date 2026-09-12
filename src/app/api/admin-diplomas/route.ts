@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { SCHOOL_CONFIG } from '@/lib/constants'
+import { mailFrom } from '@/lib/email'
 import { buildDiplomaPdf } from '@/lib/diploma-pdf'
 import nodemailer from 'nodemailer'
 import fs from 'fs'
@@ -159,7 +160,7 @@ export async function POST(request: Request) {
       }
 
       await transporter.sendMail({
-        from: `"${SCHOOL_CONFIG.name}" <${process.env.SMTP_FROM || SCHOOL_CONFIG.email}>`,
+        from: mailFrom(),
         to,
         subject: `🎓 Diploma — ${dip.student_name}`,
         attachments: attachment ? [attachment] : [],

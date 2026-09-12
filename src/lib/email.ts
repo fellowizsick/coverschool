@@ -34,6 +34,21 @@ export const transporter = () =>
 
 export const fromEmail = () => process.env.SMTP_FROM || SCHOOL_CONFIG.email
 
+/**
+ * A valid `From:` header.
+ *
+ * SMTP_FROM already holds a FULL address — `"Larose Christian Academy" <larosechristianacademy@gmail.com>`
+ * — so wrapping it in `"${name}" <${SMTP_FROM}>` a second time produces a malformed header. A real
+ * inbox showed it as `"Larose Christian Academy>" <larosechristianacademy@gmail.com>`, with a stray
+ * `>` in the sender name. Build it from whichever form the env actually holds.
+ */
+export const mailFrom = (): string => {
+  const raw = String(process.env.SMTP_FROM || '').trim()
+  if (raw.includes('<')) return raw                                       // already a full address
+  if (raw) return `"${SCHOOL_CONFIG.name}" <${raw}>`                       // a bare address
+  return `"${SCHOOL_CONFIG.name}" <${SCHOOL_CONFIG.email}>`                 // nothing configured
+}
+
 export async function sendPasswordResetEmail({ to, parentName, link }: SendPasswordResetEmailParams) {
   const subject = `Reset your ${SCHOOL_CONFIG.name} parent portal password`
 
