@@ -5,9 +5,8 @@ import { SCHOOL_CONFIG } from '@/lib/constants'
 import { mailFrom } from '@/lib/email'
 import { normalizeName } from '@/lib/diploma-name'
 import { buildDiplomaPdf } from '@/lib/diploma-pdf'
+import { getSchoolSettings, loadEmblemBytes } from '@/lib/school-settings'
 import nodemailer from 'nodemailer'
-import fs from 'fs'
-import path from 'path'
 
 /**
  * Today in the school's own timezone. The server runs in UTC, so a plain new Date() would stamp
@@ -147,11 +146,9 @@ export async function POST(request: Request) {
       // screen renders (name, date, number), so what is emailed matches what is previewed.
       let attachment: { filename: string; content: Buffer; contentType: string } | null = null
       try {
-        let emblem: Uint8Array | null = null
-        try {
-          const emblemPath = path.join(process.cwd(), 'public', 'lca-logo-transparent.png')
-          if (fs.existsSync(emblemPath)) emblem = new Uint8Array(fs.readFileSync(emblemPath))
-        } catch { /* emblem is optional */ }
+        // Anne's emblem from School Settings, else the bundled file. Never throws.
+        const school = await getSchoolSettings()
+        const emblem = await loadEmblemBytes(school.emblemPath)
 
         const pdf = await buildDiplomaPdf(
           {
@@ -159,7 +156,7 @@ export async function POST(request: Request) {
             graduationDate: dip.graduation_date || null,
             diplomaNumber: dip.diploma_number || '',
           },
-          SCHOOL_CONFIG.name,
+          school.schoolName,
           { city: 'Mobile', state: 'Alabama' },
           { president: SCHOOL_CONFIG.president, headmaster: SCHOOL_CONFIG.headmaster },
           emblem

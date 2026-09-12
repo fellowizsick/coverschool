@@ -2,6 +2,7 @@ import { createAdminClient, createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { SCHOOL_CONFIG } from '@/lib/constants'
+import { getSchoolSettings, emblemUrl } from '@/lib/school-settings'
 import { UnifrakturCook, EB_Garamond } from 'next/font/google'
 import PrintButton from '@/components/PrintButton'
 import Link from 'next/link'
@@ -43,6 +44,10 @@ export default async function WalletDiplomaPage({ params }: { params: Promise<{ 
     ? new Date(rawDate + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
     : ''
 
+  // Her school settings, same as the full diploma, so the two never disagree.
+  const school = await getSchoolSettings()
+  const emblemSrc = emblemUrl(school.emblemPath)
+
   const roman = 'var(--font-blackletter), Georgia, serif'
   const body = 'var(--font-garamond), Georgia, serif'
 
@@ -70,7 +75,7 @@ export default async function WalletDiplomaPage({ params }: { params: Promise<{ 
 
         {/* school name across the top */}
         <div style={{ fontFamily: roman, fontSize: '7.2px', letterSpacing: '1.5px', color: '#8a6d24', textTransform: 'uppercase', textAlign: 'center', fontWeight: 600 }}>
-          {SCHOOL_CONFIG.name}
+          {school.schoolName}
         </div>
 
         {/* name — the largest element, auto-sized so a long name still fits the card */}
@@ -85,7 +90,7 @@ export default async function WalletDiplomaPage({ params }: { params: Promise<{ 
         {/* seal + facts */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: 'auto' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lca-logo.png" alt="" width={30} height={30} style={{ objectFit: 'contain' }} />
+          <img src={school.emblemPath ? emblemSrc : '/lca-logo.png'} alt="" width={30} height={30} style={{ objectFit: 'contain' }} />
           <div style={{ fontFamily: body, fontSize: '6.6px', color: '#475569', lineHeight: 1.45 }}>
             <div>{gradDate}</div>
             <div>No. {diploma.diploma_number}</div>

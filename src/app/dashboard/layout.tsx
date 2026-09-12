@@ -95,6 +95,12 @@ export default async function DashboardLayout({
               Diplomas
             </Link>
             <Link
+              href="/dashboard/settings"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              School Settings
+            </Link>
+            <Link
               href="/dashboard/podcast"
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >

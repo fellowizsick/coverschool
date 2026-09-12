@@ -9,8 +9,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { SCHOOL_CONFIG } from '@/lib/constants'
 import { buildDiplomaPdf } from '@/lib/diploma-pdf'
-import fs from 'fs'
-import path from 'path'
+import { getSchoolSettings, loadEmblemBytes } from '@/lib/school-settings'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,11 +27,9 @@ export async function GET(request: NextRequest) {
   const { data: dip } = await admin.from('diplomas').select('*').eq('id', id).single()
   if (!dip) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
 
-  let emblem: Uint8Array | null = null
-  try {
-    const p = path.join(process.cwd(), 'public', 'lca-logo-transparent.png')
-    if (fs.existsSync(p)) emblem = new Uint8Array(fs.readFileSync(p))
-  } catch { /* optional */ }
+  // Anne's emblem from School Settings, else the bundled file. Never throws.
+  const school = await getSchoolSettings()
+  const emblem = await loadEmblemBytes(school.emblemPath)
 
   const pdf = await buildDiplomaPdf(
     {
@@ -40,7 +37,7 @@ export async function GET(request: NextRequest) {
       graduationDate: dip.graduation_date || null,
       diplomaNumber: dip.diploma_number || '',
     },
-    SCHOOL_CONFIG.name,
+    school.schoolName,
     { city: 'Mobile', state: 'Alabama' },
     { president: SCHOOL_CONFIG.president, headmaster: SCHOOL_CONFIG.headmaster },
     emblem

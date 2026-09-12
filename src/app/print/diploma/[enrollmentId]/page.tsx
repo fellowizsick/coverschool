@@ -1,5 +1,6 @@
 import { createAdminClient, createClient } from '@/lib/supabase/server'
 import { STANDARDS_LINES } from '@/lib/diploma-copy'
+import { getSchoolSettings, emblemUrl } from '@/lib/school-settings'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
@@ -111,6 +112,17 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
   // figure the PDF uses.
   const EMBLEM_TOP_PX = '-11px'
 
+  // The school's own name and emblem, from her School Settings page. Falls back to the bundled
+  // values if nothing is configured, so a certificate can never fail to render.
+  const school = await getSchoolSettings()
+  const emblemSrc = emblemUrl(school.emblemPath)
+
+  // Longer names must still fit the arch, so the letter size scales with the length of the name.
+  // 25 characters is the name this was designed around ('Larose Christian Academy'); anything
+  // longer steps down proportionally rather than running off the end of the arc.
+  const ARCH_DESIGN_CHARS = 25
+  const archFontSize = Math.max(120, Math.round(250 * Math.min(1, ARCH_DESIGN_CHARS / Math.max(1, school.schoolName.length))))
+
   const bl = '"LCA Old English", "Old English Text MT", "Cloister Black", Georgia, serif'
   const sig = 'var(--font-signature), "Segoe Script", cursive'
   const serif = 'var(--font-garamond), Georgia, serif'
@@ -153,14 +165,14 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
               The reference curves the name across the top; a straight line was the single most
               visible difference ("Doesn't look like it"). SVG textPath on an arc is how a real
               diploma sets it, and it scales cleanly at any print size. */}
-          <svg viewBox="0 0 3200 550" width="100%" height="154" preserveAspectRatio="xMidYMid meet" role="img" aria-label={SCHOOL_CONFIG.name} style={{ flexShrink: 0 }}>
+          <svg viewBox="0 0 3200 550" width="100%" height="154" preserveAspectRatio="xMidYMid meet" role="img" aria-label={school.schoolName} style={{ flexShrink: 0 }}>
             <defs>
               <path id="arch" d="M 20 491 Q 1600 211 3180 491" fill="none" />
             </defs>
             <text
               fontFamily="'LCA Old English', 'Old English Text MT', 'Cloister Black', serif"
               fontWeight="400"
-              fontSize="250"
+              fontSize={archFontSize}
               fill="#111"
               letterSpacing="0"
             >
@@ -170,7 +182,7 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
                 textAnchor="middle"
                 
               >
-                {SCHOOL_CONFIG.name}
+                {school.schoolName}
               </textPath>
             </text>
           </svg>
@@ -191,8 +203,8 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
                 white box — the loudest tell that a seal was dropped onto a template. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/lca-logo-transparent.png"
-              alt={`${SCHOOL_CONFIG.name} seal`}
+              src={emblemSrc}
+              alt={`${school.schoolName} seal`}
               style={{
                 position: 'absolute', left: '50%', transform: 'translateX(-50%)',
                 top: EMBLEM_TOP_PX, width: EMBLEM_BOX_PX, height: EMBLEM_BOX_PX,
