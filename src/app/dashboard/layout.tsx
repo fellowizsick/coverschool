@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
+import BeachBackdrop from '@/components/BeachBackdrop'
 
 export default async function DashboardLayout({
   children,
@@ -33,7 +34,15 @@ export default async function DashboardLayout({
   const isAdmin = profile?.role === 'admin'
 
   return (
-    <div className="mx-auto max-w-[90rem] px-4 pt-24 pb-8 sm:px-6 lg:px-8">
+    <>
+      {/* The beach scene. Rendered only here, and only admins reach this layout, so it is
+          admin-dashboard-only by construction. */}
+      <BeachBackdrop />
+      <div className="mx-auto max-w-[90rem] px-4 pt-24 pb-8 sm:px-6 lg:px-8">
+      {/* Everything sits on a near-opaque white panel. The beach is the frame; this is the
+          page. Readability must not depend on what part of the scene happens to be behind a
+          heading. */}
+      <div className="rounded-3xl border border-sky-100 bg-white/95 p-6 shadow-xl shadow-sky-900/5 backdrop-blur-sm sm:p-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">
           {isAdmin ? 'Admin Portal' : 'Parent Portal'}
@@ -80,6 +89,12 @@ export default async function DashboardLayout({
               Graduation
             </Link>
             <Link
+              href="/dashboard/diplomas"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Diplomas
+            </Link>
+            <Link
               href="/dashboard/podcast"
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
@@ -123,6 +138,8 @@ export default async function DashboardLayout({
       </nav>
 
       <div className="mt-8">{children}</div>
-    </div>
+      </div>
+      </div>
+    </>
   )
 }

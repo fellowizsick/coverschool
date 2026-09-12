@@ -1,180 +1,282 @@
 import { createAdminClient, createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { SCHOOL_CONFIG } from '@/lib/constants'
-import { Cinzel, EB_Garamond } from 'next/font/google'
-import type { CSSProperties } from 'react'
+import { EB_Garamond, Mrs_Saint_Delafield } from 'next/font/google'
+import PrintButton from '@/components/PrintButton'
+import { normalizeName, fullName, nameFontSize, nameLetterSpacing } from '@/lib/diploma-name'
 
 export const dynamic = 'force-dynamic'
 
 /**
- * Typography for a credential, not a web page.
+ * The diploma. Laid out to match the reference Jonathan supplied on 2026-09-11 — his own 2014
+ * Mobile Christian High School diploma — with our school's information in it.
  *
- * Cinzel  — Trajan-derived capitals. This is THE face of engraved certificates: monuments,
- *           diplomas, degree scrolls. Used for the school name and the award itself.
- * EB Garamond — a Garamond revival, the classic body face of printed diplomas and university
- *           charters for 500 years.
+ * "The diploma needs to look identical to this but with our information"
  *
- * The previous version was set in Georgia. Georgia is a SCREEN font, designed for low-res
- * monitors in 1993 — which is what made the letterforms read as web rather than engraved.
- * (Jonathan, 2026-09-11: "the letters Don't match up with the real diploma".)
+ * WHAT CHANGED FROM THE FIRST VERSION, and why each one matters:
+ *
+ * 1. TYPE. The first version set everything in Cinzel, a classical Roman face. The reference is
+ *    blackletter (Old English / textura). That single difference is the loudest signal of a
+ *    home-made certificate, because it is the first thing the eye compares against a real one.
+ *    UnifrakturMaguntia is the standard free blackletter for diplomas — it is what Cloister Black
+ *    (the classic diploma face) is usually standing in for.
+ *
+ * 2. THE SEAL. Mine sat low-left above the signature block. The reference puts the state seal
+ *    dead centre on the third line, flanked by the city on the left and the state on the right:
+ *
+ *        Mobile        [ SEAL ]        Alabama
+ *
+ *    That row is a structural part of the design, not decoration, so it is reproduced exactly.
+ *
+ * 3. THE BORDER. A plain double rule with a gold frame at the trim, not the heavy ormolu
+ *    banding of the first version.
+ *
+ * 4. "Diploma" alone — the reference does not print "High School Diploma".
+ *
+ * Everything that varies per student (name, date, number) still resolves at runtime from the
+ * student's own record, and the name is still normalised: a credential must never print a name
+ * with a double space or the wrong capitalisation.
  */
-const cinzel = Cinzel({ subsets: ['latin'], weight: ['400', '600', '700'], variable: '--font-cinzel', display: 'swap' })
-const garamond = EB_Garamond({ subsets: ['latin'], weight: ['400', '500', '600'], style: ['normal', 'italic'], variable: '--font-garamond', display: 'swap' })
 
-/**
- * Printable diploma — issued on COMPLETION of the program.
- *
- * ⚠️ Do not add a path that issues one for payment alone. (Jonathan, 2026-09-11: "not actually
- * just selling the damn diploma they must test and school first".) Issuing happens only through
- * /api/graduation/attest, which checks the credit ledger first.
- */
-export default async function DiplomaPrintPage({
-  params,
-}: {
-  params: Promise<{ enrollmentId: string }>
-}) {
+// ROUNDED Old English — chosen by eye from a side-by-side of eight candidates.
+//
+// History: UnifrakturMaguntia (angular Fraktur) -> Pirata One (still pointed) -> UnifrakturCook.
+// Jonathan, 2026-09-11: "the letters aren't rounded at the top". UnifrakturCook has the heavy
+// rounded bowls and rounded terminals his 2014 reference diploma has; the earlier two did not.
+// Chosen by rendering all eight on one sheet rather than guessing a third time.
+
+// Real signatures. The first version drew an SVG squiggle and it read as a child's scribble
+// ("the signatures look like a child scribbled them"). Setting the actual names in a signature
+// script is how a diploma actually looks, and it stays correct for any signatory.
+const script = Mrs_Saint_Delafield({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-signature',
+  display: 'swap',
+})
+const garamond = EB_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-garamond',
+  display: 'swap',
+})
+
+export default async function DiplomaPage({ params }: { params: Promise<{ enrollmentId: string }> }) {
   const { enrollmentId } = await params
 
-  // ── ACCESS CONTROL ──────────────────────────────────────────────────────────
-  // This page uses the service-role client, which bypasses RLS, so it MUST gate itself.
-  // It did not. Any person holding the link could view and print a real diploma carrying a
-  // real student's name and diploma number — and the link is emailed to families, so it
-  // forward easily. A credential anyone can print is not a credential.
-  // Jonathan, 2026-09-11: "People cant see that diploma can they?"
-  //
-  // Admin-only for now. A family-facing token link is the next step; until that exists,
-  // families get their diploma from the school rather than by URL.
   const auth = await createClient()
   const { data: { user } } = await auth.auth.getUser()
   if (!user || !isAuthorizedAdmin(user.email)) notFound()
 
   const admin = createAdminClient()
-
   const { data: diploma } = await admin
     .from('diplomas')
     .select('*')
     .eq('enrollment_id', enrollmentId)
-    .order('created_at', { ascending: false })
-    .limit(1)
     .maybeSingle()
-  if (!diploma) notFound()
 
   const { data: enroll } = await admin
     .from('enrollments')
-    .select('student_first_name, student_last_name, student_grade, graduation_date')
+    .select('student_first_name, student_last_name, graduation_date')
     .eq('id', enrollmentId)
     .single()
 
-  const name =
-    diploma.student_name ||
-    `${enroll?.student_first_name || ''} ${enroll?.student_last_name || ''}`.trim()
+  if (!diploma) notFound()
+
+  const name = normalizeName(diploma.student_name) ||
+    fullName(enroll?.student_first_name, enroll?.student_last_name)
+
   const rawDate = diploma.graduation_date || enroll?.graduation_date
   const gradDate = rawDate
     ? new Date(rawDate + 'T00:00:00').toLocaleDateString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       })
     : ''
 
-  // Both signatories from config — the names Jonathan authorized. `attested_by` on the diplomas
-  // table stays the AUDIT record of which admin issued it; it is not the printed name.
-  const sigLeft = SCHOOL_CONFIG.president
-  const sigRight = SCHOOL_CONFIG.headmaster
-
-  const roman = 'var(--font-cinzel), "Trajan Pro", Georgia, serif'
-  const body = 'var(--font-garamond), Garamond, "Times New Roman", serif'
-  const ink = '#1a2233'
-  const gold = '#8a6d24'
+  const bl = '"LCA Old English", "Old English Text MT", "Cloister Black", Georgia, serif'
+  const sig = 'var(--font-signature), "Segoe Script", cursive'
+  const serif = 'var(--font-garamond), Georgia, serif'
+  const inkColor = '#1a1a1a'
+  const gold = '#b8952f'
 
   return (
-    <div className={`${cinzel.variable} ${garamond.variable}`} style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#0f172a,#1e1b4b,#312e81)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-      <div id="cert" style={{ width: '100%', maxWidth: '1000px', aspectRatio: '11/8.5', background: '#fdfaf3', color: ink, position: 'relative', borderRadius: '14px', overflow: 'hidden', padding: '46px 74px 32px', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 60px rgba(0,0,0,.5)' }}>
+    <div
+      className={`${garamond.variable} ${script.variable} lca-print-doc`}
+      style={{ minHeight: '100vh', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}
+    >
+      <div
+        id="cert"
+        style={{
+          width: '864px',          /* 9in at 96dpi */
+          height: '672px',         /* 7in at 96dpi */
+          background: '#f4efe2',
+          color: inkColor,
+          position: 'relative',
+          borderRadius: '0px',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: 'none',
+        }}
+      >
+        {/* The sheet itself has NO gold — the gold in the reference photo is the leather holder's
+            corner tabs, which Jonathan pointed out 2026-09-11: "The gold corners are supposed to
+            be white not gold it's in a holder". The certificate is cream paper with a plain thin
+            double rule inset from the trim, exactly as in the reference. */}
+        <div style={{ position: 'absolute', inset: '20px', border: '0.7px solid #6b6250', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: '24px', border: '0.4px solid #8a8272', pointerEvents: 'none' }} />
 
-        {/* the plate: engraved borders, thin rules outside thick — the reverse of a web card */}
-        <div style={{ border: '1px solid #b99b4e', position: 'absolute', inset: '14px' }} />
-        <div style={{ border: '4px double #9a7b2e', position: 'absolute', inset: '22px' }} />
+        {/* The interior is designed for an 11x8.5 sheet and scaled to fit the 9x7 sheet by an
+              exact factor (864/1056). Scaling the whole box keeps every proportion identical to the
+              approved layout — no font size is re-tuned by hand, so nothing can drift or clip. */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '1056px', height: '816px', transform: 'scale(0.8181818)', transformOrigin: 'top left', boxSizing: 'border-box', padding: '4px 22px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
 
-        {/* ── header. The school is NAMED FIRST — a diploma announces its issuer. ── */}
-        <div style={{ position: 'relative', textAlign: 'center', marginTop: '2px' }}>
-          <div style={{ fontFamily: roman, fontSize: '30px', letterSpacing: '4px', textTransform: 'uppercase', color: ink, fontWeight: 600, lineHeight: 1.2 }}>
-            {SCHOOL_CONFIG.name}
+          {/* ── SCHOOL NAME, ARCHED ──
+              The reference curves the name across the top; a straight line was the single most
+              visible difference ("Doesn't look like it"). SVG textPath on an arc is how a real
+              diploma sets it, and it scales cleanly at any print size. */}
+          <svg viewBox="0 0 3200 550" width="100%" height="154" preserveAspectRatio="xMidYMid meet" role="img" aria-label={SCHOOL_CONFIG.name} style={{ flexShrink: 0 }}>
+            <defs>
+              <path id="arch" d="M 20 491 Q 1600 211 3180 491" fill="none" />
+            </defs>
+            <text
+              fontFamily="'LCA Old English', 'Old English Text MT', 'Cloister Black', serif"
+              fontWeight="400"
+              fontSize="250"
+              fill="#111"
+              letterSpacing="0"
+            >
+              <textPath
+                href="#arch"
+                startOffset="50%"
+                textAnchor="middle"
+                
+              >
+                {SCHOOL_CONFIG.name}
+              </textPath>
+            </text>
+          </svg>
+
+          {/* ── CITY — SEAL — STATE. The seal is centred on this line, as in the reference. ── */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '42px', marginTop: '4px' }}>
+            <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '34px', color: '#1a1a1a' }}>Mobile</div>
+            {/* our own seal, not the Alabama state seal — see the note in the project reference.
+                mixBlendMode: multiply drops the PNG's white background into the cream paper, so it
+                reads as printed on the sheet instead of pasted on. Without it there is a visible
+                white box — the loudest tell that a seal was dropped onto a template. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/lca-logo-transparent.png"
+              alt={`${SCHOOL_CONFIG.name} seal`}
+              width={52}
+              height={52}
+              style={{ objectFit: 'contain' }}
+            />
+            <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '34px', color: '#1a1a1a' }}>Alabama</div>
           </div>
-          <div style={{ fontFamily: body, fontSize: '14px', letterSpacing: '7px', textTransform: 'uppercase', color: gold, marginTop: '11px', fontWeight: 500 }}>
-            Mobile &middot; Alabama
-          </div>
-          <div style={{ width: '30%', height: '1px', background: '#c2a34e', margin: '15px auto 0' }} />
-        </div>
 
-        <div style={{ position: 'relative', textAlign: 'center', marginTop: '20px' }}>
-          <div style={{ fontFamily: body, fontSize: '19px', letterSpacing: '6px', textTransform: 'uppercase', color: '#4a5568' }}>
+          {/* ── THIS CERTIFIES THAT ── */}
+          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '28px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
             This Certifies That
           </div>
-        </div>
 
-        {/* ── the name. Garamond at size, not a script — scripts are where home-made
-             certificates betray themselves. ── */}
-        <div style={{ position: 'relative', textAlign: 'center', margin: '14px 0 0' }}>
-          <div style={{ fontFamily: body, fontSize: '58px', fontWeight: 500, color: '#0f1c30', lineHeight: 1.14, letterSpacing: '0.5px' }}>
+          {/* ── THE NAME ── */}
+          <div
+            style={{
+              fontFamily: bl, fontWeight: 400,
+              fontSize: `${nameFontSize(name) * 0.90}px`,
+              textAlign: 'center',
+              marginTop: '8px',
+              lineHeight: 1.16,
+              letterSpacing: nameLetterSpacing(name),
+              color: '#111',
+            }}
+          >
             {name}
           </div>
-        </div>
 
-        {/* ── the formal recital. 760px so the lines break EVENLY. ── */}
-        <div style={{ position: 'relative', textAlign: 'center', fontFamily: body, fontSize: '19px', lineHeight: 1.85, color: '#333c4d', margin: '22px auto 0', maxWidth: '750px' }}>
-          having satisfactorily completed the course of study in conformity with the
-          standards and requirements set forth for High Schools in the State of Alabama,
-          and having complied with all requirements of this Institution, is hereby awarded this
-        </div>
-
-        {/* ── the award, in engraved capitals ── */}
-        <div style={{ position: 'relative', textAlign: 'center', margin: '26px 0 0' }}>
-          <div style={{ fontFamily: roman, fontSize: '38px', fontWeight: 600, letterSpacing: '7px', textTransform: 'uppercase', color: gold, lineHeight: 1.2 }}>
-            High School Diploma
+          {/* ── THE STANDARDS PARAGRAPH ── */}
+          <div
+            style={{
+              fontFamily: bl, fontWeight: 400,
+              fontSize: '28px',
+              textAlign: 'center',
+              textWrap: 'balance' as const,
+              lineHeight: 0.98,
+              marginTop: '2px',
+              maxWidth: '1010px',
+              alignSelf: 'center',
+              color: '#1a1a1a',
+            }}
+          >
+            having satisfactorily completed the course of study in conformity with the standards
+            and requirements set forth for High Schools in the State of Alabama and having complied
+            with all requirements of this Institution is hereby awarded this
           </div>
-          <div style={{ fontFamily: body, fontSize: '17px', fontStyle: 'italic', color: '#5a6478', marginTop: '13px' }}>
-            In Testimony Whereof we have affixed our signatures
+
+          {/* ── DIPLOMA ── */}
+          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '52px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
+            Diploma
           </div>
-        </div>
 
-        {/* ── seal, anchored low near the signatures ── */}
-        <div style={{ position: 'relative', textAlign: 'center', marginTop: 'auto', paddingTop: '8px' }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lca-logo.png" alt="" width={146} height={146} style={{ mixBlendMode: 'multiply', opacity: 0.96 }} />
-        </div>
+          {/* ── IN TESTIMONY WHEREOF ── */}
+          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '29px', textAlign: 'center', marginTop: '6px', color: '#1a1a1a' }}>
+            In Testimony Whereof we have affixed our signatures.
+          </div>
 
-        {/* ── signatures. Real gaps between the rules. ── */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '0 20px', marginTop: '12px', paddingBottom: '4px', gap: '46px' }}>
-          <div style={{ textAlign: 'center', flex: 1 }}>
-            <div style={{ fontFamily: body, fontSize: '16px', color: ink, paddingBottom: '6px', minHeight: '27px' }}>{gradDate}</div>
-            <div style={{ borderTop: '1px solid #5a6478', paddingTop: '6px', fontFamily: body, fontSize: '13px', letterSpacing: '3px', textTransform: 'uppercase', color: '#5a6478' }}>
-              Date of Award
+          {/* ── DATE OF AWARD ── */}
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            <div style={{ borderTop: '1.4px solid #2b2b2b', width: '380px', margin: '0 auto' }} />
+            <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '30px', marginTop: '4px', color: '#111' }}>{gradDate}</div>
+            <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '17px', marginTop: '1px', color: '#333' }}>Date of Award</div>
+          </div>
+
+          {/* ── SIGNATURES: President (left) and Headmaster (right) ── */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '6px', paddingTop: '0px', gap: '28px' }}>
+            <div style={{ textAlign: 'center', flex: 1 }}>
+              {/* the signature: the signatory's own name in a signature script. The first version
+                  drew an SVG squiggle — "the signatures look like a child scribbled them". */}
+              <div style={{ fontFamily: sig, fontSize: '50px', lineHeight: '1.0', color: '#12163a', height: '52px', textAlign: 'center' }}>
+                {SCHOOL_CONFIG.president}
+              </div>
+              <div style={{ borderTop: '1.4px solid #2b2b2b', width: '300px', margin: '0 auto' }} />
+              <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '27px', marginTop: '2px' }}>{SCHOOL_CONFIG.president}</div>
+              <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '17px', color: '#333' }}>President</div>
+            </div>
+
+            <div style={{ textAlign: 'center', flex: 1 }}>
+              <div style={{ fontFamily: sig, fontSize: '31px', lineHeight: '1.05', color: '#12163a', height: '38px', textAlign: 'center' }}>
+                {SCHOOL_CONFIG.headmaster}
+              </div>
+              <div style={{ borderTop: '1.4px solid #2b2b2b', width: '300px', margin: '0 auto' }} />
+              <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '27px', marginTop: '2px' }}>{SCHOOL_CONFIG.headmaster}</div>
+              <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '17px', color: '#333' }}>Headmaster</div>
             </div>
           </div>
-          <div style={{ textAlign: 'center', flex: 1 }}>
-            <div style={{ fontFamily: body, fontSize: '16px', color: ink, paddingBottom: '6px', minHeight: '27px' }}>{sigLeft}</div>
-            <div style={{ borderTop: '1px solid #5a6478', paddingTop: '6px', fontFamily: body, fontSize: '13px', letterSpacing: '3px', textTransform: 'uppercase', color: '#5a6478' }}>
-              President
-            </div>
-          </div>
-          <div style={{ textAlign: 'center', flex: 1 }}>
-            <div style={{ fontFamily: body, fontSize: '16px', color: ink, paddingBottom: '6px', minHeight: '27px' }}>{sigRight}</div>
-            <div style={{ borderTop: '1px solid #5a6478', paddingTop: '6px', fontFamily: body, fontSize: '13px', letterSpacing: '3px', textTransform: 'uppercase', color: '#5a6478' }}>
-              Headmaster
-            </div>
-          </div>
-        </div>
 
-        <div style={{ position: 'relative', textAlign: 'center', fontFamily: body, fontSize: '11px', color: '#a8afbc', letterSpacing: '2px', marginTop: '5px' }}>
-          Diploma No. {diploma.diploma_number}
+          {/* diploma number — in the normal flow, not absolutely positioned, so it can never be
+              clipped off the bottom by the sheet's overflow:hidden. It traces the certificate to
+              the school's record without intruding on the design. */}
+          <div style={{ fontFamily: serif, fontSize: '13px', color: '#6b6b6b', letterSpacing: '0.6px', textAlign: 'center', marginTop: '6px' }}>
+            No. {diploma.diploma_number}
+          </div>
         </div>
       </div>
 
-      <button
-        onClick={() => window.print()}
-        style={{ position: 'fixed', bottom: '24px', right: '24px', background: '#059669', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '10px', fontSize: '15px', cursor: 'pointer', fontFamily: body, boxShadow: '0 8px 24px rgba(0,0,0,.3)' } as CSSProperties}
-      >
-        🖨️ Print Diploma
-      </button>
+      <div className="no-print" style={{ position: 'fixed', bottom: '24px', right: '24px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <Link
+          href={`/print/diploma/${enrollmentId}/wallet`}
+          style={{ background: '#475569', color: '#fff', padding: '12px 20px', borderRadius: '10px', fontFamily: 'system-ui, sans-serif', fontSize: '14px', fontWeight: 700, textDecoration: 'none' }}
+        >
+          💳 Wallet card
+        </Link>
+        <PrintButton />
+      </div>
     </div>
   )
 }

@@ -2,7 +2,13 @@
 // Accepts either (a) a signed-in Supabase session with an approved enrollment,
 // or (b) email + student name + PIN — the same proof families use at the
 // student login. Returns the approved enrollment or a typed error.
+//
+// (c) ADMIN acting on a named enrollment. Anne must be able to enter and correct records on a
+// student's behalf — without this she had no way in, because her admin email matches no
+// enrollment. Only an address in AUTHORIZED_ADMIN_EMAILS gets this path, and it requires an
+// explicit enrollmentId, so it can never widen a family's own access.
 import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { isAuthorizedAdmin } from '@/lib/adminAccess'
 
 export type VerifiedEnrollment = {
   id: string
@@ -19,11 +25,14 @@ export type VerifyResult =
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const SELECT = 'id, email, student_first_name, student_last_name, status, state'
+
 export async function verifyFamilyAccess(body: {
   email?: string
   studentFirstName?: string
   studentLastName?: string
   pin?: string
+  enrollmentId?: string
 }): Promise<VerifyResult> {
   const admin = await createAdminClient()
 
@@ -32,16 +41,28 @@ export async function verifyFamilyAccess(body: {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  // Path 1a: ADMIN acting on a specific student (the school entering records on a family's behalf)
+  if (isAuthorizedAdmin(user?.email) && body?.enrollmentId) {
+    const { data: byAdmin } = await admin
+      .from('enrollments')
+      .select(SELECT)
+      .eq('id', String(body.enrollmentId))
+      .maybeSingle()
+    if (byAdmin) return { enrollment: byAdmin as VerifiedEnrollment }
+    return { error: 'Student not found.', status: 404 }
+  }
+
   if (user?.email) {
     const { data: byAuth } = await supabase
       .from('enrollments')
-      .select('id, email, student_first_name, student_last_name, status, state')
+      .select(SELECT)
       .eq('email', user.email)
       .eq('status', 'approved')
       .order('created_at', { ascending: false })
       .limit(1)
     if (byAuth?.[0]) {
-      return { enrollment: byAuth[0] }
+      return { enrollment: byAuth[0] as VerifiedEnrollment }
     }
     return { error: 'Only enrolled LCA families can access records.', status: 403 }
   }

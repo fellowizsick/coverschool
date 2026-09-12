@@ -329,3 +329,175 @@
   background-image: radial-gradient(circle, #059669 1px, transparent 1px);
   background-size: 30px 30px;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PRINTABLE DOCUMENTS (/print/*)
+
+   The root layout wraps every page in the site Navbar and Footer. A diploma that
+   renders with website navigation across the top does not look like a credential,
+   and it would print that way. There is no way to un-render the root layout's
+   markup from a nested layout, so the print layout marks its subtree with
+   .lca-print-root and these rules hide the chrome around it.
+
+   :has() lets a rule reach UP from the marked element to body — the only way to
+   suppress a sibling subtree from here. Supported in all current browsers.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+body:has(.lca-print-root) > header,
+body:has(.lca-print-root) nav,
+body:has(.lca-print-root) footer {
+  display: none !important;
+}
+
+/* Paper white behind a document, never the site's dark theme. */
+body:has(.lca-print-root) {
+  background: #ffffff !important;
+}
+
+.lca-print-root {
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+@media print {
+  /* No browser headers/footers, no site chrome, exact colours for the seal and rules. */
+  @page { margin: 0.5in; }
+  body:has(.lca-print-root) > header,
+  body:has(.lca-print-root) nav,
+  body:has(.lca-print-root) footer,
+  body:has(.lca-print-root) .no-print {
+    display: none !important;
+  }
+  .lca-print-root { min-height: 0; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DIPLOMA PRINT SIZE — real letter sheet, landscape
+
+   Jonathan, 2026-09-11: "when they click print diploma on there will it print the
+   size of a actual diploma?"
+
+   It would not have. The certificate is capped at 1000px wide. An 11in page at 96dpi
+   is 1056px, and with the old 0.5in margins only ~960px of that is usable — so the
+   sheet was wider than the space it had, and the browser would scale it down or clip.
+   A credential printed at the wrong size is the first thing a registrar notices.
+
+   Fixed two ways:
+     * the @page box below is the exact sheet (11in x 8.5in, no margin), and
+     * on paper the certificate is pinned to fill that sheet and nothing else prints.
+
+   Verified by exporting to PDF and reading back the real page box.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Chrome ignores @page when it is nested inside @media — which is why the first version of this
+   had no effect and the sheet still came out portrait (measured: 8.5 x 11in instead of 11 x 8.5).
+   It has to be at the top level of the sheet. */
+/* Named pages so ONE site can print two different sheet sizes. @page is global, so a plain
+   rule would force the wallet card onto letter paper (or the diploma onto a card). A named
+   page is applied by the element's `page:` property and Chrome honours it. */
+@page diploma {
+  /* Two lengths ONLY. The CSS grammar does not allow `size: 11in 8.5in landscape` — the
+     keyword cannot be combined with explicit lengths, so that whole declaration is thrown
+     away and the sheet silently falls back to portrait. Measured proof: the first attempt
+     produced an 8.5 x 11in sheet. Two lengths in order already means landscape. */
+  size: 9in 7in;
+  margin: 0;
+}
+
+/* Wallet / credit-card size — ISO/IEC 7810 ID-1, 3.5 x 2in. This is the size a card is
+   actually made, so it fits a wallet sleeve and a card printer. */
+@page wallet {
+  size: 3.5in 2in;
+  margin: 0;
+}
+
+@media print {
+  /* Nothing but the certificate reaches the sheet. */
+  body:has(.lca-print-doc) {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .lca-print-doc {
+    min-height: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    background: #fff !important;
+  }
+
+  /* Fill the sheet exactly. The aspect ratio is 11/8.5, so no distortion. */
+  .lca-print-doc { page: diploma; }
+
+  .lca-print-doc #cert {
+    page: diploma;
+    width: 9in !important;
+    height: 7in !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   WALLET CARD (/print/diploma/<id>/wallet) — 3.5 x 2in, ISO/IEC 7810 ID-1
+   Jonathan, 2026-09-11: "another one they can print to go into there wallet"
+   ───────────────────────────────────────────────────────────────────────────── */
+@media print {
+  body:has(.lca-wallet-doc) {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .lca-wallet-doc {
+    page: wallet;
+    min-height: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+  .lca-wallet-doc #walletcard {
+    page: wallet;
+    width: 3.5in !important;
+    height: 2in !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+  .lca-wallet-doc .no-print { display: none !important; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   OLD ENGLISH TEXT MT — the real diploma face
+
+   Jonathan, 2026-09-11: "The letter aren't the same font". Correct. I had cycled
+   through four Google approximations (UnifrakturMaguntia, Pirata One,
+   UnifrakturCook, Grenze Gotisch) — all of them close but none the same. The
+   reference diploma is set in Old English Text MT, which ships with Windows and
+   is already installed on this machine (C:\Windows\Fonts\OLDENGL.TTF).
+
+   Serving the actual font rather than an imitation is the only way the letterforms
+   match. The file is copied into public/fonts/ so it renders for families on any
+   device, not just machines that happen to have the font installed.
+
+   LICENSING NOTE: Old English Text MT is a Monotype font that ships with Windows.
+   Self-hosting it on a public site is a licensing question, not a technical one —
+   flagged to Jonathan. The free lookalike fallback stays in the stack below so the
+   page still renders correctly if the hosted file is ever removed.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'LCA Old English';
+  src: url('/fonts/OldEnglishTextMT.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Flex items shrink by default, which silently collapsed the arched school name to zero
+   height once the sheet changed to 9x7 and the content ran short of room. Anything with a
+   fixed design height inside a print sheet must opt out of shrinking. */
+.lca-print-doc svg[role='img'] { flex-shrink: 0; }

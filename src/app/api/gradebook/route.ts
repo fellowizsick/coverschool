@@ -40,6 +40,9 @@ export async function GET(request: Request) {
       studentFirstName: String(body.studentFirstName || ''),
       studentLastName: String(body.studentLastName || ''),
       pin: String(body.pin || ''),
+      // Admins reach a student's records by id, not by family proof. Ignored unless the
+      // caller is actually an authorized admin.
+      enrollmentId: String(body.enrollmentId || ''),
     })
     if ('error' in verified) {
       return NextResponse.json({ ok: false, error: verified.error }, { status: verified.status })
