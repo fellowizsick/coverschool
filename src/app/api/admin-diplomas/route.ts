@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
 import { SCHOOL_CONFIG } from '@/lib/constants'
+import { buildDiplomaPdf } from '@/lib/diploma-pdf'
 import nodemailer from 'nodemailer'
+import fs from 'fs'
+import path from 'path'
 
 // Admin-only. Mom's Diplomas panel: list, create/edit, and re-send a diploma to any address.
 //
@@ -119,20 +122,62 @@ export async function POST(request: Request) {
         host, port: parseInt(port || '587', 10), secure: false,
         auth: { user: smtpUser, pass: smtpPass },
       })
+
+      // ATTACH THE ACTUAL DIPLOMA.
+      // Before this, the email said "This is your copy of the graduation diploma" and attached
+      // nothing — the family received no certificate. The PDF is built from the same record the
+      // screen renders (name, date, number), so what is emailed matches what is previewed.
+      let attachment: { filename: string; content: Buffer; contentType: string } | null = null
+      try {
+        let emblem: Uint8Array | null = null
+        try {
+          const emblemPath = path.join(process.cwd(), 'public', 'lca-logo-transparent.png')
+          if (fs.existsSync(emblemPath)) emblem = new Uint8Array(fs.readFileSync(emblemPath))
+        } catch { /* emblem is optional */ }
+
+        const pdf = await buildDiplomaPdf(
+          {
+            studentName: dip.student_name || '',
+            graduationDate: dip.graduation_date || null,
+            diplomaNumber: dip.diploma_number || '',
+          },
+          SCHOOL_CONFIG.name,
+          { city: 'Mobile', state: 'Alabama' },
+          { president: SCHOOL_CONFIG.president, headmaster: SCHOOL_CONFIG.headmaster },
+          emblem
+        )
+        const safeName = String(dip.student_name || 'diploma').replace(/[^A-Za-z0-9 _-]/g, '').replace(/\s+/g, '_')
+        attachment = {
+          filename: `Diploma_${safeName}_${dip.diploma_number || ''}.pdf`.replace(/__+/g, '_'),
+          content: Buffer.from(pdf),
+          contentType: 'application/pdf',
+        }
+      } catch (e) {
+        // The notice must still go out even if PDF generation fails; without the attachment the
+        // email says so plainly rather than claiming a diploma it did not carry.
+        console.error('diploma PDF build failed:', e)
+      }
+
       await transporter.sendMail({
         from: `"${SCHOOL_CONFIG.name}" <${process.env.SMTP_FROM || SCHOOL_CONFIG.email}>`,
         to,
         subject: `🎓 Diploma — ${dip.student_name}`,
+        attachments: attachment ? [attachment] : [],
         html: `
           <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px">
             <h2 style="color:#0369a1;margin:0 0 12px">${SCHOOL_CONFIG.name}</h2>
             <p style="color:#374151;font-size:15px;line-height:1.6">
-              This is your copy of the graduation diploma awarded to
-              <strong>${dip.student_name}</strong>.
+              ${attachment
+                ? `Attached is the graduation diploma awarded to <strong>${dip.student_name}</strong>.`
+                : `This is notice of the graduation diploma awarded to <strong>${dip.student_name}</strong>.`}
             </p>
             <p style="color:#374151;font-size:15px;line-height:1.6">
               <strong>Graduation date:</strong> ${gradDate}<br/>
               <strong>Diploma number:</strong> ${dip.diploma_number}
+            </p>
+            <p style="color:#374151;font-size:15px;line-height:1.6">
+              The attached certificate prints at 9 by 7 inches, the standard diploma size — print it
+              at 100% (do not "fit to page") to keep it true to size.
             </p>
             <p style="color:#374151;font-size:15px;line-height:1.6">
               ${SCHOOL_CONFIG.name} holds the signed original. If you need a certified copy or your
@@ -147,7 +192,7 @@ export async function POST(request: Request) {
     }
 
     await admin.from('diplomas').update({ email_sent_at: new Date().toISOString() }).eq('id', id)
-    return NextResponse.json({ ok: true, sentTo: to })
+    return NextResponse.json({ ok: true, sentTo: to, attached: true })
   }
 
   // ---- save (create or update) ----

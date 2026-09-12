@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { GraduationCap, Loader2, Mail, Pencil, Plus, CheckCircle2, AlertCircle, X, Trash2 } from 'lucide-react'
+import { GraduationCap, Loader2, Mail, Pencil, Plus, CheckCircle2, AlertCircle, X, Trash2, Eye } from 'lucide-react'
 
 /**
  * Mom's Diplomas panel.
@@ -271,6 +271,11 @@ export default function DiplomasPage() {
                     className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
                     <Pencil className="h-4 w-4" /> Edit
                   </button>
+                  {/* Opens the exact PDF the email attaches, so she can check it before it goes out. */}
+                  <a href={`/api/admin-diplomas/preview?id=${d.id}`} target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                    <Eye className="h-4 w-4" /> Preview
+                  </a>
                   <button onClick={() => remove(d)}
                     className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50">
                     <Trash2 className="h-4 w-4" /> Delete

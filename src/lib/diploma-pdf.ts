@@ -1,0 +1,313 @@
+// Builds the actual diploma as a print-ready PDF, for attaching to the email Mom sends.
+//
+// WHY THIS EXISTS (2026-09-11): her "Send" button emailed a notice that SAID "This is your copy of
+// the graduation diploma" while attaching nothing. A parent received no diploma. This generates the
+// real certificate so the email carries it.
+//
+// LAYOUT DISCIPLINE — this is a SECOND renderer of the same certificate, and a second renderer can
+// drift from the first. Everything here is expressed in the SAME design coordinates as the approved
+// web page (`src/app/print/diploma/[enrollmentId]/page.tsx`, a 1056 x 816 box) and scaled by the
+// same factor, so the two stay comparable. If you change one, change the other. The web page is the
+// master; this follows it.
+//
+// The sheet is 9 x 7 inches = 648 x 504 pt. 1056 design px -> 648 pt, so 1 design px = 0.613636 pt.
+//
+// FONTS: Old English Text MT (the real diploma face, self-hosted) for everything blackletter, and
+// pdf-lib's built-in Times for the body copy and signatures. No network fetch at send time — an
+// email must never fail because a font CDN was slow.
+
+import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
+import fs from 'fs'
+import path from 'path'
+
+const SHEET_W_PT = 648            // 9in
+const SHEET_H_PT = 504            // 7in
+const DESIGN_W = 1056             // the web page's interior box
+const DESIGN_H = 816
+const K = SHEET_W_PT / DESIGN_W   // 0.613636 — design px -> pt
+
+/** design px -> PDF pt, with the y axis flipped (design y grows down, PDF y grows up). */
+const dx = (v: number) => v * K
+const dy = (v: number) => SHEET_H_PT - v * K
+
+const INK = rgb(0.067, 0.067, 0.067)
+const BODY = rgb(0.102, 0.102, 0.102)
+const RULE = rgb(0.169, 0.169, 0.169)
+
+export type DiplomaPdfInput = {
+  studentName: string
+  graduationDate: string | null   // ISO yyyy-mm-dd
+  diplomaNumber: string
+}
+
+/** The long-form date the certificate prints, e.g. "May 21, 2027". */
+export function formatDiplomaDate(iso: string | null): string {
+  if (!iso) return ''
+  const d = new Date(iso + 'T00:00:00')
+  if (Number.isNaN(d.getTime())) return ''
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+/**
+ * Names must never print with a double space, wrong capitalisation, or a stray edge space.
+ * Mirrors src/lib/diploma-name.ts so the PDF and the web page agree.
+ */
+export function normalizeName(raw: string): string {
+  const cleaned = String(raw || '').replace(/\s+/g, ' ').trim()
+  if (!cleaned) return ''
+  return cleaned
+    .split(' ')
+    .map((part) =>
+      part
+        .split('-')
+        .map((seg) =>
+          seg
+            .split("'")
+            .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w))
+            .join("'")
+        )
+        .join('-')
+    )
+    .join(' ')
+}
+
+/** Long names shrink so they always fit inside the arc. Mirrors nameFontSize() on the web side. */
+function nameFontSizePt(name: string): number {
+  const n = name.length
+  if (n <= 16) return 34
+  if (n <= 22) return 30
+  if (n <= 28) return 26
+  if (n <= 34) return 22
+  if (n <= 42) return 18
+  return 16
+}
+
+/**
+ * Draw text along an arc. pdf-lib has no textPath, so characters are placed individually along the
+ * same parabola the web page uses, each rotated to the tangent. This is what makes the PDF renderer
+ * match the screen renderer instead of approximating it.
+ */
+function drawArchedText(
+  page: any,
+  text: string,
+  font: any,
+  size: number,
+  cxDesign: number,
+  apexDesignY: number,
+  halfSpanDesign: number,
+  riseDesign: number
+) {
+  const chars = Array.from(text)
+  const widths = chars.map((c) => font.widthOfTextAtSize(c, size))
+  const total = widths.reduce((a, b) => a + b, 0)
+
+  // walk the string from left to right, placing each glyph on the parabola
+  let travelled = -total / 2
+  for (let i = 0; i < chars.length; i++) {
+    const w = widths[i]
+    const centre = travelled + w / 2
+    travelled += w
+
+    // t in [-1, 1] across the arc
+    const t = halfSpanDesign === 0 ? 0 : centre / halfSpanDesign
+    if (Math.abs(t) > 1.06) continue // never draw past the arc ends
+    // parabola: y = apex + rise * t^2  (rise is positive downward in design space)
+    const yDesign = apexDesignY + riseDesign * t * t
+    const xDesign = cxDesign + centre
+    // slope dy/dx for the rotation
+    const slope = (2 * riseDesign * t) / halfSpanDesign
+    const angle = -Math.atan(slope) * (180 / Math.PI)
+
+    page.drawText(chars[i], {
+      x: dx(xDesign) - w * K / 2,
+      y: dy(yDesign),
+      size: size * K,
+      font,
+      color: INK,
+      rotate: degrees(angle),
+    })
+  }
+}
+
+/** Centre a single line of text horizontally in design space. */
+function centredText(
+  page: any,
+  text: string,
+  font: any,
+  sizeDesign: number,
+  yDesign: number,
+  color = BODY,
+  letterSpacing = 0
+) {
+  const size = sizeDesign * K
+  const w = font.widthOfTextAtSize(text, size) + letterSpacing * Math.max(0, text.length - 1) * K
+  const x = (SHEET_W_PT - w) / 2
+  const y = dy(yDesign)
+  if (letterSpacing === 0) {
+    page.drawText(text, { x, y, size, font, color })
+  } else {
+    // letterSpacing is used by the web page on the graduate's name
+    let cx = x
+    for (const ch of Array.from(text)) {
+      page.drawText(ch, { x: cx, y, size, font, color })
+      cx += font.widthOfTextAtSize(ch, size) + letterSpacing * K
+    }
+  }
+}
+
+/**
+ * Build the diploma PDF. Returns a Uint8Array suitable for a nodemailer attachment.
+ * `emblemBytes` may be null — the emblem is skipped rather than failing the send.
+ */
+export async function buildDiplomaPdf(
+  input: DiplomaPdfInput,
+  schoolName: string,
+  place: { city: string; state: string },
+  signatories: { president: string; headmaster: string },
+  emblemBytes: Uint8Array | null
+): Promise<Uint8Array> {
+  const doc = await PDFDocument.create()
+  doc.registerFontkit(fontkit)
+
+  const page = doc.addPage([SHEET_W_PT, SHEET_H_PT])
+  const name = normalizeName(input.studentName)
+  const gradDate = formatDiplomaDate(input.graduationDate)
+
+  // ---- fonts -------------------------------------------------------------
+  const blackletterPath = path.join(process.cwd(), 'public', 'fonts', 'OldEnglishTextMT.ttf')
+  const blackletter = fs.existsSync(blackletterPath)
+    ? await doc.embedFont(fs.readFileSync(blackletterPath), { subset: true })
+    : await doc.embedFont(StandardFonts.TimesRoman)
+  const serif = await doc.embedFont(StandardFonts.TimesRoman)
+  const serifItalic = await doc.embedFont(StandardFonts.TimesRomanItalic)
+
+  // ---- paper + frame -----------------------------------------------------
+  page.drawRectangle({ x: 0, y: 0, width: SHEET_W_PT, height: SHEET_H_PT, color: rgb(0.957, 0.937, 0.886) })
+  page.drawRectangle({
+    x: dx(20), y: dy(DESIGN_H - 20), width: dx(DESIGN_W - 40), height: dy(DESIGN_H - 40) - dy(20),
+    borderColor: rgb(0.42, 0.384, 0.314), borderWidth: 0.7,
+  })
+  page.drawRectangle({
+    x: dx(24), y: dy(DESIGN_H - 24), width: dx(DESIGN_W - 48), height: dy(DESIGN_H - 24) - dy(24),
+    borderColor: rgb(0.541, 0.51, 0.447), borderWidth: 0.4,
+  })
+
+  // ---- school name, arched ----------------------------------------------
+  // Matches the approved web geometry: viewBox 3200 wide, arc M 20 491 Q 1600 211 3180 491,
+  // box 154 design px tall sitting at the top of the interior.
+  {
+    const boxTop = 4
+    const scale = 154 / 550            // the web page's svg scale
+    const apexY = (491 + 2 * 211 + 491) / 4   // 351
+    const apexOnSheet = boxTop + apexY * scale // 48px into the box
+    const riseOnSheet = (491 - apexY) * scale  // the arc's rise, ~39px
+    const halfSpan = ((3200 - 40) / 2) * scale // ~434px each side
+    drawArchedText(page, schoolName, blackletter, 250 * scale, DESIGN_W / 2, apexOnSheet, halfSpan, riseOnSheet)
+  }
+
+  // ---- Mobile — emblem — Alabama ----------------------------------------
+  {
+    const rowY = 210           // design px, baseline of the flanking words
+    if (emblemBytes) {
+      try {
+        const png = await doc.embedPng(emblemBytes)
+        const box = 110                                   // approved emblem size, design px
+        const s = Math.min(dx(box) / png.width, dx(box) / png.height)
+        const w = png.width * s
+        const h = png.height * s
+        page.drawImage(png, { x: (SHEET_W_PT - w) / 2, y: dy(rowY) - h / 2, width: w, height: h })
+      } catch { /* emblem is decoration — never fail a diploma over it */ }
+    }
+    const flankSize = 26
+    const gapPt = dx(130)
+    const wCity = serif.widthOfTextAtSize(place.city, flankSize * K)
+    const wState = serif.widthOfTextAtSize(place.state, flankSize * K)
+    page.drawText(place.city, { x: SHEET_W_PT / 2 - gapPt - wCity, y: dy(rowY), size: flankSize * K, font: serif, color: INK })
+    page.drawText(place.state, { x: SHEET_W_PT / 2 + gapPt, y: dy(rowY), size: flankSize * K, font: serif, color: INK })
+  }
+
+  // ---- This Certifies That ----------------------------------------------
+  centredText(page, 'This Certifies That', blackletter, 24, 268, INK)
+
+  // ---- the graduate ------------------------------------------------------
+  if (name) {
+    centredText(page, name, blackletter, nameFontSizePt(name) * 2.1, 330, INK, 1.2)
+  }
+
+  // ---- the standards paragraph ------------------------------------------
+  {
+    const para = 'having satisfactorily completed the course of study in conformity with the standards and requirements set forth for High Schools in the State of Alabama and having complied with all requirements of this Institution is hereby awarded this'
+    const size = 22 * K
+    const maxW = dx(1010)
+    const words = para.split(' ')
+    const lines: string[] = []
+    let line = ''
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w
+      if (serif.widthOfTextAtSize(test, size) > maxW && line) { lines.push(line); line = w }
+      else line = test
+    }
+    if (line) lines.push(line)
+    lines.forEach((l, i) => centredText(page, l, serif, 22, 362 + i * 26, BODY))
+  }
+
+  // ---- High School Diploma ----------------------------------------------
+  centredText(page, 'High School Diploma', blackletter, 40, 492, INK)
+
+  // ---- In Testimony Whereof ---------------------------------------------
+  centredText(page, 'In Testimony Whereof we have affixed our signatures.', blackletter, 23, 528, BODY)
+
+  // ---- rule + date -------------------------------------------------------
+  {
+    const y = dy(566)
+    page.drawLine({ start: { x: SHEET_W_PT / 2 - dx(190), y }, end: { x: SHEET_W_PT / 2 + dx(190), y }, thickness: 1.4 * K, color: RULE })
+    if (gradDate) centredText(page, gradDate, blackletter, 30, 596, INK)
+  }
+
+  // ---- signatures --------------------------------------------------------
+  // TWO columns, centred on their own axes. The first version centred every piece on the SHEET,
+  // which stacked both signatories on top of each other in the middle — caught by looking at the
+  // rendered PDF, not by any status code.
+  {
+    const yTop = 660
+    const leftCentre = 220      // design px — mirrors the web page's space-between columns
+    const rightCentre = 836
+    const colW = dx(240)
+    const cols = [
+      { cx: leftCentre, who: signatories.president, title: 'President' },
+      { cx: rightCentre, who: signatories.headmaster, title: 'Headmaster' },
+    ]
+    for (const c of cols) {
+      const centrePt = dx(c.cx)
+      const x0 = centrePt - colW / 2
+
+      // script signature
+      const sigSize = 26 * K
+      const sw = serifItalic.widthOfTextAtSize(c.who, sigSize)
+      page.drawText(c.who, { x: centrePt - sw / 2, y: dy(yTop), size: sigSize, font: serifItalic, color: INK })
+
+      // the rule beneath it
+      page.drawLine({
+        start: { x: x0, y: dy(700) }, end: { x: x0 + colW, y: dy(700) },
+        thickness: 0.8 * K, color: RULE,
+      })
+
+      // printed name and title, each centred in THIS column
+      const nameSize = 25 * K
+      const nw = serif.widthOfTextAtSize(c.who, nameSize)
+      page.drawText(c.who, { x: centrePt - nw / 2, y: dy(722), size: nameSize, font: serif, color: INK })
+
+      const titleSize = 25 * K
+      const tw = serif.widthOfTextAtSize(c.title, titleSize)
+      page.drawText(c.title, { x: centrePt - tw / 2, y: dy(746), size: titleSize, font: serif, color: INK })
+    }
+  }
+
+  // ---- certificate number ------------------------------------------------
+  if (input.diplomaNumber) {
+    centredText(page, `No. ${input.diplomaNumber}`, serif, 20, 784, BODY)
+  }
+
+  return await doc.save()
+}
