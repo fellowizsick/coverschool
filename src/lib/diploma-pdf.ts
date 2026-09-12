@@ -177,6 +177,44 @@ export async function buildDiplomaPdf(
     : await doc.embedFont(StandardFonts.TimesRoman)
   const serifItalic = script   // the signature script, matching the web page
 
+  // ---------------------------------------------------------------------------------------------
+  // POSITIONS ARE THE PAGE'S OWN CENTRES, MEASURED OFF THE LIVE CERTIFICATE.
+  //
+  // The first version of this file guessed these y values, and every one of them drifted: measured
+  // against the live page the paragraph sat 54 design px too high, "This Certifies That" 41px, the
+  // date 33px, and the Mobile row 24px - which is what Jonathan saw as "the emblem moved down a
+  // little bit" ("I like where the emblems at where the one has my name on it"). Nothing here is
+  // eyeballed any more.
+  //
+  // The page lays itself out with CSS flow, so its centre for each element was measured from the
+  // rendered DOM and is written here as the TARGET. A text baseline sits below its visual centre by
+  // a fixed fraction of the font size, and that fraction was measured per font family:
+  //
+  //     blackletter (Old English)   0.362 x size
+  //     signature script (Mrs Saint Delafield)   0.143 x size
+  //     serif (EB Garamond)         0.355 x size
+  //
+  // so the baseline to draw at is:  TARGET_CENTRE + FACTOR * size.
+  // ---------------------------------------------------------------------------------------------
+  const CENTRE = {
+    emblemRow: 221.3,          // Mobile - emblem - Alabama all share this centre on the page
+    certifiesThat: 300.6,
+    name: 361.2,
+    paragraph: 408.6,          // first line; the rest step by STANDARDS_LINE_HEIGHT
+    highSchoolDiploma: 498.8,
+    inTestimony: 554.4,
+    date: 602.4,
+    dateRule: 630.9,
+    signatureRule: 690.2,
+    printedName: 711.9,
+    title: 743.4,
+    number: 776.2,
+  }
+  const F_BLACK = 0.362
+  const F_SERIF = 0.355
+  const F_SCRIPT = 0.143
+  const at = (centre: number, size: number, factor: number) => centre + factor * size
+
   // ---- paper + frame -----------------------------------------------------
   page.drawRectangle({ x: 0, y: 0, width: SHEET_W_PT, height: SHEET_H_PT, color: rgb(0.957, 0.937, 0.886) })
   // Height must be a POSITIVE length. Computing it as dy(top) - dy(bottom) inverted it — dy() flips
@@ -210,7 +248,8 @@ export async function buildDiplomaPdf(
 
   // ---- Mobile — emblem — Alabama ----------------------------------------
   {
-    const rowY = 210           // design px, baseline of the flanking words
+    const flankSize = 34
+    const rowY = at(CENTRE.emblemRow, flankSize, F_BLACK)   // words' baseline
     if (emblemBytes) {
       try {
         const png = await doc.embedPng(emblemBytes)
@@ -218,12 +257,12 @@ export async function buildDiplomaPdf(
         const s = Math.min(dx(box) / png.width, dx(box) / png.height)
         const w = png.width * s
         const h = png.height * s
-        page.drawImage(png, { x: (SHEET_W_PT - w) / 2, y: dy(rowY) - h / 2, width: w, height: h })
+        // centred on the row's CENTRE, exactly as the page does — this was the 'emblem moved down'
+        page.drawImage(png, { x: (SHEET_W_PT - w) / 2, y: dy(CENTRE.emblemRow) - h / 2, width: w, height: h })
       } catch { /* emblem is decoration — never fail a diploma over it */ }
     }
     // The page sets these in BLACKLETTER at 34px with a 42px flex gap either side of a 110px
     // emblem — so each word's inner edge sits 55 + 42 = 97 design px off centre.
-    const flankSize = 34
     const gapPt = dx(97)
     const wCity = blackletter.widthOfTextAtSize(place.city, flankSize * K)
     const wState = blackletter.widthOfTextAtSize(place.state, flankSize * K)
@@ -232,13 +271,15 @@ export async function buildDiplomaPdf(
   }
 
   // ---- This Certifies That ----------------------------------------------
-  centredText(page, 'This Certifies That', blackletter, 24, 268, INK)
+  centredText(page, 'This Certifies That', blackletter, 24, at(CENTRE.certifiesThat, 24, F_BLACK), INK)
 
   // ---- the graduate ------------------------------------------------------
   if (name) {
     // identical formula to the web page: nameFontSize(name) * 0.90, in design px
     const ls = parseFloat(nameLetterSpacing(name)) || 0
-    centredText(page, name, blackletter, nameFontSize(name) * 0.90, 330, INK, ls)
+    const size = nameFontSize(name) * 0.90
+    // the CENTRE is fixed, so a longer name grows downward and upward around the same line
+    centredText(page, name, blackletter, size, at(CENTRE.name, size, F_BLACK), INK, ls)
   }
 
   // ---- the standards paragraph ------------------------------------------
@@ -246,21 +287,21 @@ export async function buildDiplomaPdf(
     // EXACTLY the lines the web page shows, from the shared module — never wrapped here.
     // Greedy wrapping with Times metrics produced 2 lines where the screen had 3.
     STANDARDS_LINES.forEach((l, i) =>
-      centredText(page, l, serif, 22, 362 + i * STANDARDS_LINE_HEIGHT, BODY))
+      centredText(page, l, serif, 22, at(CENTRE.paragraph, 22, F_SERIF) + i * STANDARDS_LINE_HEIGHT, BODY))
   }
 
   // ---- High School Diploma ----------------------------------------------
-  centredText(page, 'High School Diploma', blackletter, 40, 492, INK)
+  centredText(page, 'High School Diploma', blackletter, 40, at(CENTRE.highSchoolDiploma, 40, F_BLACK), INK)
 
   // ---- In Testimony Whereof ---------------------------------------------
-  centredText(page, 'In Testimony Whereof we have affixed our signatures.', blackletter, 23, 528, BODY)
+  centredText(page, 'In Testimony Whereof we have affixed our signatures.', blackletter, 23, at(CENTRE.inTestimony, 23, F_BLACK), BODY)
 
   // ---- rule + date -------------------------------------------------------
   {
     // The date first, then its rule BELOW it — the reference reads as an underlined date, not a
     // date under a heading. (Jonathan asked: "Is the line above the date supposed to be under it?")
-    if (gradDate) centredText(page, gradDate, blackletter, 30, 580, INK)
-    const y = dy(596)
+    if (gradDate) centredText(page, gradDate, blackletter, 30, at(CENTRE.date, 30, F_BLACK), INK)
+    const y = dy(CENTRE.dateRule)
     page.drawLine({ start: { x: SHEET_W_PT / 2 - dx(190), y }, end: { x: SHEET_W_PT / 2 + dx(190), y }, thickness: 1.4 * K, color: RULE })
   }
 
@@ -269,15 +310,16 @@ export async function buildDiplomaPdf(
   // which stacked both signatories on top of each other in the middle — caught by looking at the
   // rendered PDF, not by any status code.
   {
-    const yTop = 660
     const leftCentre = 220      // design px — mirrors the web page's space-between columns
     const rightCentre = 836
     const colW = dx(300)        // the page's signature rules are 300px wide
     const cols = [
       // the page draws the president's script at 50px and the headmaster's at 31px — different sizes
       // so the two names read at the same visual weight. One shared size made them look wrong.
-      { cx: leftCentre, who: signatories.president, title: 'President', sig: 50 },
-      { cx: rightCentre, who: signatories.headmaster, title: 'Headmaster', sig: 31 },
+      // measured: the page draws Mom's script centred at 664.2 and yours at 671.2 — they are NOT
+      // on one line, because the two scripts are different sizes.
+      { cx: leftCentre, who: signatories.president, title: 'President', sig: 50, centre: 664.2 },
+      { cx: rightCentre, who: signatories.headmaster, title: 'Headmaster', sig: 31, centre: 671.2 },
     ]
     for (const c of cols) {
       const centrePt = dx(c.cx)
@@ -286,28 +328,29 @@ export async function buildDiplomaPdf(
       // script signature
       const sigSize = c.sig * K
       const sw = serifItalic.widthOfTextAtSize(c.who, sigSize)
-      page.drawText(c.who, { x: centrePt - sw / 2, y: dy(yTop), size: sigSize, font: serifItalic, color: INK })
+      const sigY = at(c.centre, c.sig, F_SCRIPT)
+      page.drawText(c.who, { x: centrePt - sw / 2, y: dy(sigY), size: sigSize, font: serifItalic, color: INK })
 
       // the rule beneath it
       page.drawLine({
-        start: { x: x0, y: dy(700) }, end: { x: x0 + colW, y: dy(700) },
+        start: { x: x0, y: dy(CENTRE.signatureRule) }, end: { x: x0 + colW, y: dy(CENTRE.signatureRule) },
         thickness: 0.8 * K, color: RULE,
       })
 
       // printed name and title, each centred in THIS column
       const nameSize = 25 * K
       const nw = serif.widthOfTextAtSize(c.who, nameSize)
-      page.drawText(c.who, { x: centrePt - nw / 2, y: dy(722), size: nameSize, font: serif, color: INK })
+      page.drawText(c.who, { x: centrePt - nw / 2, y: dy(at(CENTRE.printedName, 25, F_SERIF)), size: nameSize, font: serif, color: INK })
 
       const titleSize = 17 * K
       const tw = serif.widthOfTextAtSize(c.title, titleSize)
-      page.drawText(c.title, { x: centrePt - tw / 2, y: dy(746), size: titleSize, font: serif, color: INK })
+      page.drawText(c.title, { x: centrePt - tw / 2, y: dy(at(CENTRE.title, 17, F_SERIF)), size: titleSize, font: serif, color: INK })
     }
   }
 
   // ---- certificate number ------------------------------------------------
   if (input.diplomaNumber) {
-    centredText(page, `No. ${input.diplomaNumber}`, serif, 13, 784, BODY, 0.6)
+    centredText(page, `No. ${input.diplomaNumber}`, serif, 13, at(CENTRE.number, 13, F_SERIF), BODY, 0.6)
   }
 
   return await doc.save()
