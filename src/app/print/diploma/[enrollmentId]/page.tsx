@@ -33,7 +33,9 @@ export const dynamic = 'force-dynamic'
  * 3. THE BORDER. A plain double rule with a gold frame at the trim, not the heavy ormolu
  *    banding of the first version.
  *
- * 4. "Diploma" alone — the reference does not print "High School Diploma".
+ * 4. "High School Diploma". The 2014 reference prints "Diploma" alone, but Jonathan asked for
+ *    the full "High School Diploma" on 2026-09-11: "Where it shows diploma it needs to say
+ *    high school diploma." His call overrides the reference.
  *
  * Everything that varies per student (name, date, number) still resolves at runtime from the
  * student's own record, and the name is still normalised: a credential must never print a name
@@ -220,8 +222,8 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
           </div>
 
           {/* ── DIPLOMA ── */}
-          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '48px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
-            Diploma
+          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '42px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
+            High School Diploma
           </div>
 
           {/* ── IN TESTIMONY WHEREOF ── */}
