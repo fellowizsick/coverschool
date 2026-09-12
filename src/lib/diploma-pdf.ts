@@ -17,6 +17,7 @@
 // email must never fail because a font CDN was slow.
 
 import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib'
+import { normalizeName, nameFontSize, nameLetterSpacing } from './diploma-name'
 import fontkit from '@pdf-lib/fontkit'
 import fs from 'fs'
 import path from 'path'
@@ -49,39 +50,9 @@ export function formatDiplomaDate(iso: string | null): string {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
-/**
- * Names must never print with a double space, wrong capitalisation, or a stray edge space.
- * Mirrors src/lib/diploma-name.ts so the PDF and the web page agree.
- */
-export function normalizeName(raw: string): string {
-  const cleaned = String(raw || '').replace(/\s+/g, ' ').trim()
-  if (!cleaned) return ''
-  return cleaned
-    .split(' ')
-    .map((part) =>
-      part
-        .split('-')
-        .map((seg) =>
-          seg
-            .split("'")
-            .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w))
-            .join("'")
-        )
-        .join('-')
-    )
-    .join(' ')
-}
-
-/** Long names shrink so they always fit inside the arc. Mirrors nameFontSize() on the web side. */
-function nameFontSizePt(name: string): number {
-  const n = name.length
-  if (n <= 16) return 34
-  if (n <= 22) return 30
-  if (n <= 28) return 26
-  if (n <= 34) return 22
-  if (n <= 42) return 18
-  return 16
-}
+// Name handling lives in ONE place — ./diploma-name — so the screen and the PDF can never
+// disagree about a name's text, size or tracking. A second copy here already drifted once.
+export { normalizeName }
 
 /**
  * Draw text along an arc. pdf-lib has no textPath, so characters are placed individually along the
@@ -260,7 +231,9 @@ export async function buildDiplomaPdf(
 
   // ---- the graduate ------------------------------------------------------
   if (name) {
-    centredText(page, name, blackletter, nameFontSizePt(name) * 2.1, 330, INK, 1.2)
+    // identical formula to the web page: nameFontSize(name) * 0.90, in design px
+    const ls = parseFloat(nameLetterSpacing(name)) || 0
+    centredText(page, name, blackletter, nameFontSize(name) * 0.90, 330, INK, ls)
   }
 
   // ---- the standards paragraph ------------------------------------------

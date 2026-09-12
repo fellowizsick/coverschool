@@ -172,6 +172,29 @@ export default function DiplomasPage() {
         </button>
       </div>
 
+      {/* Plain words, three steps, no jargon — so the page explains itself without a phone call. */}
+      <div className="mt-5 rounded-2xl border border-sky-100 bg-sky-50/70 p-4">
+        <p className="text-sm font-bold text-sky-900">How this works</p>
+        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+          <div className="rounded-xl bg-white/80 px-3 py-2">
+            <p className="text-sm font-bold text-gray-800">1. Make the diploma</p>
+            <p className="text-xs text-gray-600">Tap <strong>New diploma</strong>. Pick the student, or just type the name exactly as it should print. Add the date and the number.</p>
+          </div>
+          <div className="rounded-xl bg-white/80 px-3 py-2">
+            <p className="text-sm font-bold text-gray-800">2. Look at it first</p>
+            <p className="text-xs text-gray-600">Tap <strong>Preview</strong> to see the exact certificate. Nothing is sent until you send it.</p>
+          </div>
+          <div className="rounded-xl bg-white/80 px-3 py-2">
+            <p className="text-sm font-bold text-gray-800">3. Send it</p>
+            <p className="text-xs text-gray-600">Tap <strong>Send</strong>, type the email, and it goes from the school email <strong>with the diploma attached</strong>.</p>
+          </div>
+        </div>
+        <p className="mt-2 text-xs text-gray-600">
+          The certificate prints at 9&nbsp;&times;&nbsp;7&nbsp;inches. Only the name and the date change from student to
+          student — everything else is the same every time, so it always looks right.
+        </p>
+      </div>
+
       {msg && <p className="mt-4 flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800"><CheckCircle2 className="h-4 w-4 shrink-0" /> {msg}</p>}
       {err && <p className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"><AlertCircle className="h-4 w-4 shrink-0" /> {err}</p>}
 
