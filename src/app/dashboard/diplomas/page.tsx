@@ -182,7 +182,7 @@ export default function DiplomasPage() {
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
           <div className="rounded-xl bg-white/80 px-3 py-2">
             <p className="text-sm font-bold text-gray-800">1. Make the diploma</p>
-            <p className="text-xs text-gray-600">Tap <strong>New diploma</strong>. Pick the student, or just type the name exactly as it should print. Add the date and the number.</p>
+            <p className="text-xs text-gray-600">Tap <strong>New diploma</strong>. Pick the student from the list — you have to pick one — then check the name as it will print. Add the date and the number.</p>
           </div>
           <div className="rounded-xl bg-white/80 px-3 py-2">
             <p className="text-sm font-bold text-gray-800">2. Look at it first</p>
@@ -215,7 +215,7 @@ export default function DiplomasPage() {
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {!editing && (
               <label className="block sm:col-span-2">
-                <span className="mb-1.5 block text-sm font-bold text-gray-800">Which student?</span>
+                <span className="mb-1.5 block text-sm font-bold text-gray-800">Which student? <span className="font-normal text-gray-500">(required — pick one)</span></span>
                 <select
                   value={form.enrollment_id} className={field}
                   onChange={(e) => {
