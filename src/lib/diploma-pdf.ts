@@ -17,6 +17,7 @@
 // email must never fail because a font CDN was slow.
 
 import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib'
+import { STANDARDS_LINES, STANDARDS_LINE_HEIGHT } from './diploma-copy'
 import { normalizeName, nameFontSize, nameLetterSpacing } from './diploma-name'
 import fontkit from '@pdf-lib/fontkit'
 import fs from 'fs'
@@ -181,15 +182,17 @@ export async function buildDiplomaPdf(
   // Height must be a POSITIVE length. Computing it as dy(top) - dy(bottom) inverted it — dy() flips
   // the axis, so the subtraction came out negative and the frame collapsed (visible only along the
   // bottom edge). Equal insets on all sides means height = the same span as the width.
+  // Insets taken straight from the page: it sets inset 20px / 24px on an 864px-wide sheet, which is
+  // 24.4 / 29.3 design px. Border widths likewise: 0.7px and 0.4px at 96dpi are 0.525pt and 0.3pt.
   page.drawRectangle({
-    x: dx(20), y: dy(DESIGN_H - 20),
-    width: dx(DESIGN_W - 40), height: dx(DESIGN_H - 40),
-    borderColor: rgb(0.42, 0.384, 0.314), borderWidth: 0.7,
+    x: dx(24.4), y: dy(DESIGN_H - 24.4),
+    width: dx(DESIGN_W - 48.8), height: dx(DESIGN_H - 48.8),
+    borderColor: rgb(0.42, 0.384, 0.314), borderWidth: 0.525,
   })
   page.drawRectangle({
-    x: dx(24), y: dy(DESIGN_H - 24),
-    width: dx(DESIGN_W - 48), height: dx(DESIGN_H - 48),
-    borderColor: rgb(0.541, 0.51, 0.447), borderWidth: 0.4,
+    x: dx(29.3), y: dy(DESIGN_H - 29.3),
+    width: dx(DESIGN_W - 58.6), height: dx(DESIGN_H - 58.6),
+    borderColor: rgb(0.541, 0.51, 0.447), borderWidth: 0.3,
   })
 
   // ---- school name, arched ----------------------------------------------
@@ -218,12 +221,14 @@ export async function buildDiplomaPdf(
         page.drawImage(png, { x: (SHEET_W_PT - w) / 2, y: dy(rowY) - h / 2, width: w, height: h })
       } catch { /* emblem is decoration — never fail a diploma over it */ }
     }
-    const flankSize = 26
-    const gapPt = dx(130)
-    const wCity = serif.widthOfTextAtSize(place.city, flankSize * K)
-    const wState = serif.widthOfTextAtSize(place.state, flankSize * K)
-    page.drawText(place.city, { x: SHEET_W_PT / 2 - gapPt - wCity, y: dy(rowY), size: flankSize * K, font: serif, color: INK })
-    page.drawText(place.state, { x: SHEET_W_PT / 2 + gapPt, y: dy(rowY), size: flankSize * K, font: serif, color: INK })
+    // The page sets these in BLACKLETTER at 34px with a 42px flex gap either side of a 110px
+    // emblem — so each word's inner edge sits 55 + 42 = 97 design px off centre.
+    const flankSize = 34
+    const gapPt = dx(97)
+    const wCity = blackletter.widthOfTextAtSize(place.city, flankSize * K)
+    const wState = blackletter.widthOfTextAtSize(place.state, flankSize * K)
+    page.drawText(place.city, { x: SHEET_W_PT / 2 - gapPt - wCity, y: dy(rowY), size: flankSize * K, font: blackletter, color: INK })
+    page.drawText(place.state, { x: SHEET_W_PT / 2 + gapPt, y: dy(rowY), size: flankSize * K, font: blackletter, color: INK })
   }
 
   // ---- This Certifies That ----------------------------------------------
@@ -238,19 +243,10 @@ export async function buildDiplomaPdf(
 
   // ---- the standards paragraph ------------------------------------------
   {
-    const para = 'having satisfactorily completed the course of study in conformity with the standards and requirements set forth for High Schools in the State of Alabama and having complied with all requirements of this Institution is hereby awarded this'
-    const size = 22 * K
-    const maxW = dx(1010)
-    const words = para.split(' ')
-    const lines: string[] = []
-    let line = ''
-    for (const w of words) {
-      const test = line ? line + ' ' + w : w
-      if (serif.widthOfTextAtSize(test, size) > maxW && line) { lines.push(line); line = w }
-      else line = test
-    }
-    if (line) lines.push(line)
-    lines.forEach((l, i) => centredText(page, l, serif, 22, 362 + i * 26, BODY))
+    // EXACTLY the lines the web page shows, from the shared module — never wrapped here.
+    // Greedy wrapping with Times metrics produced 2 lines where the screen had 3.
+    STANDARDS_LINES.forEach((l, i) =>
+      centredText(page, l, serif, 22, 362 + i * STANDARDS_LINE_HEIGHT, BODY))
   }
 
   // ---- High School Diploma ----------------------------------------------
@@ -276,17 +272,19 @@ export async function buildDiplomaPdf(
     const yTop = 660
     const leftCentre = 220      // design px — mirrors the web page's space-between columns
     const rightCentre = 836
-    const colW = dx(240)
+    const colW = dx(300)        // the page's signature rules are 300px wide
     const cols = [
-      { cx: leftCentre, who: signatories.president, title: 'President' },
-      { cx: rightCentre, who: signatories.headmaster, title: 'Headmaster' },
+      // the page draws the president's script at 50px and the headmaster's at 31px — different sizes
+      // so the two names read at the same visual weight. One shared size made them look wrong.
+      { cx: leftCentre, who: signatories.president, title: 'President', sig: 50 },
+      { cx: rightCentre, who: signatories.headmaster, title: 'Headmaster', sig: 31 },
     ]
     for (const c of cols) {
       const centrePt = dx(c.cx)
       const x0 = centrePt - colW / 2
 
       // script signature
-      const sigSize = 26 * K
+      const sigSize = c.sig * K
       const sw = serifItalic.widthOfTextAtSize(c.who, sigSize)
       page.drawText(c.who, { x: centrePt - sw / 2, y: dy(yTop), size: sigSize, font: serifItalic, color: INK })
 
@@ -301,7 +299,7 @@ export async function buildDiplomaPdf(
       const nw = serif.widthOfTextAtSize(c.who, nameSize)
       page.drawText(c.who, { x: centrePt - nw / 2, y: dy(722), size: nameSize, font: serif, color: INK })
 
-      const titleSize = 25 * K
+      const titleSize = 17 * K
       const tw = serif.widthOfTextAtSize(c.title, titleSize)
       page.drawText(c.title, { x: centrePt - tw / 2, y: dy(746), size: titleSize, font: serif, color: INK })
     }
@@ -309,7 +307,7 @@ export async function buildDiplomaPdf(
 
   // ---- certificate number ------------------------------------------------
   if (input.diplomaNumber) {
-    centredText(page, `No. ${input.diplomaNumber}`, serif, 20, 784, BODY)
+    centredText(page, `No. ${input.diplomaNumber}`, serif, 13, 784, BODY, 0.6)
   }
 
   return await doc.save()

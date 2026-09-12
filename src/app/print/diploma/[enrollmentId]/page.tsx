@@ -1,4 +1,5 @@
 import { createAdminClient, createClient } from '@/lib/supabase/server'
+import { STANDARDS_LINES } from '@/lib/diploma-copy'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { isAuthorizedAdmin } from '@/lib/adminAccess'
@@ -216,9 +217,9 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
               color: '#1a1a1a',
             }}
           >
-            having satisfactorily completed the course of study in conformity with the standards
-            and requirements set forth for High Schools in the State of Alabama and having complied
-            with all requirements of this Institution is hereby awarded this
+            {STANDARDS_LINES.map((line, i) => (
+              <span key={i} style={{ display: 'block' }}>{line}</span>
+            ))}
           </div>
 
           {/* ── DIPLOMA ── */}

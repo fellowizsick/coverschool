@@ -9,6 +9,17 @@ import nodemailer from 'nodemailer'
 import fs from 'fs'
 import path from 'path'
 
+/**
+ * Today in the school's own timezone. The server runs in UTC, so a plain new Date() would stamp
+ * tomorrow's date for anything created after 7pm Central.
+ */
+function schoolToday(): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(new Date())
+}
+
+
 // Admin-only. Mom's Diplomas panel: list, create/edit, and re-send a diploma to any address.
 //
 // WHY SEND-TO-ANY-EMAIL EXISTS (Jonathan, 2026-09-11): "she needs to send it to them again or
@@ -206,7 +217,9 @@ export async function POST(request: Request) {
   const id = String(body.id || '')
   const enrollmentId = String(body.enrollment_id || '')
   const studentName = String(body.student_name || '').trim()
-  const gradDate = String(body.graduation_date || '').trim() || null
+  // The award date is never blank: the column is NOT NULL, and a diploma without a date looks
+  // unfinished. Fall back to today at the school if the office left it empty.
+  const gradDate = String(body.graduation_date || '').trim() || schoolToday()
   const number = String(body.diploma_number || '').trim()
   const format = body.format === 'digital_plus_paper' ? 'digital_plus_paper' : 'digital'
 

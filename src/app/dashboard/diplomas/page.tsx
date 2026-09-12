@@ -16,6 +16,19 @@ import { GraduationCap, Loader2, Mail, Pencil, Plus, CheckCircle2, AlertCircle, 
  * (send another copy) is one click and one email box.
  */
 
+/**
+ * Today, as YYYY-MM-DD in the user's OWN timezone.
+ *
+ * Not toISOString(): that returns UTC, so after 7pm Central it would hand the diploma TOMORROW's
+ * date. Jonathan, 2026-09-12: "the date always gets updated to the correct days date unless Anne
+ * manually changes it."
+ */
+function todayLocal(): string {
+  const d = new Date()
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
+}
+
 type Diploma = {
   id: string
   enrollment_id: string
@@ -109,7 +122,7 @@ export default function DiplomasPage() {
       if (!d.ok) { setErr(d.error || 'Could not save.'); return }
       setMsg(editing ? 'Diploma updated ✅' : 'Diploma created ✅')
       setCreating(false); setEditing(null)
-      setForm({ enrollment_id: '', student_name: '', graduation_date: '', diploma_number: '' })
+      setForm({ enrollment_id: '', student_name: '', graduation_date: todayLocal(), diploma_number: '' })
       await load()
     } catch { setErr('Network error.') } finally { setSaving(false) }
   }
@@ -127,7 +140,8 @@ export default function DiplomasPage() {
       const d = await r.json()
       if (d.ok) number = d.number
     } catch { /* fall through to a blank the server will validate */ }
-    setForm({ enrollment_id: '', student_name: '', graduation_date: '', diploma_number: number })
+    // default the award date to TODAY; she can still change it
+    setForm({ enrollment_id: '', student_name: '', graduation_date: todayLocal(), diploma_number: number })
   }
 
   async function remove(d: Diploma) {
