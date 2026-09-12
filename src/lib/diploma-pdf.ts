@@ -286,8 +286,12 @@ export async function buildDiplomaPdf(
   {
     // EXACTLY the lines the web page shows, from the shared module — never wrapped here.
     // Greedy wrapping with Times metrics produced 2 lines where the screen had 3.
+    // BLACKLETTER, matching the page. This was drawn in serif while the page renders the same words
+    // in Old English, so the block under the name was measurably a different shape (12-31 design px
+    // narrower on every line). Jonathan spotted it: "the words underneath the name are a little
+    // different". Verified by comparing rendered text widths on both sides.
     STANDARDS_LINES.forEach((l, i) =>
-      centredText(page, l, serif, 22, at(CENTRE.paragraph, 22, F_SERIF) + i * STANDARDS_LINE_HEIGHT, BODY))
+      centredText(page, l, blackletter, 22, at(CENTRE.paragraph, 22, F_BLACK) + i * STANDARDS_LINE_HEIGHT, BODY))
   }
 
   // ---- High School Diploma ----------------------------------------------

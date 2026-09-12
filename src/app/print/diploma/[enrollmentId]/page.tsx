@@ -188,19 +188,28 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
             This Certifies That
           </div>
 
-          {/* ── THE NAME ── */}
-          <div
-            style={{
-              fontFamily: bl, fontWeight: 400,
-              fontSize: `${nameFontSize(name) * 0.90}px`,
-              textAlign: 'center',
-              marginTop: '8px',
-              lineHeight: 1.16,
-              letterSpacing: nameLetterSpacing(name),
-              color: '#111',
-            }}
-          >
-            {name}
+          {/* ── THE NAME ──
+              Held in a FIXED-HEIGHT box. The font steps down for a longer name, and because this
+              column distributes space with space-between, that size change used to shove every
+              other element up or down. Jonathan, 2026-09-12: "they don't need to be changing up all
+              the time... only the name and the date changes... consistency is key with this."
+              With the box fixed, the name's centre never moves and nothing downstream can shift.
+              60.55px = the tallest name (58px * 0.90) at line-height 1.16, so the current look is
+              unchanged. */}
+          <div style={{ height: '60.55px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '8px', flexShrink: 0 }}>
+            <div
+              style={{
+                fontFamily: bl, fontWeight: 400,
+                fontSize: `${nameFontSize(name) * 0.90}px`,
+                textAlign: 'center',
+                lineHeight: 1.16,
+                letterSpacing: nameLetterSpacing(name),
+                color: '#111',
+                width: '100%',
+              }}
+            >
+              {name}
+            </div>
           </div>
 
           {/* ── THE STANDARDS PARAGRAPH ── */}
