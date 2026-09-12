@@ -30,11 +30,15 @@ type Diploma = {
   family_email: string
 }
 
+/**
+ * The shape /api/graduation/status actually returns. Verified live 2026-09-11 — it is NOT
+ * id/student_first_name/student_last_name/student_grade, and assuming so rendered every option as
+ * "undefined undefined — undefined" and made the picker value the literal string "undefined".
+ */
 type Student = {
-  id: string
-  student_first_name: string
-  student_last_name: string
-  student_grade: string
+  enrollmentId: string
+  student: string
+  grade: string
   email: string
 }
 
@@ -215,18 +219,18 @@ export default function DiplomasPage() {
                 <select
                   value={form.enrollment_id} className={field}
                   onChange={(e) => {
-                    const s = students.find((x) => x.id === e.target.value)
+                    const s = students.find((x) => x.enrollmentId === e.target.value)
                     setForm((f) => ({
                       ...f,
                       enrollment_id: e.target.value,
-                      student_name: s ? `${s.student_first_name || ''} ${s.student_last_name || ''}`.trim() : f.student_name,
+                      student_name: s ? s.student : f.student_name,
                     }))
                   }}
                 >
                   <option value="">Choose a student…</option>
                   {students.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {`${s.student_first_name || ''} ${s.student_last_name || ''}`.trim()} — {s.student_grade}
+                    <option key={s.enrollmentId} value={s.enrollmentId}>
+                      {s.student}{s.grade ? ` — ${s.grade}` : ''}
                     </option>
                   ))}
                 </select>
