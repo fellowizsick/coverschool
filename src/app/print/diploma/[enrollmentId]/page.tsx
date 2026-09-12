@@ -134,7 +134,7 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
         {/* The interior is designed for an 11x8.5 sheet and scaled to fit the 9x7 sheet by an
               exact factor (864/1056). Scaling the whole box keeps every proportion identical to the
               approved layout — no font size is re-tuned by hand, so nothing can drift or clip. */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '1056px', height: '816px', transform: 'scale(0.8181818)', transformOrigin: 'top left', boxSizing: 'border-box', padding: '4px 22px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '1056px', height: '816px', transform: 'scale(0.8181818)', transformOrigin: 'top left', boxSizing: 'border-box', padding: '4px 22px 30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
 
           {/* ── SCHOOL NAME, ARCHED ──
               The reference curves the name across the top; a straight line was the single most
@@ -173,15 +173,15 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
             <img
               src="/lca-logo-transparent.png"
               alt={`${SCHOOL_CONFIG.name} seal`}
-              width={52}
-              height={52}
+              width={84}
+              height={84}
               style={{ objectFit: 'contain' }}
             />
             <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '34px', color: '#1a1a1a' }}>Alabama</div>
           </div>
 
           {/* ── THIS CERTIFIES THAT ── */}
-          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '28px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
+          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '26px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
             This Certifies That
           </div>
 
@@ -204,7 +204,7 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
           <div
             style={{
               fontFamily: bl, fontWeight: 400,
-              fontSize: '28px',
+              fontSize: '24px',
               textAlign: 'center',
               textWrap: 'balance' as const,
               lineHeight: 0.98,
@@ -220,24 +220,24 @@ export default async function DiplomaPage({ params }: { params: Promise<{ enroll
           </div>
 
           {/* ── DIPLOMA ── */}
-          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '52px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
+          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '48px', textAlign: 'center', marginTop: '2px', color: '#111' }}>
             Diploma
           </div>
 
           {/* ── IN TESTIMONY WHEREOF ── */}
-          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '29px', textAlign: 'center', marginTop: '6px', color: '#1a1a1a' }}>
+          <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '25px', textAlign: 'center', marginTop: '5px', color: '#1a1a1a' }}>
             In Testimony Whereof we have affixed our signatures.
           </div>
 
           {/* ── DATE OF AWARD ── */}
-          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <div style={{ textAlign: 'center', marginTop: '6px' }}>
             <div style={{ borderTop: '1.4px solid #2b2b2b', width: '380px', margin: '0 auto' }} />
             <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '30px', marginTop: '4px', color: '#111' }}>{gradDate}</div>
             <div style={{ fontFamily: bl, fontWeight: 400, fontSize: '17px', marginTop: '1px', color: '#333' }}>Date of Award</div>
           </div>
 
           {/* ── SIGNATURES: President (left) and Headmaster (right) ── */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '6px', paddingTop: '0px', gap: '28px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '4px', paddingTop: '0px', gap: '28px' }}>
             <div style={{ textAlign: 'center', flex: 1 }}>
               {/* the signature: the signatory's own name in a signature script. The first version
                   drew an SVG squiggle — "the signatures look like a child scribbled them". */}
